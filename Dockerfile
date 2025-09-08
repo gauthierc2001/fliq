@@ -52,9 +52,16 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy prisma schema and generated client
+# Copy prisma schema, generated client, and necessary dependencies
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/package.json ./package.json
+
+# Install only prisma in production for migrations
+RUN npm install prisma@^6.15.0 --omit=dev
+
+# Set correct ownership for nextjs user
+RUN chown -R nextjs:nodejs /app
 
 USER nextjs
 
@@ -64,6 +71,5 @@ ENV PORT 3000
 # set hostname to localhost
 ENV HOSTNAME "0.0.0.0"
 
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD ["node", "server.js"]
+# Use a script that runs migrations then starts the server
+CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
