@@ -1,5 +1,7 @@
 'use client'
 
+import { Crown, Medal, Award, Trophy } from 'lucide-react'
+
 interface LeaderboardEntry {
   rank: number
   wallet: string
@@ -23,16 +25,16 @@ export default function LeaderboardTable({ leaderboard }: LeaderboardTableProps)
   }
 
   const getRankBadge = (rank: number) => {
-    if (rank === 1) return '🥇'
-    if (rank === 2) return '🥈'
-    if (rank === 3) return '🥉'
-    return rank.toString()
+    if (rank === 1) return <Crown className="w-6 h-6 text-yellow-500" />
+    if (rank === 2) return <Medal className="w-6 h-6 text-gray-400" />
+    if (rank === 3) return <Award className="w-6 h-6 text-orange-400" />
+    return <span className="text-lg font-bold text-brand-gray">{rank}</span>
   }
 
   if (leaderboard.length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="text-4xl mb-4">🏆</div>
+        <Trophy className="w-16 h-16 text-brand-green mx-auto mb-4" />
         <div className="text-lg font-semibold text-brand-gray mb-2">No rankings yet</div>
         <div className="text-sm text-brand-lightGray">Be the first to start predicting!</div>
       </div>
@@ -49,7 +51,7 @@ export default function LeaderboardTable({ leaderboard }: LeaderboardTableProps)
         {leaderboard.map((entry) => (
           <div key={entry.rank} className="px-6 py-4 flex items-center justify-between hover:bg-brand-bgGray transition-colors">
             <div className="flex items-center space-x-4">
-              <div className="text-2xl w-8 text-center">
+              <div className="w-8 flex justify-center">
                 {getRankBadge(entry.rank)}
               </div>
               <div>

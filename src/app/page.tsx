@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { Rocket, Zap, Target, DollarSign, ArrowRight } from 'lucide-react'
 
 export default function HomePage() {
   return (
@@ -66,7 +67,7 @@ export default function HomePage() {
                 transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                 className="mr-2"
               >
-                🚀
+                <Rocket className="w-4 h-4 inline text-brand-green" />
               </motion.span>
               Powered by Solana
             </span>
@@ -121,16 +122,12 @@ export default function HomePage() {
                 />
                 <span className="relative z-10 flex items-center gap-3">
                   Launch App
-                  <motion.svg 
-                    className="w-6 h-6" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor"
+                  <motion.div
                     whileHover={{ x: 5 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </motion.svg>
+                    <ArrowRight className="w-6 h-6" />
+                  </motion.div>
                 </span>
               </motion.button>
             </Link>
@@ -147,7 +144,9 @@ export default function HomePage() {
               whileHover={{ y: -5 }}
               className="text-center p-6 bg-white/50 backdrop-blur-sm rounded-2xl border border-white/20 shadow-lg"
             >
-              <div className="text-3xl mb-3">⚡</div>
+              <div className="text-3xl mb-3">
+                <Zap className="w-8 h-8 text-brand-green mx-auto" />
+              </div>
               <h3 className="font-bold text-brand-black mb-2">Instant</h3>
               <p className="text-brand-gray text-sm">One swipe to place your bet</p>
             </motion.div>
@@ -156,7 +155,9 @@ export default function HomePage() {
               whileHover={{ y: -5 }}
               className="text-center p-6 bg-white/50 backdrop-blur-sm rounded-2xl border border-white/20 shadow-lg"
             >
-              <div className="text-3xl mb-3">🎯</div>
+              <div className="text-3xl mb-3">
+                <Target className="w-8 h-8 text-brand-green mx-auto" />
+              </div>
               <h3 className="font-bold text-brand-black mb-2">Simple</h3>
               <p className="text-brand-gray text-sm">Just predict up or down</p>
             </motion.div>
@@ -165,7 +166,9 @@ export default function HomePage() {
               whileHover={{ y: -5 }}
               className="text-center p-6 bg-white/50 backdrop-blur-sm rounded-2xl border border-white/20 shadow-lg"
             >
-              <div className="text-3xl mb-3">💰</div>
+              <div className="text-3xl mb-3">
+                <DollarSign className="w-8 h-8 text-brand-green mx-auto" />
+              </div>
               <h3 className="font-bold text-brand-black mb-2">Profitable</h3>
               <p className="text-brand-gray text-sm">Win real rewards</p>
             </motion.div>

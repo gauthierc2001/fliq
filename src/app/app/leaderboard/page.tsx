@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import LeaderboardTable from '@/components/LeaderboardTable'
+import { Crown, Users, DollarSign } from 'lucide-react'
 
 interface LeaderboardEntry {
   rank: number
@@ -62,7 +63,7 @@ export default function LeaderboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-brand-green rounded-lg shadow-lg p-6 text-white">
           <div className="flex items-center">
-            <div className="text-3xl mr-4">🥇</div>
+            <Crown className="w-8 h-8 mr-4 text-white" />
             <div>
               <div className="text-lg font-semibold">Champion</div>
               <div className="text-white/90">
@@ -74,7 +75,7 @@ export default function LeaderboardPage() {
         
         <div className="bg-brand-black rounded-lg shadow-lg p-6 text-white">
           <div className="flex items-center">
-            <div className="text-3xl mr-4">👥</div>
+            <Users className="w-8 h-8 mr-4 text-white" />
             <div>
               <div className="text-lg font-semibold">Total Players</div>
               <div className="text-white/90">{leaderboard.length} active</div>
@@ -84,7 +85,7 @@ export default function LeaderboardPage() {
         
         <div className="bg-white border border-brand-border rounded-lg shadow-lg p-6">
           <div className="flex items-center">
-            <div className="text-3xl mr-4">💰</div>
+            <DollarSign className="w-8 h-8 mr-4 text-brand-green" />
             <div>
               <div className="text-lg font-semibold text-brand-black">Highest P&L</div>
               <div className="text-brand-green">

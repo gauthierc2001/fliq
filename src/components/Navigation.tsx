@@ -3,14 +3,15 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import WalletConnectButton from './WalletConnectButton'
+import { Target, User, Trophy } from 'lucide-react'
 
 export default function Navigation() {
   const pathname = usePathname()
 
   const navItems = [
-    { href: '/app/predictions', label: 'Predict', icon: '🎯' },
-    { href: '/app/user', label: 'Profile', icon: '👤' },
-    { href: '/app/leaderboard', label: 'Leaderboard', icon: '🏆' },
+    { href: '/app/predictions', label: 'Predict', icon: Target },
+    { href: '/app/user', label: 'Profile', icon: User },
+    { href: '/app/leaderboard', label: 'Leaderboard', icon: Trophy },
   ]
 
   if (pathname === '/') {
@@ -43,13 +44,15 @@ export default function Navigation() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${
                       pathname === item.href
-                        ? 'bg-fliq-green text-white'
-                        : 'text-fliq-gray hover:text-fliq-dark hover:bg-fliq-bg-gray'
+                        ? 'bg-brand-green text-white'
+                        : 'text-brand-gray hover:text-brand-black hover:bg-brand-bgGray'
                     }`}
                   >
-                    <span className="mr-2">{item.icon}</span>
+                    <item.icon className={`w-4 h-4 mr-2 ${
+                      pathname === item.href ? 'text-white' : 'text-brand-green'
+                    }`} />
                     {item.label}
                   </Link>
                 ))}
@@ -69,11 +72,13 @@ export default function Navigation() {
               href={item.href}
               className={`flex flex-col items-center py-3 px-4 text-xs transition-colors ${
                 pathname === item.href
-                  ? 'text-fliq-green bg-fliq-bg-gray'
-                  : 'text-fliq-gray'
+                  ? 'text-brand-green bg-brand-bgGray'
+                  : 'text-brand-gray'
               }`}
             >
-              <span className="text-lg mb-1">{item.icon}</span>
+              <item.icon className={`w-5 h-5 mb-1 ${
+                pathname === item.href ? 'text-brand-green' : 'text-brand-gray'
+              }`} />
               {item.label}
             </Link>
           ))}

@@ -3,7 +3,7 @@
 import { useWallet } from '@solana/wallet-adapter-react'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { useEffect, useState, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import bs58 from 'bs58'
 
 interface User {
@@ -18,6 +18,7 @@ export default function WalletConnectButton() {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
 
   const handleAuth = useCallback(async () => {
     if (!publicKey || !signMessage) return
@@ -58,14 +59,17 @@ export default function WalletConnectButton() {
       const { user } = await verifyResponse.json()
       setUser(user)
       
-      // Redirect to app
-      router.push('/app/predictions')
+      // Only redirect if we're on the landing page
+      if (pathname === '/') {
+        router.push('/app/predictions')
+      }
+      // If already in the app, just stay there and update the user state
     } catch (error) {
       console.error('Auth error:', error)
     } finally {
       setIsLoading(false)
     }
-  }, [publicKey, signMessage, router])
+  }, [publicKey, signMessage, router, pathname])
 
   useEffect(() => {
     if (connected && publicKey && signMessage && !user) {

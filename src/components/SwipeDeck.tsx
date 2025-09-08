@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useSwipeable } from 'react-swipeable'
 import MarketCard from './MarketCard'
+import { Target } from 'lucide-react'
 
 interface Market {
   id: string
@@ -69,9 +70,9 @@ export default function SwipeDeck({ markets, onSwipe, isLoading }: SwipeDeckProp
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
-          <div className="text-2xl mb-2">🎯</div>
-          <div className="text-lg font-semibold text-gray-600">No markets available</div>
-          <div className="text-sm text-gray-500">Check back soon for new predictions!</div>
+          <Target className="w-12 h-12 text-brand-green mx-auto mb-4" />
+          <div className="text-lg font-semibold text-brand-gray">No markets available</div>
+          <div className="text-sm text-brand-lightGray">Check back soon for new predictions!</div>
         </div>
       </div>
     )
