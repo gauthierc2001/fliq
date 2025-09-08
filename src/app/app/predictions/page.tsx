@@ -122,8 +122,8 @@ export default function PredictionsPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
-            <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <div className="text-lg font-semibold text-gray-600">Loading markets...</div>
+            <div className="w-12 h-12 border-4 border-fliq-green border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <div className="text-lg font-semibold text-fliq-gray">Loading markets...</div>
           </div>
         </div>
       </div>
@@ -135,13 +135,13 @@ export default function PredictionsPage() {
       {/* Header with Balance */}
       {user && (
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-[#0F0F0F] mb-2">Predict & Earn</h1>
-          <div className="bg-white rounded-lg shadow-sm border border-[#E5E5E5] p-4 max-w-sm mx-auto">
-            <div className="text-2xl font-bold text-[#57C84D]">{user.balance} $FLIQ</div>
-            <div className="text-sm text-[#555555]">Available Balance</div>
+          <h1 className="text-3xl font-bold text-fliq-dark mb-2">Predict & Earn</h1>
+          <div className="bg-white rounded-lg shadow-sm border border-fliq-border p-4 max-w-sm mx-auto">
+            <div className="text-2xl font-bold text-fliq-green">{user.balance} $FLIQ</div>
+            <div className="text-sm text-fliq-gray">Available Balance</div>
             {user.totalPnL !== 0 && (
               <div className={`text-sm font-medium ${
-                user.totalPnL > 0 ? 'text-[#57C84D]' : 'text-[#0F0F0F]'
+                user.totalPnL > 0 ? 'text-fliq-green' : 'text-fliq-dark'
               }`}>
                 {user.totalPnL > 0 ? '+' : ''}{user.totalPnL} Total P&L
               </div>
@@ -161,16 +161,16 @@ export default function PredictionsPage() {
 
       {/* Instructions */}
       <div className="mt-12 max-w-2xl mx-auto">
-        <div className="bg-white rounded-lg shadow-sm border border-[#E5E5E5] p-6">
-          <h2 className="text-lg font-semibold mb-4 text-center text-[#0F0F0F]">How to Play</h2>
+        <div className="bg-white rounded-lg shadow-sm border border-fliq-border p-6">
+          <h2 className="text-lg font-semibold mb-4 text-center text-fliq-dark">How to Play</h2>
           <div className="grid md:grid-cols-2 gap-4 text-sm">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-[#F5F5F5] rounded-full flex items-center justify-center text-[#0F0F0F]">
+              <div className="w-8 h-8 bg-fliq-bg-gray rounded-full flex items-center justify-center text-fliq-dark">
                 ←
               </div>
               <div>
-                <div className="font-medium text-[#0F0F0F]">Swipe Left = NO</div>
-                <div className="text-[#555555]">Price will go down</div>
+                <div className="font-medium text-fliq-dark">Swipe Left = NO</div>
+                <div className="text-fliq-gray">Price will go down</div>
               </div>
             </div>
             <div className="flex items-center space-x-3">
@@ -178,8 +178,8 @@ export default function PredictionsPage() {
                 →
               </div>
               <div>
-                <div className="font-medium text-[#0F0F0F]">Swipe Right = YES</div>
-                <div className="text-[#555555]">Price will go up</div>
+                <div className="font-medium text-fliq-dark">Swipe Right = YES</div>
+                <div className="text-fliq-gray">Price will go up</div>
               </div>
             </div>
           </div>

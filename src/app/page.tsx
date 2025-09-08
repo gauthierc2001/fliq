@@ -23,7 +23,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Link
               href="/app/predictions"
-              className="px-8 py-4 bg-fliq-green text-white font-bold text-lg rounded-2xl hover:bg-green-600 transition-all transform hover:scale-105 shadow-lg"
+              className="px-8 py-4 bg-fliq-green text-white font-bold text-lg rounded-2xl hover:bg-green-600 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
               Launch App
             </Link>
