@@ -1,24 +1,14 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { getCurrentPrice, getCoinGeckoId } from '@/lib/prices'
-
-const COINS = [
-  { symbol: 'bitcoin', name: 'Bitcoin', ticker: 'BTC' },
-  { symbol: 'ethereum', name: 'Ethereum', ticker: 'ETH' },
-  { symbol: 'solana', name: 'Solana', ticker: 'SOL' },
-  { symbol: 'cardano', name: 'Cardano', ticker: 'ADA' },
-  { symbol: 'avalanche-2', name: 'Avalanche', ticker: 'AVAX' },
-  { symbol: 'chainlink', name: 'Chainlink', ticker: 'LINK' }
-]
-
-const DURATIONS = [5, 15, 30] // minutes
+import { generateMarketData, getFallbackMarkets } from '@/lib/marketGenerator'
 
 export async function POST() {
   try {
     console.log('Starting market generation...')
     let createdCount = 0
+    let usedFallback = false
     
-    // Always ensure we have at least a few active markets
+    // Check existing active markets
     const activeMarkets = await prisma.market.count({
       where: {
         resolved: false,
@@ -30,48 +20,50 @@ export async function POST() {
     
     console.log(`Found ${activeMarkets} active markets`)
     
-    // Generate markets for each coin and duration
-    for (const coin of COINS) {
+    let marketDataToCreate
+    
+    try {
+      // Try to get live market data from CoinGecko
+      marketDataToCreate = await generateMarketData()
+      console.log(`Generated ${marketDataToCreate.length} markets from CoinGecko`)
+    } catch (error) {
+      console.warn('CoinGecko unavailable, using fallback markets:', error)
+      marketDataToCreate = getFallbackMarkets()
+      usedFallback = true
+    }
+    
+    // Create markets in database
+    for (const marketData of marketDataToCreate) {
       try {
-        const coinId = getCoinGeckoId(coin.symbol)
-        const currentPrice = await getCurrentPrice(coinId)
+        // Check if market already exists
+        const existingMarket = await prisma.market.findFirst({
+          where: {
+            symbol: marketData.symbol,
+            durationMin: marketData.durationMin,
+            resolved: false,
+            endTime: {
+              gt: new Date()
+            }
+          }
+        })
         
-        console.log(`${coin.ticker}: $${currentPrice}`)
-        
-        for (const duration of DURATIONS) {
-          const startTime = new Date()
-          const endTime = new Date(startTime.getTime() + duration * 60 * 1000)
-          
-          // Check if market already exists for this combination
-          const existingMarket = await prisma.market.findFirst({
-            where: {
-              symbol: coin.symbol,
-              durationMin: duration,
-              resolved: false,
-              endTime: {
-                gt: new Date()
-              }
+        if (!existingMarket) {
+          await prisma.market.create({
+            data: {
+              symbol: marketData.symbol,
+              title: marketData.title,
+              durationMin: marketData.durationMin,
+              startTime: marketData.startTime,
+              endTime: marketData.endTime,
+              startPrice: marketData.startPrice
             }
           })
-          
-          if (!existingMarket) {
-            await prisma.market.create({
-              data: {
-                symbol: coin.symbol,
-                title: `Will ${coin.ticker} price go ↑ in ${duration}m?`,
-                durationMin: duration,
-                startTime,
-                endTime,
-                startPrice: currentPrice
-              }
-            })
-            createdCount++
-            console.log(`Created market: ${coin.ticker} ${duration}m`)
-          }
+          createdCount++
+          console.log(`Created market: ${marketData.ticker} ${marketData.durationMin}m`)
         }
       } catch (error) {
-        console.error(`Error processing ${coin.ticker}:`, error)
-        // Continue with other coins
+        console.error(`Error creating market ${marketData.ticker}:`, error)
+        // Continue with other markets
       }
     }
     
@@ -91,15 +83,48 @@ export async function POST() {
       success: true,
       message: `Created ${createdCount} new markets`,
       createdCount,
-      totalActiveMarkets: finalCount
+      totalActiveMarkets: finalCount,
+      usedFallback,
+      warning: usedFallback ? 'CoinGecko API unavailable, using fallback data' : null
     })
   } catch (error) {
     console.error('Error generating markets:', error)
-    return NextResponse.json({ 
-      success: false,
-      error: 'Failed to generate markets',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
+    
+    // Last resort: try to create basic fallback markets
+    try {
+      const fallbackMarkets = getFallbackMarkets()
+      let fallbackCreated = 0
+      
+      for (const marketData of fallbackMarkets) {
+        await prisma.market.create({
+          data: {
+            symbol: marketData.symbol,
+            title: marketData.title,
+            durationMin: marketData.durationMin,
+            startTime: marketData.startTime,
+            endTime: marketData.endTime,
+            startPrice: marketData.startPrice
+          }
+        })
+        fallbackCreated++
+      }
+      
+      return NextResponse.json({
+        success: true,
+        message: `Created ${fallbackCreated} fallback markets`,
+        createdCount: fallbackCreated,
+        totalActiveMarkets: fallbackCreated,
+        usedFallback: true,
+        warning: 'Emergency fallback: Created basic markets due to API/database issues'
+      })
+    } catch (fallbackError) {
+      console.error('Even fallback failed:', fallbackError)
+      return NextResponse.json({ 
+        success: false,
+        error: 'Complete market generation failure',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      }, { status: 500 })
+    }
   }
 }
 

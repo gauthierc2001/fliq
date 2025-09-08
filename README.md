@@ -1,273 +1,224 @@
-# Fliq - Predict the Future in a Flick 🚀
+# Fliq - Crypto Prediction Market
 
-A production-ready Solana wallet-based prediction market app with mobile-first swipe UX, built with Next.js 15 and designed for seamless Railway deployment.
+A Tinder-style crypto prediction market where users swipe to predict price movements and compete on the leaderboard.
 
-## 🎯 Features
+## Features
 
-- **Mobile-First Swipe UX**: Tinder-like interface for predictions (swipe left = NO, right = YES)
-- **Solana Wallet Authentication**: Support for Phantom, Solflare, and Backpack wallets
-- **Real-Time Markets**: Bitcoin, Ethereum, and Solana price prediction markets
-- **Credits System**: Start with 1,000 $FLIQ, bet 100 $FLIQ per prediction
-- **Dynamic Odds**: Odds calculated based on market sentiment
-- **Leaderboard**: Rankings by total P&L and current balance
-- **Auto-Resolution**: Markets resolve automatically using CoinGecko price feeds
+- **Live Crypto Markets**: Real-time prices from CoinGecko API
+- **Tinder-Style Swipe UI**: Swipe left (NO), right (YES), or up (SKIP)
+- **Quick Resolution**: 5, 15, and 30-minute prediction windows
+- **Social Integration**: Connect Twitter/X for profile and leaderboard
+- **Wallet-Based**: Solana wallet authentication required
 
-## 🏗️ Tech Stack
+## Tech Stack
 
-- **Frontend**: Next.js 15.5.2 (App Router), TypeScript, Tailwind CSS 3.4.17
-- **Backend**: Next.js API Routes, Prisma ORM 6.15.0
-- **Database**: PostgreSQL (Railway)
-- **Blockchain**: Solana Web3.js, Wallet Adapter
-- **Deployment**: Docker, Railway
-- **Authentication**: JWT with Solana signature verification
-- **UI**: React 19.1.1, Framer Motion 12.23.12
+- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS
+- **Animations**: Framer Motion
+- **Wallet**: Solana Wallet Adapter
+- **Database**: PostgreSQL with Prisma
+- **APIs**: CoinGecko (crypto prices), Twitter OAuth 2.0
 
-## 📦 Stable Production Dependencies
+## Setup
 
-All dependencies are pinned to stable, production-ready versions:
+### Environment Variables
 
-### Core Framework
-- `next@15.5.2` - Latest stable Next.js
-- `react@19.1.1` & `react-dom@19.1.1` - Latest stable React 19
-- `typescript@^5` - Latest stable TypeScript
+Copy `env.template` to `.env.local` and fill in the values:
 
-### Database & Backend  
-- `@prisma/client@^6.15.0` - Latest stable Prisma
-- `jsonwebtoken@^9.0.2` - Stable JWT implementation
-- `bcryptjs@^3.0.2` - Secure password hashing
+```bash
+# Database - Railway PostgreSQL or local instance
+DATABASE_URL="postgresql://user:password@host:port/database"
 
-### Blockchain & Wallets
-- `@solana/web3.js@^1.98.4` - Stable Solana SDK
-- `@solana/wallet-adapter-react@^0.15.39` - Latest stable wallet adapter
-- `@solana/wallet-adapter-react-ui@^0.9.39` - Stable UI components
+# JWT Secret - Generate a strong secret
+JWT_SECRET="your_super_secret_jwt_key_change_in_production"
 
-### UI & Animations
-- `tailwindcss@^3.4.17` - Latest stable TailwindCSS v3
-- `framer-motion@^12.23.12` - Latest stable Framer Motion
-- `lucide-react@^0.542.0` - Icon library
+# Solana Network
+NEXT_PUBLIC_SOLANA_NETWORK="devnet"  # or "mainnet-beta" for production
 
-### Security
-- No experimental features or beta versions
-- All dependencies audited with 0 vulnerabilities
-- JWT secrets must be 32+ characters
+# CoinGecko API Key (optional but recommended)
+COINGECKO_API_KEY="your-coingecko-api-key"
 
-## 🚀 Quick Start
+# Twitter OAuth 2.0 (for social features)
+TWITTER_CLIENT_ID="your-twitter-client-id"
+TWITTER_CLIENT_SECRET="your-twitter-client-secret"
 
-### Local Development
-
-1. **Clone and install dependencies**
-   ```bash
-   git clone <repository-url>
-   cd fliq
-   npm install
-   ```
-
-2. **Set up environment variables**
-   ```bash
-   # Copy and configure environment variables
-   DATABASE_URL="postgresql://user:pass@localhost:5432/fliq"
-   JWT_SECRET="your_super_secret_jwt_key"
-   NEXT_PUBLIC_SOLANA_NETWORK="mainnet-beta"
-   COINGECKO_API_KEY="optional_api_key"
-   ```
-
-3. **Set up database**
-   ```bash
-   # Generate Prisma client
-   npx prisma generate
-   
-   # Run migrations
-   npx prisma migrate dev
-   
-   # Optional: Seed initial markets
-   npm run db:seed
-   ```
-
-4. **Start development server**
-   ```bash
-   npm run dev
-   ```
-
-Visit [http://localhost:3000](http://localhost:3000) to see the app.
-
-### Railway Deployment
-
-This app is designed for one-click Railway deployment. See [railway-deploy.md](./railway-deploy.md) for detailed instructions.
-
-**Quick Deploy:**
-1. Push code to GitHub
-2. Create Railway project
-3. Add PostgreSQL database
-4. Set environment variables
-5. Deploy
-6. Set up cron jobs for market resolution
-
-## 📱 App Flow
-
-### Landing Page (`/`)
-- Hero section with "Predict the future in a flick"
-- Connect wallet CTA
-- Features overview and how-it-works
-
-### Predictions (`/app/predictions`)
-- Swipeable market cards
-- Real-time odds and multipliers
-- Balance display and bet placement
-- Mobile-optimized touch gestures
-
-### User Profile (`/app/user`)
-- Wallet balance and total P&L
-- Betting history with outcomes
-- Win rate and performance stats
-
-### Leaderboard (`/app/leaderboard`)
-- Top 100 users by total P&L
-- Anonymized wallet addresses
-- Real-time rankings
-
-## 🔧 API Endpoints
-
-### Authentication
-- `POST /api/auth/nonce` - Generate signing nonce
-- `POST /api/auth/verify` - Verify wallet signature
-- `GET /api/auth/me` - Get current user
-- `POST /api/auth/logout` - Clear session
-
-### Markets & Betting
-- `GET /api/markets/list` - Fetch active markets
-- `POST /api/swipe` - Place bet (100 $FLIQ)
-- `GET /api/user/history` - User betting history
-- `GET /api/leaderboard` - Top users ranking
-
-### Cron Jobs
-- `POST /api/cron/resolve` - Resolve ended markets
-- `POST /api/cron/seed-markets` - Create new markets
-- `GET /api/prices/[symbol]` - Fetch current prices
-
-## 🎲 Betting Mechanics
-
-### Odds Calculation
-```javascript
-yesShare = yesBets / (yesBets + noBets)
-yesMultiplier = 2 - yesShare
-noMultiplier = 2 - noShare
+# Base URL (for OAuth callbacks)
+NEXT_PUBLIC_BASE_URL="http://localhost:3000"
 ```
 
-### Market Resolution
-- **YES**: Price goes up → YES bets win
-- **NO**: Price goes down → NO bets win  
-- **PUSH**: Price unchanged → Refund all bets
+### Installation
 
-### Payouts
-- Winner receives: `stake × multiplier`
-- Net P&L: `(stake × multiplier) - stake`
+```bash
+# Install dependencies
+npm install
 
-## 🗄️ Database Schema
+# Generate Prisma client
+npx prisma generate
+
+# Run database migrations
+npx prisma db push
+
+# Start development server
+npm run dev
+```
+
+## API Endpoints
+
+### Markets
+- `GET/POST /api/markets/generate` - Generate new markets from CoinGecko
+- `GET /api/markets/list` - Get active markets
+- `POST /api/cron/resolve` - Resolve expired markets
+- `POST /api/cron/seed-markets` - Seed markets (legacy)
+
+### Authentication
+- `GET /api/auth/me` - Get current user
+- `POST /api/auth/verify` - Verify wallet signature
+- `GET /api/auth/nonce` - Get signing nonce
+- `POST /api/auth/logout` - Logout user
+
+### Twitter Integration
+- `GET /api/auth/twitter` - Get Twitter OAuth URL
+- `POST /api/auth/twitter` - Handle OAuth callback
+- `GET /api/auth/twitter/callback` - OAuth redirect handler
+
+### User & Betting
+- `GET /api/user/history` - Get user betting history
+- `POST /api/swipe` - Place a bet (swipe)
+- `GET /api/leaderboard` - Get leaderboard with social profiles
+
+## User Flow
+
+1. **Landing Page**: Click "Launch App"
+2. **Connect Wallet**: Solana wallet authentication
+3. **Twitter Prompt**: Optional social connection (auto-prompted)
+4. **Predict Markets**: Swipe/click on crypto predictions
+5. **View Results**: Check profile and leaderboard
+
+## Swipe Actions
+
+### Interaction Methods
+- **Mouse/Touch**: Drag cards left, right, or up
+- **Buttons**: Click ← (NO), ↑ (SKIP), → (YES)
+- **Keyboard**: A (NO), S/Space (SKIP), D (YES)
+
+### Skip Logic Location
+The Skip functionality is implemented in:
+- `src/components/SwipeDeck.tsx` - UI component and interactions
+- `src/app/app/predictions/page.tsx` - Skip state management
+- Keyboard shortcuts: S key or Spacebar
+- Swipe gesture: Upward swipe
+- Button: Center ↑ button
+
+## Market Generation
+
+### CoinGecko Integration
+- **Primary**: Live prices from CoinGecko API
+- **Fallback**: Static markets if API unavailable
+- **Rate Limiting**: Graceful degradation with warnings
+- **Coins**: BTC, ETH, SOL, ADA, AVAX, LINK, MATIC, BNB
+
+### Auto-Generation
+Markets are automatically created when:
+1. App launches with no active markets
+2. User visits predictions page
+3. Markets expire and need replacement
+
+## Database Schema
 
 ```sql
--- Users start with 1,000 $FLIQ balance
-User {
-  id        String   @id @default(cuid())
-  wallet    String   @unique
-  balance   Int      @default(1000)
-  totalPnL  Int      @default(0)
-  swipes    Swipe[]
+-- User with social integration
+model User {
+  id            String   @id @default(cuid())
+  wallet        String   @unique
+  balance       Int      @default(1000)
+  totalPnL      Int      @default(0)
+  twitterId     String?  @unique
+  twitterHandle String?
+  twitterAvatar String?
+  twitterName   String?
+  swipes        Swipe[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
--- Markets for BTC/ETH/SOL with 10m/30m/1h durations
-Market {
+-- Prediction markets
+model Market {
   id          String   @id @default(cuid())
-  symbol      String   // 'bitcoin','ethereum','solana'
-  title       String   // 'BTC ↑ in 10m?'
+  symbol      String   // coin symbol
+  title       String   // prediction question
+  durationMin Int      // 5, 15, or 30 minutes
+  startTime   DateTime
+  endTime     DateTime
   startPrice  Float
   endPrice    Float?
   resolved    Boolean  @default(false)
-  outcome     Outcome? // YES/NO/PUSH
+  outcome     Outcome? // YES, NO, PUSH
   yesBets     Int      @default(0)
   noBets      Int      @default(0)
+  swipes      Swipe[]
+  createdAt   DateTime @default(now())
 }
 
--- Individual bets (100 $FLIQ each)
-Swipe {
-  side       Outcome  // YES/NO
-  stake      Int      // Always 100
-  payoutMult Float    // Locked-in multiplier
+-- User predictions/bets
+model Swipe {
+  id         String   @id @default(cuid())
+  userId     String
+  marketId   String
+  side       Outcome  // YES or NO
+  stake      Int      // bet amount
+  payoutMult Float    // multiplier for winnings
   settled    Boolean  @default(false)
   win        Boolean?
-  pnl        Int?     // Profit/loss amount
+  pnl        Int?     // profit/loss
+  createdAt  DateTime @default(now())
+  
+  user   User   @relation(fields: [userId], references: [id])
+  market Market @relation(fields: [marketId], references: [id])
 }
 ```
 
-## 🔐 Security Features
+## Rate Limits & API Considerations
 
-- **Signature Verification**: Nonce-based Solana signature authentication
-- **Session Management**: Secure HTTP-only JWT cookies
-- **Nonce Expiry**: 5-minute nonce validity window
-- **Input Validation**: All API endpoints validate inputs
-- **Database Transactions**: Atomic bet placement and balance updates
+### CoinGecko Free Tier
+- **Limit**: 10-30 calls/minute
+- **Fallback**: Static price data when rate limited
+- **Handling**: Graceful degradation with user notifications
 
-## 📊 Market Lifecycle
+### Twitter API
+- **OAuth 2.0**: Standard rate limits apply
+- **User Data**: Cached after initial connection
+- **Fallback**: App works without Twitter connection
 
-1. **Creation**: Auto-seeded every 5 minutes for BTC/ETH/SOL
-2. **Active Betting**: Users can swipe/bet while market is open
-3. **Resolution**: Prices fetched from CoinGecko at end time
-4. **Settlement**: Winning bets paid out, balances updated
-5. **Cleanup**: New markets created for next time slots
+## Production Deployment
 
-## 🛠️ Development Commands
+1. Set environment variables
+2. Use production database (Railway PostgreSQL recommended)
+3. Set `NEXT_PUBLIC_SOLANA_NETWORK="mainnet-beta"`
+4. Add your domain to Twitter OAuth settings
+5. Update `NEXT_PUBLIC_BASE_URL` to your domain
 
-```bash
-# Database
-npm run db:migrate     # Run Prisma migrations
-npm run db:studio      # Open Prisma Studio
-npm run db:seed        # Seed initial markets
+## Troubleshooting
 
-# Development  
-npm run dev            # Start dev server
-npm run build          # Build for production
-npm run start          # Start production server
+### No Markets Loading
+1. Check CoinGecko API connectivity
+2. Verify database connection
+3. Check browser console for errors
+4. Try manual market generation: `curl http://localhost:3000/api/markets/generate`
 
-# Linting
-npm run lint           # ESLint check
-```
+### Twitter Connection Issues
+1. Verify OAuth credentials in environment
+2. Check redirect URL in Twitter app settings
+3. Ensure popup blockers are disabled
 
-## 🚧 Production Considerations
+### Wallet Connection Problems
+1. Ensure Solana wallet extension is installed
+2. Check network setting (devnet vs mainnet)
+3. Verify wallet has some SOL for transactions
 
-### Environment Variables
-- `DATABASE_URL` - PostgreSQL connection string
-- `JWT_SECRET` - Strong secret for JWT signing
-- `NEXT_PUBLIC_SOLANA_NETWORK` - mainnet-beta for production
-- `COINGECKO_API_KEY` - Optional for higher rate limits
+## Architecture Notes
 
-### Cron Jobs (Railway)
-- **Market Resolution**: Every 1 minute
-- **Market Seeding**: Every 5 minutes
-
-### Performance
-- Database indexes on frequently queried fields
-- Optimized Prisma queries with specific selects
-- React.memo for expensive components
-- Next.js standalone output for Docker
-
-## 📈 Scalability
-
-- **Database**: PostgreSQL with connection pooling
-- **Caching**: Redis can be added for market data
-- **CDN**: Static assets served via Railway CDN
-- **Monitoring**: Built-in error handling and logging
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
-
-**Ready to predict the future?** Deploy to Railway and start swiping! 🎯
+- **Client-side routing**: Next.js App Router
+- **State management**: React hooks (no external state library)
+- **Authentication**: JWT with wallet signatures
+- **Database**: Prisma ORM with PostgreSQL
+- **Styling**: Tailwind CSS with custom brand colors
+- **Icons**: Lucide React (no emojis)

@@ -63,7 +63,20 @@ export default function WalletConnectButton() {
       if (pathname === '/') {
         router.push('/app/predictions')
       }
-      // If already in the app, just stay there and update the user state
+      
+      // Prompt for Twitter connection after successful wallet connection
+      // Only if user doesn't already have Twitter connected
+      if (!user.twitterHandle && pathname.startsWith('/app')) {
+        // Small delay to ensure wallet connection UI has updated
+        setTimeout(() => {
+          const shouldConnectTwitter = confirm(
+            'Connect your Twitter/X account to show your profile on the leaderboard and unlock social features!'
+          )
+          if (shouldConnectTwitter) {
+            handleTwitterConnect()
+          }
+        }, 1000)
+      }
     } catch (error) {
       console.error('Auth error:', error)
     } finally {
@@ -79,6 +92,30 @@ export default function WalletConnectButton() {
       setUser(null)
     }
   }, [connected, publicKey, signMessage, user, handleAuth])
+
+  const handleTwitterConnect = async () => {
+    try {
+      const response = await fetch('/api/auth/twitter')
+      if (response.ok) {
+        const { authUrl } = await response.json()
+        // Open Twitter auth in a popup
+        const popup = window.open(authUrl, 'twitter-auth', 'width=600,height=600')
+        
+        // Listen for popup to close or message from popup
+        const checkClosed = setInterval(() => {
+          if (popup?.closed) {
+            clearInterval(checkClosed)
+            // Refresh user data after Twitter connection attempt
+            if (connected) {
+              handleAuth()
+            }
+          }
+        }, 1000)
+      }
+    } catch (error) {
+      console.error('Twitter connect error:', error)
+    }
+  }
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })

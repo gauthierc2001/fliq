@@ -35,6 +35,9 @@ export default function PredictionsPage() {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isSwipeLoading, setIsSwipeLoading] = useState(false)
+  const [marketError, setMarketError] = useState<string | null>(null)
+  const [isGeneratingMarkets, setIsGeneratingMarkets] = useState(false)
+  const [skippedMarkets, setSkippedMarkets] = useState<Set<string>>(new Set())
 
   const checkAuth = useCallback(async () => {
     try {
@@ -56,28 +59,54 @@ export default function PredictionsPage() {
 
   const fetchMarkets = useCallback(async () => {
     try {
+      setMarketError(null)
+      console.log('Fetching markets...')
+      
       const response = await fetch('/api/markets/list')
       if (response.ok) {
         const { markets } = await response.json()
+        console.log(`Found ${markets.length} markets`)
         
         // If no markets available, generate some
         if (markets.length === 0) {
           console.log('No markets found, generating new ones...')
-          const generateResponse = await fetch('/api/markets/generate', { method: 'POST' })
-          if (generateResponse.ok) {
-            // Fetch markets again after generation
-            const retryResponse = await fetch('/api/markets/list')
-            if (retryResponse.ok) {
-              const { markets: newMarkets } = await retryResponse.json()
-              setMarkets(newMarkets)
+          setIsGeneratingMarkets(true)
+          
+          try {
+            const generateResponse = await fetch('/api/markets/generate', { method: 'POST' })
+            if (generateResponse.ok) {
+              const generationResult = await generateResponse.json()
+              console.log('Generation result:', generationResult)
+              
+              // Show warning if using fallback data
+              if (generationResult.warning) {
+                setMarketError(generationResult.warning)
+              }
+              
+              // Fetch markets again after generation
+              const retryResponse = await fetch('/api/markets/list')
+              if (retryResponse.ok) {
+                const { markets: newMarkets } = await retryResponse.json()
+                console.log(`After generation: ${newMarkets.length} markets`)
+                setMarkets(newMarkets)
+              } else {
+                throw new Error('Failed to fetch markets after generation')
+              }
+            } else {
+              throw new Error('Failed to generate markets')
             }
+          } finally {
+            setIsGeneratingMarkets(false)
           }
         } else {
           setMarkets(markets)
         }
+      } else {
+        throw new Error(`API error: ${response.status}`)
       }
     } catch (error) {
       console.error('Failed to fetch markets:', error)
+      setMarketError(error instanceof Error ? error.message : 'Failed to load markets')
     } finally {
       setIsLoading(false)
     }
@@ -138,13 +167,25 @@ export default function PredictionsPage() {
     }
   }
 
-  if (isLoading) {
+  const handleSkip = (marketId: string) => {
+    console.log(`Skipped market: ${marketId}`)
+    setSkippedMarkets(prev => new Set([...prev, marketId]))
+  }
+
+  if (isLoading || isGeneratingMarkets) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
-            <div className="w-12 h-12 border-4 border-fliq-green border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <div className="text-lg font-semibold text-fliq-gray">Loading markets...</div>
+            <div className="w-12 h-12 border-4 border-brand-green border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <div className="text-lg font-semibold text-brand-gray">
+              {isGeneratingMarkets ? 'Generating live markets...' : 'Loading markets...'}
+            </div>
+            {isGeneratingMarkets && (
+              <div className="text-sm text-brand-lightGray mt-2">
+                Fetching live crypto prices from CoinGecko
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -185,11 +226,33 @@ export default function PredictionsPage() {
         </div>
       )}
 
+      {/* Error Display */}
+      {marketError && (
+        <div className="max-w-md mx-auto mb-6">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="flex items-center space-x-2">
+              <div className="text-yellow-600 text-sm">⚠️</div>
+              <div className="text-sm text-yellow-800">{marketError}</div>
+            </div>
+            <button
+              onClick={() => {
+                setMarketError(null)
+                fetchMarkets()
+              }}
+              className="mt-2 text-xs text-yellow-700 hover:text-yellow-900 underline"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Swipe Deck */}
       <div className="max-w-md mx-auto">
         <SwipeDeck 
           markets={markets} 
           onSwipe={handleSwipe}
+          onSkip={handleSkip}
           isLoading={isSwipeLoading}
         />
       </div>
