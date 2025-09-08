@@ -48,8 +48,8 @@ export default function UserHistory({ history }: UserHistoryProps) {
   }
 
   const getPnLColor = (pnl: number | null) => {
-    if (pnl === null || pnl === 0) return 'text-gray-600'
-    return pnl > 0 ? 'text-green-600' : 'text-red-600'
+    if (pnl === null || pnl === 0) return 'text-[#555555]'
+    return pnl > 0 ? 'text-[#57C84D]' : 'text-[#0F0F0F]'
   }
 
   const formatPnL = (pnl: number | null) => {
@@ -70,45 +70,45 @@ export default function UserHistory({ history }: UserHistoryProps) {
 
   return (
     <div className="space-y-3">
-      {history.map((swipe) => (
-        <div key={swipe.id} className="bg-white rounded-lg shadow-sm border p-4">
-          <div className="flex justify-between items-start mb-2">
-            <div>
-              <h3 className="font-medium text-gray-900">{swipe.market.title}</h3>
-              <div className="text-sm text-gray-500">{formatDate(swipe.createdAt)}</div>
-            </div>
+        {history.map((swipe) => (
+          <div key={swipe.id} className="bg-white rounded-lg shadow-sm border border-[#E5E5E5] p-4">
+            <div className="flex justify-between items-start mb-2">
+              <div>
+                <h3 className="font-medium text-[#0F0F0F]">{swipe.market.title}</h3>
+                <div className="text-sm text-[#555555]">{formatDate(swipe.createdAt)}</div>
+              </div>
             <div className="text-right">
               {getStatusBadge(swipe)}
             </div>
           </div>
           
-          <div className="grid grid-cols-4 gap-4 text-sm">
-            <div>
-              <div className="text-gray-500">Bet</div>
-              <div className={`font-medium ${
-                swipe.side === 'YES' ? 'text-green-600' : 'text-red-600'
-              }`}>
-                {swipe.side}
+            <div className="grid grid-cols-4 gap-4 text-sm">
+              <div>
+                <div className="text-[#555555]">Bet</div>
+                <div className={`font-medium ${
+                  swipe.side === 'YES' ? 'text-[#57C84D]' : 'text-[#0F0F0F]'
+                }`}>
+                  {swipe.side}
+                </div>
+              </div>
+              
+              <div>
+                <div className="text-[#555555]">Stake</div>
+                <div className="font-medium text-[#0F0F0F]">{swipe.stake} $FLIQ</div>
+              </div>
+              
+              <div>
+                <div className="text-[#555555]">Odds</div>
+                <div className="font-medium text-[#0F0F0F]">{swipe.payoutMult.toFixed(2)}x</div>
+              </div>
+              
+              <div>
+                <div className="text-[#555555]">P&L</div>
+                <div className={`font-medium ${getPnLColor(swipe.pnl)}`}>
+                  {formatPnL(swipe.pnl)} $FLIQ
+                </div>
               </div>
             </div>
-            
-            <div>
-              <div className="text-gray-500">Stake</div>
-              <div className="font-medium">{swipe.stake} $FLIQ</div>
-            </div>
-            
-            <div>
-              <div className="text-gray-500">Odds</div>
-              <div className="font-medium">{swipe.payoutMult.toFixed(2)}x</div>
-            </div>
-            
-            <div>
-              <div className="text-gray-500">P&L</div>
-              <div className={`font-medium ${getPnLColor(swipe.pnl)}`}>
-                {formatPnL(swipe.pnl)} $FLIQ
-              </div>
-            </div>
-          </div>
         </div>
       ))}
     </div>

@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased bg-gray-50`}>
+      <body className={`${inter.variable} font-sans antialiased bg-white`}>
         <WalletProvider>
           <Navigation />
           <main className="min-h-screen pb-20 md:pb-0">

@@ -54,40 +54,40 @@ export default function LeaderboardPage() {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Leaderboard</h1>
-        <p className="text-gray-600">Top predictors ranked by total P&L and balance</p>
+        <h1 className="text-3xl font-bold text-[#0F0F0F] mb-2">Leaderboard</h1>
+        <p className="text-[#555555]">Top predictors ranked by total P&L and balance</p>
       </div>
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-lg shadow-lg p-6 text-white">
+        <div className="bg-[#57C84D] rounded-lg shadow-lg p-6 text-white">
           <div className="flex items-center">
             <div className="text-3xl mr-4">🥇</div>
             <div>
               <div className="text-lg font-semibold">Champion</div>
-              <div className="text-yellow-100">
+              <div className="text-white/90">
                 {leaderboard[0] ? leaderboard[0].wallet : 'No champion yet'}
               </div>
             </div>
           </div>
         </div>
         
-        <div className="bg-gradient-to-r from-purple-500 to-purple-700 rounded-lg shadow-lg p-6 text-white">
+        <div className="bg-[#0F0F0F] rounded-lg shadow-lg p-6 text-white">
           <div className="flex items-center">
             <div className="text-3xl mr-4">👥</div>
             <div>
               <div className="text-lg font-semibold">Total Players</div>
-              <div className="text-purple-100">{leaderboard.length} active</div>
+              <div className="text-white/90">{leaderboard.length} active</div>
             </div>
           </div>
         </div>
         
-        <div className="bg-gradient-to-r from-green-500 to-green-700 rounded-lg shadow-lg p-6 text-white">
+        <div className="bg-white border border-[#E5E5E5] rounded-lg shadow-lg p-6">
           <div className="flex items-center">
             <div className="text-3xl mr-4">💰</div>
             <div>
-              <div className="text-lg font-semibold">Highest P&L</div>
-              <div className="text-green-100">
+              <div className="text-lg font-semibold text-[#0F0F0F]">Highest P&L</div>
+              <div className="text-[#57C84D]">
                 {leaderboard[0] ? `${leaderboard[0].totalPnL > 0 ? '+' : ''}${leaderboard[0].totalPnL}` : '0'} $FLIQ
               </div>
             </div>

@@ -100,12 +100,12 @@ export default function SwipeDeck({ markets, onSwipe, isLoading }: SwipeDeckProp
       {/* Swipe Indicators */}
       <div className="absolute top-4 left-4 right-4 flex justify-between pointer-events-none">
         <div className={`px-3 py-1 rounded-full text-white font-bold transition-opacity ${
-          swipeDirection === 'left' ? 'bg-red-500 opacity-100' : 'bg-gray-400 opacity-0'
+          swipeDirection === 'left' ? 'bg-[#0F0F0F] opacity-100' : 'bg-[#B5B5B5] opacity-0'
         }`}>
           NO
         </div>
         <div className={`px-3 py-1 rounded-full text-white font-bold transition-opacity ${
-          swipeDirection === 'right' ? 'bg-green-500 opacity-100' : 'bg-gray-400 opacity-0'
+          swipeDirection === 'right' ? 'bg-[#57C84D] opacity-100' : 'bg-[#B5B5B5] opacity-0'
         }`}>
           YES
         </div>
@@ -113,10 +113,10 @@ export default function SwipeDeck({ markets, onSwipe, isLoading }: SwipeDeckProp
 
       {/* Instructions */}
       <div className="absolute -bottom-12 left-0 right-0 text-center">
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-[#555555]">
           Swipe left for NO • Swipe right for YES
         </div>
-        <div className="text-xs text-gray-400 mt-1">
+        <div className="text-xs text-[#B5B5B5] mt-1">
           or tap the buttons below
         </div>
       </div>

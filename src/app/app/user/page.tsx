@@ -98,40 +98,40 @@ export default function UserPage() {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       {/* Profile Header */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Your Profile</h1>
+        <h1 className="text-3xl font-bold text-[#0F0F0F] mb-4">Your Profile</h1>
         
         {/* Wallet Display */}
-        <div className="bg-white rounded-lg shadow-sm p-4 mb-6 max-w-md mx-auto">
-          <div className="text-lg font-mono text-gray-600 mb-2">
+        <div className="bg-white rounded-lg shadow-sm border border-[#E5E5E5] p-4 mb-6 max-w-md mx-auto">
+          <div className="text-lg font-mono text-[#555555] mb-2">
             {user.wallet.slice(0, 8)}...{user.wallet.slice(-8)}
           </div>
-          <div className="text-xs text-gray-500">Connected Wallet</div>
+          <div className="text-xs text-[#B5B5B5]">Connected Wallet</div>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="text-2xl font-bold text-purple-600">{user.balance}</div>
-            <div className="text-sm text-gray-500">$FLIQ Balance</div>
+          <div className="bg-white rounded-lg shadow-sm border border-[#E5E5E5] p-6">
+            <div className="text-2xl font-bold text-[#57C84D]">{user.balance}</div>
+            <div className="text-sm text-[#555555]">$FLIQ Balance</div>
           </div>
           
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm border border-[#E5E5E5] p-6">
             <div className={`text-2xl font-bold ${
-              user.totalPnL >= 0 ? 'text-green-600' : 'text-red-600'
+              user.totalPnL >= 0 ? 'text-[#57C84D]' : 'text-[#0F0F0F]'
             }`}>
               {user.totalPnL >= 0 ? '+' : ''}{user.totalPnL}
             </div>
-            <div className="text-sm text-gray-500">Total P&L</div>
+            <div className="text-sm text-[#555555]">Total P&L</div>
           </div>
           
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="text-2xl font-bold text-blue-600">{winRate.toFixed(1)}%</div>
-            <div className="text-sm text-gray-500">Win Rate</div>
+          <div className="bg-white rounded-lg shadow-sm border border-[#E5E5E5] p-6">
+            <div className="text-2xl font-bold text-[#57C84D]">{winRate.toFixed(1)}%</div>
+            <div className="text-sm text-[#555555]">Win Rate</div>
           </div>
           
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="text-2xl font-bold text-gray-900">{totalBets}</div>
-            <div className="text-sm text-gray-500">Total Bets</div>
+          <div className="bg-white rounded-lg shadow-sm border border-[#E5E5E5] p-6">
+            <div className="text-2xl font-bold text-[#0F0F0F]">{totalBets}</div>
+            <div className="text-sm text-[#555555]">Total Bets</div>
           </div>
         </div>
 
@@ -151,7 +151,7 @@ export default function UserPage() {
 
       {/* Betting History */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Betting History</h2>
+        <h2 className="text-2xl font-bold text-[#0F0F0F] mb-6">Betting History</h2>
         <UserHistory history={history} />
       </div>
 
@@ -162,13 +162,13 @@ export default function UserPage() {
           <div className="flex justify-center space-x-4">
             <button
               onClick={() => router.push('/app/predictions')}
-              className="px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors"
+              className="px-6 py-3 bg-[#57C84D] text-white font-semibold rounded-lg hover:bg-[#4AB844] transition-colors"
             >
               Start Predicting
             </button>
             <button
               onClick={() => router.push('/app/leaderboard')}
-              className="px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors"
+              className="px-6 py-3 bg-[#F5F5F5] text-[#0F0F0F] font-semibold rounded-lg hover:bg-[#E5E5E5] transition-colors border border-[#E5E5E5]"
             >
               View Leaderboard
             </button>
