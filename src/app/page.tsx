@@ -1,103 +1,126 @@
-import Image from "next/image";
+import Link from 'next/link'
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800">
+      <div className="container mx-auto px-4 py-16 text-center text-white">
+        {/* Hero Section */}
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            Predict the future
+            <br />
+            <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+              in a flick
+            </span>
+          </h1>
+          
+          <p className="text-xl md:text-2xl mb-12 text-purple-100 max-w-2xl mx-auto leading-relaxed">
+            Swipe to predict crypto price movements. Win credits with accurate predictions. 
+            Powered by Solana wallets.
+          </p>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <Link
+              href="/app/predictions"
+              className="px-8 py-4 bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold text-lg rounded-2xl hover:from-green-500 hover:to-blue-600 transition-all transform hover:scale-105 shadow-xl"
+            >
+              Launch App
+            </Link>
+            <Link
+              href="/app/leaderboard"
+              className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold text-lg rounded-2xl hover:bg-white/20 transition-all border border-white/20"
+            >
+              View Leaderboard
+            </Link>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Features Grid */}
+        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 mb-16">
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+            <div className="text-4xl mb-4">📱</div>
+            <h3 className="text-xl font-bold mb-3">Mobile-First</h3>
+            <p className="text-purple-100">
+              Swipe left for NO, right for YES. Simple, intuitive, and addictive.
+            </p>
+          </div>
+          
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+            <div className="text-4xl mb-4">⚡</div>
+            <h3 className="text-xl font-bold mb-3">Solana Powered</h3>
+            <p className="text-purple-100">
+              Connect your Phantom, Solflare, or Backpack wallet. No gas fees, instant settlements.
+            </p>
+          </div>
+          
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+            <div className="text-4xl mb-4">🎯</div>
+            <h3 className="text-xl font-bold mb-3">Real-Time Markets</h3>
+            <p className="text-purple-100">
+              Predict BTC, ETH, and SOL price movements over 10m, 30m, and 1h timeframes.
+            </p>
+          </div>
+        </div>
+
+        {/* How It Works */}
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold mb-12">How It Works</h2>
+          
+          <div className="grid md:grid-cols-4 gap-6 text-center">
+            <div className="mb-8">
+              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                1
+              </div>
+              <h4 className="font-semibold mb-2">Connect Wallet</h4>
+              <p className="text-sm text-purple-200">Sign in with your Solana wallet</p>
+            </div>
+            
+            <div className="mb-8">
+              <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                2
+              </div>
+              <h4 className="font-semibold mb-2">Choose Market</h4>
+              <p className="text-sm text-purple-200">Pick a crypto and timeframe</p>
+            </div>
+            
+            <div className="mb-8">
+              <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                3
+              </div>
+              <h4 className="font-semibold mb-2">Swipe Prediction</h4>
+              <p className="text-sm text-purple-200">Left for down, right for up</p>
+            </div>
+            
+            <div className="mb-8">
+              <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                4
+              </div>
+              <h4 className="font-semibold mb-2">Win Credits</h4>
+              <p className="text-sm text-purple-200">Earn $FLIQ based on odds</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div className="mt-20 bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 max-w-2xl mx-auto">
+          <h3 className="text-2xl font-bold mb-6">Start with 1,000 $FLIQ</h3>
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div>
+              <div className="text-2xl font-bold text-green-400">100</div>
+              <div className="text-sm text-purple-200">$FLIQ per bet</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-blue-400">2.0x</div>
+              <div className="text-sm text-purple-200">Max multiplier</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-yellow-400">∞</div>
+              <div className="text-sm text-purple-200">Possibilities</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  );
+  )
 }

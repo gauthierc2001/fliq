@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  wallet    String   @unique
+  balance   Int      @default(1000)
+  totalPnL  Int      @default(0)
+  swipes    Swipe[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Market {
+  id          String   @id @default(cuid())
+  symbol      String   // 'bitcoin','ethereum','solana'
+  title       String
+  durationMin Int
+  startTime   DateTime
+  endTime     DateTime
+  startPrice  Float
+  endPrice    Float?
+  resolved    Boolean  @default(false)
+  outcome     Outcome?
+  yesBets     Int      @default(0)
+  noBets      Int      @default(0)
+  swipes      Swipe[]
+  createdAt   DateTime @default(now())
+}
+
+model Swipe {
+  id         String   @id @default(cuid())
+  userId     String
+  marketId   String
+  side       Outcome
+  stake      Int
+  payoutMult Float
+  settled    Boolean  @default(false)
+  win        Boolean?
+  pnl        Int?
+  createdAt  DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  market Market @relation(fields: [marketId], references: [id])
+}
+
+enum Outcome {
+  YES
+  NO
+  PUSH
+}
+
+model Nonce {
+  id        String   @id @default(cuid())
+  wallet    String
+  nonce     String
+  createdAt DateTime @default(now())
+}
