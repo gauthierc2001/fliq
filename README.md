@@ -1,6 +1,6 @@
 # Fliq - Predict the Future in a Flick 🚀
 
-A production-ready Solana wallet-based prediction market app with mobile-first swipe UX, built with Next.js 14 and designed for seamless Railway deployment.
+A production-ready Solana wallet-based prediction market app with mobile-first swipe UX, built with Next.js 15 and designed for seamless Railway deployment.
 
 ## 🎯 Features
 
@@ -14,12 +14,42 @@ A production-ready Solana wallet-based prediction market app with mobile-first s
 
 ## 🏗️ Tech Stack
 
-- **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes, Prisma ORM
+- **Frontend**: Next.js 15.5.2 (App Router), TypeScript, Tailwind CSS 3.4.17
+- **Backend**: Next.js API Routes, Prisma ORM 6.15.0
 - **Database**: PostgreSQL (Railway)
 - **Blockchain**: Solana Web3.js, Wallet Adapter
 - **Deployment**: Docker, Railway
 - **Authentication**: JWT with Solana signature verification
+- **UI**: React 19.1.1, Framer Motion 12.23.12
+
+## 📦 Stable Production Dependencies
+
+All dependencies are pinned to stable, production-ready versions:
+
+### Core Framework
+- `next@15.5.2` - Latest stable Next.js
+- `react@19.1.1` & `react-dom@19.1.1` - Latest stable React 19
+- `typescript@^5` - Latest stable TypeScript
+
+### Database & Backend  
+- `@prisma/client@^6.15.0` - Latest stable Prisma
+- `jsonwebtoken@^9.0.2` - Stable JWT implementation
+- `bcryptjs@^3.0.2` - Secure password hashing
+
+### Blockchain & Wallets
+- `@solana/web3.js@^1.98.4` - Stable Solana SDK
+- `@solana/wallet-adapter-react@^0.15.39` - Latest stable wallet adapter
+- `@solana/wallet-adapter-react-ui@^0.9.39` - Stable UI components
+
+### UI & Animations
+- `tailwindcss@^3.4.17` - Latest stable TailwindCSS v3
+- `framer-motion@^12.23.12` - Latest stable Framer Motion
+- `lucide-react@^0.542.0` - Icon library
+
+### Security
+- No experimental features or beta versions
+- All dependencies audited with 0 vulnerabilities
+- JWT secrets must be 32+ characters
 
 ## 🚀 Quick Start
 
