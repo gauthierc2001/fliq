@@ -31,6 +31,9 @@ DATABASE_URL=postgresql://username:password@host:port/database
 JWT_SECRET=your_super_secret_jwt_key_here
 NEXT_PUBLIC_SOLANA_NETWORK=mainnet-beta
 COINGECKO_API_KEY=(optional)
+TWITTER_CLIENT_ID=your_twitter_client_id
+TWITTER_CLIENT_SECRET=your_twitter_client_secret
+NEXT_PUBLIC_BASE_URL=https://your-app.railway.app
 ```
 
 ### 4. Deploy Application
@@ -73,6 +76,9 @@ railway run npx prisma migrate deploy
 | `JWT_SECRET` | Secret for JWT token signing | Yes |
 | `NEXT_PUBLIC_SOLANA_NETWORK` | Solana network (mainnet-beta/devnet) | Yes |
 | `COINGECKO_API_KEY` | CoinGecko API key for price data | No |
+| `TWITTER_CLIENT_ID` | Twitter OAuth 2.0 Client ID | No |
+| `TWITTER_CLIENT_SECRET` | Twitter OAuth 2.0 Client Secret | No |
+| `NEXT_PUBLIC_BASE_URL` | Base URL for OAuth callbacks | Yes |
 
 ## Post-Deployment
 

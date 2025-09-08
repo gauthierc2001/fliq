@@ -1,6 +1,7 @@
 'use client'
 
 import { Component, ReactNode } from 'react'
+import { AlertTriangle } from 'lucide-react'
 
 interface Props {
   children: ReactNode
@@ -33,7 +34,9 @@ export default class ErrorBoundary extends Component<Props, State> {
           <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-emerald-50">
             <div className="max-w-md mx-auto text-center p-8">
               <div className="card p-8">
-                <div className="text-6xl mb-4">⚠️</div>
+                <div className="mb-4">
+                  <AlertTriangle className="w-16 h-16 text-brand-black mx-auto" />
+                </div>
                 <h2 className="text-2xl font-bold text-slate-800 mb-4">
                   Something went wrong
                 </h2>
