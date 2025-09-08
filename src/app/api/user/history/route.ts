@@ -31,7 +31,10 @@ export async function GET(request: NextRequest) {
         id: user.id,
         wallet: user.wallet,
         balance: user.balance,
-        totalPnL: user.totalPnL
+        totalPnL: user.totalPnL,
+        twitterHandle: user.twitterHandle,
+        twitterName: user.twitterName,
+        twitterAvatar: user.twitterAvatar
       },
       history: swipes
     })

@@ -33,7 +33,10 @@ export function getCoinGeckoId(symbol: string): string {
   const mapping: Record<string, string> = {
     'bitcoin': 'bitcoin',
     'ethereum': 'ethereum', 
-    'solana': 'solana'
+    'solana': 'solana',
+    'cardano': 'cardano',
+    'avalanche-2': 'avalanche-2',
+    'chainlink': 'chainlink'
   }
   return mapping[symbol] || symbol
 }

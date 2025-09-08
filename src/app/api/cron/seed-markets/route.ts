@@ -5,10 +5,13 @@ import { getCurrentPrice, getCoinGeckoId } from '@/lib/prices'
 const COINS = [
   { symbol: 'bitcoin', name: 'Bitcoin', ticker: 'BTC' },
   { symbol: 'ethereum', name: 'Ethereum', ticker: 'ETH' },
-  { symbol: 'solana', name: 'Solana', ticker: 'SOL' }
+  { symbol: 'solana', name: 'Solana', ticker: 'SOL' },
+  { symbol: 'cardano', name: 'Cardano', ticker: 'ADA' },
+  { symbol: 'avalanche-2', name: 'Avalanche', ticker: 'AVAX' },
+  { symbol: 'chainlink', name: 'Chainlink', ticker: 'LINK' }
 ]
 
-const DURATIONS = [10, 30, 60] // minutes
+const DURATIONS = [5, 15, 30] // minutes - quick resolution times
 
 export async function POST() {
   try {

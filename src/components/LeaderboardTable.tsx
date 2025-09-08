@@ -7,6 +7,9 @@ interface LeaderboardEntry {
   wallet: string
   balance: number
   totalPnL: number
+  twitterHandle?: string
+  twitterName?: string
+  twitterAvatar?: string
 }
 
 interface LeaderboardTableProps {
@@ -54,12 +57,46 @@ export default function LeaderboardTable({ leaderboard }: LeaderboardTableProps)
               <div className="w-8 flex justify-center">
                 {getRankBadge(entry.rank)}
               </div>
-              <div>
-                <div className="font-medium text-brand-black font-mono">
-                  {entry.wallet}
-                </div>
-                <div className="text-sm text-brand-gray">
-                  Rank #{entry.rank}
+              <div className="flex items-center space-x-3">
+                {/* Twitter Avatar */}
+                {entry.twitterAvatar ? (
+                  <img 
+                    src={entry.twitterAvatar} 
+                    alt={`${entry.twitterHandle}'s avatar`}
+                    className="w-10 h-10 rounded-full border border-brand-green"
+                  />
+                ) : (
+                  <div className="w-10 h-10 bg-brand-bgGray rounded-full flex items-center justify-center">
+                    <span className="text-xs font-bold text-brand-gray">
+                      {entry.wallet.slice(0, 2).toUpperCase()}
+                    </span>
+                  </div>
+                )}
+                
+                {/* User Info */}
+                <div>
+                  {entry.twitterHandle ? (
+                    <>
+                      <div className="font-medium text-brand-black">
+                        {entry.twitterName || `@${entry.twitterHandle}`}
+                      </div>
+                      <div className="text-sm text-brand-green">
+                        @{entry.twitterHandle}
+                      </div>
+                      <div className="text-xs text-brand-gray font-mono">
+                        {entry.wallet.slice(0, 6)}...{entry.wallet.slice(-4)}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="font-medium text-brand-black font-mono">
+                        {entry.wallet.slice(0, 8)}...{entry.wallet.slice(-6)}
+                      </div>
+                      <div className="text-sm text-brand-gray">
+                        Rank #{entry.rank}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

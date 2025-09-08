@@ -59,7 +59,22 @@ export default function PredictionsPage() {
       const response = await fetch('/api/markets/list')
       if (response.ok) {
         const { markets } = await response.json()
-        setMarkets(markets)
+        
+        // If no markets available, generate some
+        if (markets.length === 0) {
+          console.log('No markets found, generating new ones...')
+          const generateResponse = await fetch('/api/markets/generate', { method: 'POST' })
+          if (generateResponse.ok) {
+            // Fetch markets again after generation
+            const retryResponse = await fetch('/api/markets/list')
+            if (retryResponse.ok) {
+              const { markets: newMarkets } = await retryResponse.json()
+              setMarkets(newMarkets)
+            }
+          }
+        } else {
+          setMarkets(markets)
+        }
       }
     } catch (error) {
       console.error('Failed to fetch markets:', error)

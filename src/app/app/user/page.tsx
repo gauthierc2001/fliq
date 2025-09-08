@@ -4,12 +4,16 @@ import { useState, useEffect, useCallback } from 'react'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useRouter } from 'next/navigation'
 import UserHistory from '@/components/UserHistory'
+import { User, Twitter, ExternalLink } from 'lucide-react'
 
-interface User {
+interface UserData {
   id: string
   wallet: string
   balance: number
   totalPnL: number
+  twitterHandle?: string
+  twitterName?: string
+  twitterAvatar?: string
 }
 
 interface Swipe {
@@ -32,7 +36,7 @@ interface Swipe {
 export default function UserPage() {
   const { connected } = useWallet()
   const router = useRouter()
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<UserData | null>(null)
   const [history, setHistory] = useState<Swipe[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -78,16 +82,33 @@ export default function UserPage() {
     )
   }
 
+  const handleTwitterConnect = async () => {
+    try {
+      const response = await fetch('/api/auth/twitter')
+      if (response.ok) {
+        const { authUrl } = await response.json()
+        window.open(authUrl, 'twitter-auth', 'width=600,height=600')
+      }
+    } catch (error) {
+      console.error('Twitter connect error:', error)
+    }
+  }
+
   if (!connected) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-brand-black mb-4">User Profile</h1>
-          <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6 max-w-md mx-auto">
-            <div className="text-lg font-semibold text-brand-black mb-2">Connect Your Wallet</div>
-            <p className="text-brand-gray mb-4">To view your profile and betting history, please connect your Solana wallet.</p>
+          <h1 className="text-3xl font-bold text-brand-black mb-6">User Profile</h1>
+          <div className="bg-white rounded-lg shadow-sm border border-brand-border p-8 max-w-md mx-auto">
+            <div className="mb-6">
+              <div className="w-20 h-20 bg-brand-bgGray rounded-full mx-auto mb-4 flex items-center justify-center">
+                <User className="w-10 h-10 text-brand-gray" />
+              </div>
+              <div className="text-lg font-semibold text-brand-black mb-2">Connect Your Wallet</div>
+              <p className="text-brand-gray mb-4">To view your profile and start predicting, please connect your Solana wallet.</p>
+            </div>
             <div className="text-sm text-brand-gray">
-              Connect your wallet using the button in the top navigation.
+              Use the wallet button in the top navigation to get started.
             </div>
           </div>
         </div>
@@ -117,14 +138,63 @@ export default function UserPage() {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       {/* Profile Header */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-[#0F0F0F] mb-4">Your Profile</h1>
+        <h1 className="text-3xl font-bold text-brand-black mb-6">User Profile</h1>
         
-        {/* Wallet Display */}
-        <div className="bg-white rounded-lg shadow-sm border border-[#E5E5E5] p-4 mb-6 max-w-md mx-auto">
-          <div className="text-lg font-mono text-[#555555] mb-2">
-            {user.wallet.slice(0, 8)}...{user.wallet.slice(-8)}
+        {/* Profile Card */}
+        <div className="bg-white rounded-2xl shadow-lg border border-brand-border p-8 max-w-md mx-auto mb-6">
+          {/* Avatar Section */}
+          <div className="mb-6">
+            {user.twitterAvatar ? (
+              <img 
+                src={user.twitterAvatar} 
+                alt="Profile" 
+                className="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-brand-green"
+              />
+            ) : (
+              <div className="w-20 h-20 bg-brand-bgGray rounded-full mx-auto mb-4 flex items-center justify-center">
+                <User className="w-10 h-10 text-brand-gray" />
+              </div>
+            )}
+            
+            {/* Twitter Info */}
+            {user.twitterHandle ? (
+              <div className="mb-4">
+                <div className="text-lg font-bold text-brand-black">{user.twitterName}</div>
+                <div className="text-brand-green font-medium">@{user.twitterHandle}</div>
+              </div>
+            ) : (
+              <button
+                onClick={handleTwitterConnect}
+                className="mb-4 flex items-center justify-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors mx-auto"
+              >
+                <Twitter className="w-4 h-4" />
+                <span>Connect Twitter</span>
+              </button>
+            )}
           </div>
-          <div className="text-xs text-[#B5B5B5]">Connected Wallet</div>
+
+          {/* Wallet Info */}
+          <div className="mb-6 p-4 bg-brand-bgGray rounded-xl">
+            <div className="text-xs text-brand-gray uppercase tracking-wide mb-1">Wallet Address</div>
+            <div className="text-sm text-brand-black font-mono">
+              {user.wallet.slice(0, 8)}...{user.wallet.slice(-8)}
+            </div>
+          </div>
+
+          {/* Balance & P&L */}
+          <div className="space-y-4">
+            <div>
+              <div className="text-3xl font-bold text-brand-green mb-1">{user.balance} $FLIQ</div>
+              <div className="text-sm text-brand-gray">Available Balance</div>
+            </div>
+            
+            <div className={`text-xl font-semibold ${
+              user.totalPnL >= 0 ? 'text-brand-green' : 'text-red-500'
+            }`}>
+              {user.totalPnL >= 0 ? '+' : ''}{user.totalPnL} $FLIQ
+              <div className="text-sm text-brand-gray font-normal">Total P&L</div>
+            </div>
+          </div>
         </div>
 
         {/* Stats Grid */}

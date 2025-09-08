@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useSwipeable } from 'react-swipeable'
+import { motion } from 'framer-motion'
 import MarketCard from './MarketCard'
 import { Target } from 'lucide-react'
 
@@ -79,27 +80,45 @@ export default function SwipeDeck({ markets, onSwipe, isLoading }: SwipeDeckProp
   }
 
   return (
-    <div className="relative w-full max-w-sm mx-auto h-96" style={{ perspective: '1000px' }}>
-      {/* Current Card */}
-      <div
-        {...swipeHandlers}
-        className={`absolute inset-0 transition-transform duration-300 cursor-grab active:cursor-grabbing ${
-          isAnimating
-            ? swipeDirection === 'right'
-              ? 'transform translate-x-full rotate-12'
-              : 'transform -translate-x-full -rotate-12'
-            : ''
-        } ${isLoading ? 'pointer-events-none opacity-50' : ''}`}
-      >
-        <MarketCard market={currentMarket} onSwipe={handleSwipe} />
-      </div>
+    <div className="relative w-full max-w-sm mx-auto h-[500px]" style={{ perspective: '1000px' }}>
+      {/* Card Stack - show 3 cards for depth */}
+      {markets.slice(currentIndex, currentIndex + 3).map((market, index) => (
+        <motion.div
+          key={market.id}
+          className={`absolute inset-0 ${index === 0 ? 'z-30' : index === 1 ? 'z-20' : 'z-10'}`}
+          initial={index === 0 ? {} : { scale: 0.95 - (index * 0.05), y: index * 8 }}
+          animate={{
+            scale: 1 - (index * 0.05),
+            y: index * 8,
+            opacity: 1 - (index * 0.3),
+            zIndex: 30 - index
+          }}
+          style={{
+            transformOrigin: 'center bottom'
+          }}
+        >
+          <div
+            {...(index === 0 ? swipeHandlers : {})}
+            className={`h-full ${index === 0 ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'} ${
+              isAnimating && index === 0
+                ? swipeDirection === 'right'
+                  ? 'transform translate-x-full rotate-12 opacity-0'
+                  : 'transform -translate-x-full -rotate-12 opacity-0'
+                : ''
+            } ${isLoading ? 'pointer-events-none opacity-50' : ''}`}
+            style={{ 
+              transition: isAnimating ? 'transform 0.3s ease-out, opacity 0.3s ease-out' : 'none'
+            }}
+          >
+            <MarketCard market={market} onSwipe={index === 0 ? handleSwipe : undefined} />
+          </div>
+        </motion.div>
+      ))}
 
-      {/* Next Card (peek) */}
-      {markets[currentIndex + 1] && (
-        <div className="absolute inset-0 -z-10 scale-95 opacity-50">
-          <MarketCard market={markets[currentIndex + 1]} />
-        </div>
-      )}
+      {/* Background cards for visual depth */}
+      <div className="absolute inset-0 -z-20 scale-90 opacity-20">
+        <div className="w-full h-full bg-white rounded-2xl border border-gray-200" />
+      </div>
 
       {/* Swipe Indicators */}
       <div className="absolute top-4 left-4 right-4 flex justify-between pointer-events-none">

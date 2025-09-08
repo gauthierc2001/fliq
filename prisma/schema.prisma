@@ -11,13 +11,17 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  wallet    String   @unique
-  balance   Int      @default(1000)
-  totalPnL  Int      @default(0)
-  swipes    Swipe[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  wallet      String   @unique
+  balance     Int      @default(1000)
+  totalPnL    Int      @default(0)
+  twitterId   String?  @unique
+  twitterHandle String?
+  twitterAvatar String?
+  twitterName String?
+  swipes      Swipe[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Market {
