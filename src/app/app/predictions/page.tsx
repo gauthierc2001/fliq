@@ -161,7 +161,7 @@ export default function PredictionsPage() {
             <div className="text-lg font-semibold text-fliq-dark mb-2">Connect Your Wallet</div>
             <p className="text-fliq-gray mb-4">To start predicting and earning, please connect your Solana wallet.</p>
             <div className="text-sm text-fliq-gray">
-              You can explore the markets below, but you'll need to connect to place bets.
+              You can explore the markets below, but you&apos;ll need to connect to place bets.
             </div>
           </div>
         </div>
