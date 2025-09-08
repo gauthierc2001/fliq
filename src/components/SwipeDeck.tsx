@@ -44,7 +44,10 @@ export default function SwipeDeck({ markets, onSwipe, isLoading }: SwipeDeckProp
       
       // Move to next card after animation
       setTimeout(() => {
-        setCurrentIndex(prev => (prev + 1) % markets.length)
+        setCurrentIndex(prev => {
+          const nextIndex = prev + 1
+          return nextIndex >= markets.length ? 0 : nextIndex
+        })
         setIsAnimating(false)
         setSwipeDirection(null)
       }, 300)
@@ -56,8 +59,8 @@ export default function SwipeDeck({ markets, onSwipe, isLoading }: SwipeDeckProp
   }
 
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => handleSwipe(currentMarket.id, 'NO'),
-    onSwipedRight: () => handleSwipe(currentMarket.id, 'YES'),
+    onSwipedLeft: () => currentMarket && handleSwipe(currentMarket.id, 'NO'),
+    onSwipedRight: () => currentMarket && handleSwipe(currentMarket.id, 'YES'),
     trackMouse: true,
     preventScrollOnSwipe: true,
   })

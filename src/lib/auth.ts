@@ -8,12 +8,18 @@ export interface JWTPayload {
 }
 
 export function signJWT(payload: JWTPayload): string {
-  return jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: '7d' })
+  const secret = process.env.JWT_SECRET
+  if (!secret || secret.length < 32) {
+    throw new Error('JWT_SECRET must be at least 32 characters long')
+  }
+  return jwt.sign(payload, secret, { expiresIn: '7d' })
 }
 
 export function verifyJWT(token: string): JWTPayload | null {
   try {
-    return jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload
+    const secret = process.env.JWT_SECRET
+    if (!secret) return null
+    return jwt.verify(token, secret) as JWTPayload
   } catch {
     return null
   }

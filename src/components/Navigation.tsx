@@ -15,10 +15,10 @@ export default function Navigation() {
 
   if (pathname === '/') {
     return (
-      <nav className="bg-white shadow-sm border-b border-fliq-border">
+      <nav className="bg-white/90 backdrop-blur-md shadow-lg border-b border-white/20 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link href="/" className="text-2xl font-bold text-fliq-green">
+            <Link href="/" className="text-3xl font-black text-gradient-green hover:scale-105 transition-transform">
               Fliq
             </Link>
             <WalletConnectButton />

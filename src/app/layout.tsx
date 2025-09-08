@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import WalletProvider from "@/components/providers/WalletProvider";
 import Navigation from "@/components/Navigation";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -21,13 +22,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased bg-white`}>
-        <WalletProvider>
-          <Navigation />
-          <main className="min-h-screen pb-20 md:pb-0">
-            {children}
-          </main>
-        </WalletProvider>
+      <body className={`${inter.variable} font-sans antialiased`}>
+        <ErrorBoundary>
+          <WalletProvider>
+            <Navigation />
+            <main className="min-h-screen pb-20 md:pb-0">
+              {children}
+            </main>
+          </WalletProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

@@ -27,6 +27,10 @@ export default function MarketCard({ market, onSwipe }: MarketCardProps) {
   const [timeLeft, setTimeLeft] = useState(market.timeLeft)
 
   useEffect(() => {
+    setTimeLeft(market.timeLeft)
+  }, [market.timeLeft])
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(prev => Math.max(0, prev - 1000))
     }, 1000)
