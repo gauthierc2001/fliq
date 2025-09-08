@@ -1,15 +1,15 @@
 # Multi-stage build for production optimization
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat python3 make g++
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
 RUN \
-  if [ -f package-lock.json ]; then npm ci --only=production; \
+  if [ -f package-lock.json ]; then npm ci --omit=dev --legacy-peer-deps; \
   else echo "Lockfile not found." && exit 1; \
   fi
 

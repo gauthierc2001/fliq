@@ -36,6 +36,10 @@
     "react-swipeable": "^7.0.2",
     "tweetnacl": "^1.0.3"
   },
+  "overrides": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
