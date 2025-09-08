@@ -1,41 +1,15 @@
-/* Import Tailwind CSS via CDN for Railway deployment */
-@import url('https://cdn.tailwindcss.com');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Custom Fliq brand colors as CSS variables */
-:root {
-  --fliq-green: #57C84D;
-  --fliq-dark: #0F0F0F;
-  --fliq-gray: #555555;
-  --fliq-light-gray: #B5B5B5;
-  --fliq-bg-gray: #F5F5F5;
-  --fliq-border: #E5E5E5;
-}
-
-/* Base styles */
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background-color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
 * {
   box-sizing: border-box;
 }
-
-/* Utility classes for Fliq colors */
-.text-fliq-green { color: var(--fliq-green) !important; }
-.text-fliq-dark { color: var(--fliq-dark) !important; }
-.text-fliq-gray { color: var(--fliq-gray) !important; }
-.text-fliq-light-gray { color: var(--fliq-light-gray) !important; }
-
-.bg-fliq-green { background-color: var(--fliq-green) !important; }
-.bg-fliq-dark { background-color: var(--fliq-dark) !important; }
-.bg-fliq-bg-gray { background-color: var(--fliq-bg-gray) !important; }
-
-.border-fliq-border { border-color: var(--fliq-border) !important; }
-
-.hover\\:bg-fliq-green-dark:hover { background-color: #4AB844 !important; }
-.hover\\:bg-fliq-gray:hover { background-color: var(--fliq-bg-gray) !important; }
-.hover\\:bg-fliq-border:hover { background-color: var(--fliq-border) !important; }

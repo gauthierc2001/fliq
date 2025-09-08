@@ -6,15 +6,15 @@ export default function HomePage() {
       <div className="container mx-auto px-4 py-16 text-center">
         {/* Hero Section */}
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight text-[#0F0F0F]">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight text-fliq-dark">
             Predict the future
             <br />
-            <span className="text-[#57C84D]">
+            <span className="text-fliq-green">
               in a flick
             </span>
           </h1>
           
-          <p className="text-xl md:text-2xl mb-12 text-[#555555] max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl mb-12 text-fliq-gray max-w-2xl mx-auto leading-relaxed">
             Swipe to predict crypto price movements. Win credits with accurate predictions. 
             Powered by Solana wallets.
           </p>
@@ -23,13 +23,13 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Link
               href="/app/predictions"
-              className="px-8 py-4 bg-[#57C84D] text-white font-bold text-lg rounded-2xl hover:bg-[#4AB844] transition-all transform hover:scale-105 shadow-lg"
+              className="px-8 py-4 bg-fliq-green text-white font-bold text-lg rounded-2xl hover:bg-green-600 transition-all transform hover:scale-105 shadow-lg"
             >
               Launch App
             </Link>
             <Link
               href="/app/leaderboard"
-              className="px-8 py-4 bg-white text-[#0F0F0F] font-semibold text-lg rounded-2xl hover:bg-[#F5F5F5] transition-all border-2 border-[#E5E5E5]"
+              className="px-8 py-4 bg-white text-fliq-dark font-semibold text-lg rounded-2xl hover:bg-fliq-bg-gray transition-all border-2 border-fliq-border"
             >
               View Leaderboard
             </Link>
