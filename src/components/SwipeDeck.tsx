@@ -78,7 +78,7 @@ export default function SwipeDeck({ markets, onSwipe, isLoading }: SwipeDeckProp
   }
 
   return (
-    <div className="relative w-full max-w-sm mx-auto h-96 perspective-1000">
+    <div className="relative w-full max-w-sm mx-auto h-96" style={{ perspective: '1000px' }}>
       {/* Current Card */}
       <div
         {...swipeHandlers}
@@ -127,7 +127,7 @@ export default function SwipeDeck({ markets, onSwipe, isLoading }: SwipeDeckProp
       {/* Loading Overlay */}
       {isLoading && (
         <div className="absolute inset-0 bg-black/20 rounded-2xl flex items-center justify-center">
-          <div className="w-8 h-8 border-3 border-white border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
         </div>
       )}
     </div>
