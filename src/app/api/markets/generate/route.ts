@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { generateMarketData, getFallbackMarkets } from '@/lib/marketGenerator'
 
-export async function POST(request?: NextRequest) {
+export async function POST(request: NextRequest) {
   // Add basic rate limiting for production
-  const clientIP = request?.headers.get('x-forwarded-for') || request?.headers.get('x-real-ip') || 'unknown'
+  const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
   console.log(`Market generation request from IP: ${clientIP}`)
   
   try {
@@ -132,7 +132,7 @@ export async function POST(request?: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   // Allow GET requests to trigger market generation for testing
-  return POST()
+  return POST(request)
 }

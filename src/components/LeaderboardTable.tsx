@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { Crown, Medal, Award, Trophy } from 'lucide-react'
 
 interface LeaderboardEntry {
@@ -60,9 +61,11 @@ export default function LeaderboardTable({ leaderboard }: LeaderboardTableProps)
               <div className="flex items-center space-x-3">
                 {/* Twitter Avatar */}
                 {entry.twitterAvatar ? (
-                  <img 
+                  <Image 
                     src={entry.twitterAvatar} 
                     alt={`${entry.twitterHandle}'s avatar`}
+                    width={40}
+                    height={40}
                     className="w-10 h-10 rounded-full border border-brand-green"
                   />
                 ) : (

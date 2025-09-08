@@ -3,8 +3,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import UserHistory from '@/components/UserHistory'
-import { User, Twitter, ExternalLink } from 'lucide-react'
+import { User, Twitter } from 'lucide-react'
 
 interface UserData {
   id: string
@@ -145,9 +146,11 @@ export default function UserPage() {
           {/* Avatar Section */}
           <div className="mb-6">
             {user.twitterAvatar ? (
-              <img 
+              <Image 
                 src={user.twitterAvatar} 
-                alt="Profile" 
+                alt="Profile"
+                width={80}
+                height={80}
                 className="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-brand-green"
               />
             ) : (

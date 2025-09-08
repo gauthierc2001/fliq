@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import LeaderboardTable from '@/components/LeaderboardTable'
 import { Crown, Users, DollarSign } from 'lucide-react'
 
@@ -15,16 +15,7 @@ export default function LeaderboardPage() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    fetchLeaderboard()
-    
-    // Refresh leaderboard every 30 seconds
-    const interval = setInterval(fetchLeaderboard, 30000)
-    
-    return () => clearInterval(interval)
-  }, [])
-
-  const fetchLeaderboard = async () => {
+  const fetchLeaderboard = useCallback(async () => {
     try {
       const response = await fetch('/api/leaderboard')
       if (response.ok) {
@@ -36,7 +27,16 @@ export default function LeaderboardPage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    fetchLeaderboard()
+    
+    // Refresh leaderboard every 30 seconds
+    const interval = setInterval(fetchLeaderboard, 30000)
+    
+    return () => clearInterval(interval)
+  }, [fetchLeaderboard])
 
   if (isLoading) {
     return (
