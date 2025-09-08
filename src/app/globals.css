@@ -26,25 +26,77 @@
 @layer components {
   /* Modern button styles */
   .btn-primary {
-    @apply px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-600 text-white font-bold text-lg rounded-2xl hover:from-emerald-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl;
+    padding: 1rem 2rem;
+    background: linear-gradient(90deg, #10b981, #059669);
+    color: white;
+    font-weight: 700;
+    font-size: 1.125rem;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    transform: scale(1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(90deg, #059669, #047857);
+    transform: scale(1.05);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   }
   
   .btn-secondary {
-    @apply px-8 py-4 bg-white text-gray-900 font-semibold text-lg rounded-2xl hover:bg-gray-50 transition-all duration-300 border-2 border-gray-200 hover:border-gray-300 shadow-md hover:shadow-lg;
+    padding: 1rem 2rem;
+    background: white;
+    color: #111827;
+    font-weight: 600;
+    font-size: 1.125rem;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    border: 2px solid #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn-secondary:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   }
   
   /* Card styles */
   .card {
-    @apply bg-white/90 backdrop-blur-sm rounded-3xl border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02];
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    border-radius: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transition: all 0.3s ease;
+  }
+  
+  .card:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+    transform: scale(1.02);
   }
   
   .card-gradient {
-    @apply bg-gradient-to-br from-white/95 to-gray-50/95 backdrop-blur-sm rounded-3xl border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(249, 250, 251, 0.95));
+    backdrop-filter: blur(12px);
+    border-radius: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transition: all 0.3s ease;
+  }
+  
+  .card-gradient:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
   }
   
   /* Loading spinner */
   .spinner {
-    @apply w-8 h-8 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin;
+    width: 2rem;
+    height: 2rem;
+    border: 4px solid #a7f3d0;
+    border-top: 4px solid #059669;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
   }
   
   /* Modern gradients */
@@ -58,7 +110,10 @@
   
   /* Glass morphism effect */
   .glass {
-    @apply bg-white/10 backdrop-blur-md border border-white/20 shadow-xl;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   }
   
   /* Animated elements */
@@ -73,6 +128,15 @@
 
 @layer utilities {
   /* Custom animations */
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
   @keyframes float {
     0%, 100% {
       transform: translateY(0px);
