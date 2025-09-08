@@ -15,10 +15,10 @@ export default function Navigation() {
 
   if (pathname === '/') {
     return (
-      <nav className="bg-white shadow-sm border-b border-[#E5E5E5]">
+      <nav className="bg-white shadow-sm border-b border-fliq-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link href="/" className="text-2xl font-bold text-[#57C84D]">
+            <Link href="/" className="text-2xl font-bold text-fliq-green">
               Fliq
             </Link>
             <WalletConnectButton />
@@ -31,11 +31,11 @@ export default function Navigation() {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:block bg-white shadow-sm border-b border-[#E5E5E5]">
+      <nav className="hidden md:block bg-white shadow-sm border-b border-fliq-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-8">
-              <Link href="/" className="text-2xl font-bold text-[#57C84D]">
+              <Link href="/" className="text-2xl font-bold text-fliq-green">
                 Fliq
               </Link>
               <div className="flex space-x-6">
@@ -45,8 +45,8 @@ export default function Navigation() {
                     href={item.href}
                     className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       pathname === item.href
-                        ? 'bg-[#57C84D] text-white'
-                        : 'text-[#555555] hover:text-[#0F0F0F] hover:bg-[#F5F5F5]'
+                        ? 'bg-fliq-green text-white'
+                        : 'text-fliq-gray hover:text-fliq-dark hover:bg-fliq-bg-gray'
                     }`}
                   >
                     <span className="mr-2">{item.icon}</span>
@@ -61,7 +61,7 @@ export default function Navigation() {
       </nav>
 
       {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#E5E5E5] z-50">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-fliq-border z-50">
         <div className="grid grid-cols-3">
           {navItems.map((item) => (
             <Link
@@ -69,8 +69,8 @@ export default function Navigation() {
               href={item.href}
               className={`flex flex-col items-center py-3 px-4 text-xs transition-colors ${
                 pathname === item.href
-                  ? 'text-[#57C84D] bg-[#F5F5F5]'
-                  : 'text-[#555555]'
+                  ? 'text-fliq-green bg-fliq-bg-gray'
+                  : 'text-fliq-gray'
               }`}
             >
               <span className="text-lg mb-1">{item.icon}</span>
@@ -81,9 +81,9 @@ export default function Navigation() {
       </div>
 
       {/* Mobile Top Bar */}
-      <div className="md:hidden bg-white shadow-sm border-b border-[#E5E5E5]">
+      <div className="md:hidden bg-white shadow-sm border-b border-fliq-border">
         <div className="flex justify-between items-center px-4 h-16">
-          <Link href="/" className="text-xl font-bold text-[#57C84D]">
+          <Link href="/" className="text-xl font-bold text-fliq-green">
             Fliq
           </Link>
           <WalletConnectButton />
