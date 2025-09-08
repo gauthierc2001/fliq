@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import WalletConnectButton from './WalletConnectButton'
 import { Target, User, Trophy } from 'lucide-react'
+import Image from 'next/image'
 
 export default function Navigation() {
   const pathname = usePathname()
@@ -18,12 +19,18 @@ export default function Navigation() {
     return (
       <nav className="absolute top-0 left-0 right-0 z-50 bg-transparent">
         <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex justify-between items-center">
-            <Link href="/" className="text-2xl font-black bg-gradient-to-r from-brand-green to-brand-greenDark bg-clip-text text-transparent hover:scale-105 transition-transform">
-              Fliq
-            </Link>
-            {/* Clean landing page - no wallet connection */}
-          </div>
+           <div className="flex justify-between items-center">
+             <Link href="/" className="hover:scale-105 transition-transform">
+               <Image 
+                 src="/fliq-logo.png" 
+                 alt="Fliq" 
+                 width={80} 
+                 height={40}
+                 className="h-8 w-auto"
+               />
+             </Link>
+             {/* Clean landing page - no wallet connection */}
+           </div>
         </div>
       </nav>
     )
@@ -35,10 +42,16 @@ export default function Navigation() {
       <nav className="hidden md:block bg-white shadow-sm border-b border-fliq-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-8">
-              <Link href="/" className="text-2xl font-bold text-brand-green">
-                Fliq
-              </Link>
+             <div className="flex items-center space-x-8">
+               <Link href="/" className="hover:scale-105 transition-transform">
+                 <Image 
+                   src="/fliq-logo.png" 
+                   alt="Fliq" 
+                   width={80} 
+                   height={40}
+                   className="h-7 w-auto"
+                 />
+               </Link>
               <div className="flex space-x-6">
                 {navItems.map((item) => (
                   <Link
@@ -87,10 +100,16 @@ export default function Navigation() {
 
       {/* Mobile Top Bar */}
       <div className="md:hidden bg-white shadow-sm border-b border-fliq-border">
-        <div className="flex justify-between items-center px-4 h-16">
-          <Link href="/" className="text-xl font-bold text-brand-green">
-            Fliq
-          </Link>
+         <div className="flex justify-between items-center px-4 h-16">
+           <Link href="/" className="hover:scale-105 transition-transform">
+             <Image 
+               src="/fliq-logo.png" 
+               alt="Fliq" 
+               width={70} 
+               height={35}
+               className="h-6 w-auto"
+             />
+           </Link>
           <WalletConnectButton />
         </div>
       </div>

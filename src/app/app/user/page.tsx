@@ -44,24 +44,26 @@ export default function UserPage() {
         setUser(user)
         setHistory(history)
       } else {
-        router.push('/')
+        console.error('Failed to fetch user data - staying in app')
+        // Don't redirect, just show error state
       }
     } catch (error) {
       console.error('Failed to fetch user data:', error)
-      router.push('/')
+      // Don't redirect, just show error state
     } finally {
       setIsLoading(false)
     }
-  }, [router])
+  }, [])
 
   useEffect(() => {
-    if (!connected) {
-      router.push('/')
-      return
+    if (connected) {
+      fetchUserData()
+    } else {
+      // If not connected, just show a message to connect wallet
+      // Don't redirect - let them stay in the app
+      setIsLoading(false)
     }
-    
-    fetchUserData()
-  }, [connected, fetchUserData, router])
+  }, [connected, fetchUserData])
 
   if (isLoading) {
     return (
@@ -70,6 +72,23 @@ export default function UserPage() {
           <div className="text-center">
             <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <div className="text-lg font-semibold text-gray-600">Loading profile...</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!connected) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-brand-black mb-4">User Profile</h1>
+          <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6 max-w-md mx-auto">
+            <div className="text-lg font-semibold text-brand-black mb-2">Connect Your Wallet</div>
+            <p className="text-brand-gray mb-4">To view your profile and betting history, please connect your Solana wallet.</p>
+            <div className="text-sm text-brand-gray">
+              Connect your wallet using the button in the top navigation.
+            </div>
           </div>
         </div>
       </div>

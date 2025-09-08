@@ -74,6 +74,9 @@ export default function WalletConnectButton() {
   useEffect(() => {
     if (connected && publicKey && signMessage && !user) {
       handleAuth()
+    } else if (!connected && user) {
+      // Wallet disconnected - clear user state but DON'T redirect
+      setUser(null)
     }
   }, [connected, publicKey, signMessage, user, handleAuth])
 

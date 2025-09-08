@@ -43,13 +43,16 @@ export default function PredictionsPage() {
         const { user } = await response.json()
         setUser(user)
       } else {
-        router.push('/')
+        console.error('Auth check failed - staying in app')
+        // Don't redirect, just clear user state
+        setUser(null)
       }
     } catch (error) {
       console.error('Auth check failed:', error)
-      router.push('/')
+      // Don't redirect, just clear user state
+      setUser(null)
     }
-  }, [router])
+  }, [])
 
   const fetchMarkets = useCallback(async () => {
     try {

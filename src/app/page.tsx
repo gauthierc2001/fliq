@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Rocket, Zap, Target, DollarSign, ArrowRight } from 'lucide-react'
+import Image from 'next/image'
 
 export default function HomePage() {
   return (
@@ -73,13 +74,23 @@ export default function HomePage() {
             </span>
           </motion.div>
           
-          {/* Main Headline */}
+          {/* Logo and Main Headline */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mb-8"
           >
+            <div className="mb-6">
+              <Image 
+                src="/fliq-logo.png" 
+                alt="Fliq" 
+                width={200} 
+                height={100}
+                className="h-16 w-auto mx-auto"
+                priority
+              />
+            </div>
             <h1 className="text-6xl md:text-8xl font-black mb-6 leading-tight tracking-tight text-brand-black">
               Predict the future
               <br />
