@@ -45,10 +45,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Copy Prisma files (schema and generated client)
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 
-# Create a minimal package.json for Prisma CLI only
-RUN echo '{"dependencies":{"prisma":"^6.15.0"}}' > package.json && \
-    npm install --production --no-save prisma@^6.15.0 && \
+# Install only Prisma CLI for migrations
+RUN npm install --production --no-save prisma@^6.15.0 && \
     chown -R nextjs:nodejs /app
 
 USER nextjs
@@ -59,4 +59,4 @@ ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
 # Use a script that runs migrations then starts the server
-CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
+CMD ["sh", "-c", "npm run start:production"]
