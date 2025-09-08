@@ -14,7 +14,7 @@
     margin: 0;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
       Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    background: #FFFFFF;
     min-height: 100vh;
   }
 
@@ -27,7 +27,7 @@
   /* Modern button styles */
   .btn-primary {
     padding: 1rem 2rem;
-    background: linear-gradient(90deg, #10b981, #059669);
+    background: #6CC04A;
     color: white;
     font-weight: 700;
     font-size: 1.125rem;
@@ -38,7 +38,7 @@
   }
   
   .btn-primary:hover {
-    background: linear-gradient(90deg, #059669, #047857);
+    background: #57A73D;
     transform: scale(1.05);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   }
@@ -93,8 +93,8 @@
   .spinner {
     width: 2rem;
     height: 2rem;
-    border: 4px solid #a7f3d0;
-    border-top: 4px solid #059669;
+    border: 4px solid rgba(108, 192, 74, 0.3);
+    border-top: 4px solid #6CC04A;
     border-radius: 50%;
     animation: spin 1s linear infinite;
   }
@@ -105,7 +105,7 @@
   }
   
   .gradient-green {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    background: linear-gradient(135deg, #6CC04A 0%, #57A73D 100%);
   }
   
   /* Glass morphism effect */
@@ -164,7 +164,7 @@
   }
   
   .text-gradient-green {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    background: linear-gradient(135deg, #6CC04A 0%, #57A73D 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

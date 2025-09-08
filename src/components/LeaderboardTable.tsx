@@ -13,8 +13,8 @@ interface LeaderboardTableProps {
 
 export default function LeaderboardTable({ leaderboard }: LeaderboardTableProps) {
   const getPnLColor = (pnl: number) => {
-    if (pnl === 0) return 'text-[#555555]'
-    return pnl > 0 ? 'text-[#57C84D]' : 'text-[#0F0F0F]'
+    if (pnl === 0) return 'text-brand-gray'
+    return pnl > 0 ? 'text-brand-green' : 'text-brand-black'
   }
 
   const formatPnL = (pnl: number) => {
@@ -33,37 +33,37 @@ export default function LeaderboardTable({ leaderboard }: LeaderboardTableProps)
     return (
       <div className="text-center py-12">
         <div className="text-4xl mb-4">🏆</div>
-        <div className="text-lg font-semibold text-gray-600 mb-2">No rankings yet</div>
-        <div className="text-sm text-gray-500">Be the first to start predicting!</div>
+        <div className="text-lg font-semibold text-brand-gray mb-2">No rankings yet</div>
+        <div className="text-sm text-brand-lightGray">Be the first to start predicting!</div>
       </div>
     )
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-[#E5E5E5] overflow-hidden">
-      <div className="px-6 py-4 border-b border-[#E5E5E5]">
-        <h2 className="text-lg font-semibold text-[#0F0F0F]">Top Predictors</h2>
+    <div className="bg-white rounded-lg shadow-sm border border-brand-border overflow-hidden">
+      <div className="px-6 py-4 border-b border-brand-border">
+        <h2 className="text-lg font-semibold text-brand-black">Top Predictors</h2>
       </div>
       
-      <div className="divide-y divide-[#E5E5E5]">
+      <div className="divide-y divide-brand-border">
         {leaderboard.map((entry) => (
-          <div key={entry.rank} className="px-6 py-4 flex items-center justify-between hover:bg-[#F5F5F5] transition-colors">
+          <div key={entry.rank} className="px-6 py-4 flex items-center justify-between hover:bg-brand-bgGray transition-colors">
             <div className="flex items-center space-x-4">
               <div className="text-2xl w-8 text-center">
                 {getRankBadge(entry.rank)}
               </div>
               <div>
-                <div className="font-medium text-[#0F0F0F] font-mono">
+                <div className="font-medium text-brand-black font-mono">
                   {entry.wallet}
                 </div>
-                <div className="text-sm text-[#555555]">
+                <div className="text-sm text-brand-gray">
                   Rank #{entry.rank}
                 </div>
               </div>
             </div>
             
             <div className="text-right">
-              <div className="font-semibold text-[#0F0F0F]">
+              <div className="font-semibold text-brand-black">
                 {entry.balance.toLocaleString()} $FLIQ
               </div>
               <div className={`text-sm font-medium ${getPnLColor(entry.totalPnL)}`}>

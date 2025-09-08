@@ -66,12 +66,10 @@ export default function PredictionsPage() {
   }, [])
 
   useEffect(() => {
-    if (!connected) {
-      router.push('/')
-      return
+    if (connected) {
+      checkAuth()
     }
     
-    checkAuth()
     fetchMarkets()
     
     // Set up intervals for real-time updates
@@ -80,9 +78,14 @@ export default function PredictionsPage() {
     return () => {
       clearInterval(marketInterval)
     }
-  }, [connected, checkAuth, fetchMarkets, router])
+  }, [connected, checkAuth, fetchMarkets])
 
   const handleSwipe = async (marketId: string, side: 'YES' | 'NO') => {
+    if (!connected) {
+      alert('Please connect your wallet to place bets!')
+      return
+    }
+    
     if (!user || isSwipeLoading) return
 
     if (user.balance < 100) {
@@ -146,6 +149,20 @@ export default function PredictionsPage() {
                 {user.totalPnL > 0 ? '+' : ''}{user.totalPnL} Total P&L
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Wallet Connection Required */}
+      {!connected && (
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-fliq-dark mb-4">Welcome to Fliq!</h1>
+          <div className="bg-white rounded-lg shadow-sm border border-fliq-border p-6 max-w-md mx-auto">
+            <div className="text-lg font-semibold text-fliq-dark mb-2">Connect Your Wallet</div>
+            <p className="text-fliq-gray mb-4">To start predicting and earning, please connect your Solana wallet.</p>
+            <div className="text-sm text-fliq-gray">
+              You can explore the markets below, but you'll need to connect to place bets.
+            </div>
           </div>
         </div>
       )}

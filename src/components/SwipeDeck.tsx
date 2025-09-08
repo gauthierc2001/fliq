@@ -103,12 +103,12 @@ export default function SwipeDeck({ markets, onSwipe, isLoading }: SwipeDeckProp
       {/* Swipe Indicators */}
       <div className="absolute top-4 left-4 right-4 flex justify-between pointer-events-none">
         <div className={`px-3 py-1 rounded-full text-white font-bold transition-opacity ${
-          swipeDirection === 'left' ? 'bg-fliq-dark opacity-100' : 'bg-fliq-light-gray opacity-0'
+          swipeDirection === 'left' ? 'bg-brand-black opacity-100' : 'bg-brand-lightGray opacity-0'
         }`}>
           NO
         </div>
         <div className={`px-3 py-1 rounded-full text-white font-bold transition-opacity ${
-          swipeDirection === 'right' ? 'bg-fliq-green opacity-100' : 'bg-fliq-light-gray opacity-0'
+          swipeDirection === 'right' ? 'bg-brand-green opacity-100' : 'bg-brand-lightGray opacity-0'
         }`}>
           YES
         </div>

@@ -42,8 +42,8 @@ export default function LeaderboardPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
-            <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <div className="text-lg font-semibold text-gray-600">Loading leaderboard...</div>
+            <div className="w-12 h-12 border-4 border-brand-green border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <div className="text-lg font-semibold text-brand-gray">Loading leaderboard...</div>
           </div>
         </div>
       </div>
@@ -54,13 +54,13 @@ export default function LeaderboardPage() {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-[#0F0F0F] mb-2">Leaderboard</h1>
-        <p className="text-[#555555]">Top predictors ranked by total P&L and balance</p>
+        <h1 className="text-3xl font-bold text-brand-black mb-2">Leaderboard</h1>
+        <p className="text-brand-gray">Top predictors ranked by total P&L and balance</p>
       </div>
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-[#57C84D] rounded-lg shadow-lg p-6 text-white">
+        <div className="bg-brand-green rounded-lg shadow-lg p-6 text-white">
           <div className="flex items-center">
             <div className="text-3xl mr-4">🥇</div>
             <div>
@@ -72,7 +72,7 @@ export default function LeaderboardPage() {
           </div>
         </div>
         
-        <div className="bg-[#0F0F0F] rounded-lg shadow-lg p-6 text-white">
+        <div className="bg-brand-black rounded-lg shadow-lg p-6 text-white">
           <div className="flex items-center">
             <div className="text-3xl mr-4">👥</div>
             <div>
@@ -82,12 +82,12 @@ export default function LeaderboardPage() {
           </div>
         </div>
         
-        <div className="bg-white border border-[#E5E5E5] rounded-lg shadow-lg p-6">
+        <div className="bg-white border border-brand-border rounded-lg shadow-lg p-6">
           <div className="flex items-center">
             <div className="text-3xl mr-4">💰</div>
             <div>
-              <div className="text-lg font-semibold text-[#0F0F0F]">Highest P&L</div>
-              <div className="text-[#57C84D]">
+              <div className="text-lg font-semibold text-brand-black">Highest P&L</div>
+              <div className="text-brand-green">
                 {leaderboard[0] ? `${leaderboard[0].totalPnL > 0 ? '+' : ''}${leaderboard[0].totalPnL}` : '0'} $FLIQ
               </div>
             </div>
@@ -107,7 +107,7 @@ export default function LeaderboardPage() {
           </p>
           <a
             href="/app/predictions"
-            className="inline-block px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors"
+            className="inline-block px-6 py-3 bg-brand-green text-white font-semibold rounded-lg hover:bg-brand-greenDark transition-colors"
           >
             Start Predicting
           </a>

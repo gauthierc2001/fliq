@@ -8,10 +8,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Fliq brand colors
-        'fliq-green': '#57C84D',
-        'fliq-dark': '#0F0F0F',
-        'fliq-gray': '#555555', 
+        // Fliq brand colors - updated to match brand palette
+        brand: {
+          green: '#6CC04A',
+          greenDark: '#57A73D',
+          black: '#000000',
+          white: '#FFFFFF',
+          gray: '#666666',
+          lightGray: '#B5B5B5',
+          bgGray: '#F5F5F5',
+          border: '#E5E5E5',
+        },
+        // Legacy colors for backwards compatibility
+        'fliq-green': '#6CC04A',
+        'fliq-dark': '#000000',
+        'fliq-gray': '#666666', 
         'fliq-light-gray': '#B5B5B5',
         'fliq-bg-gray': '#F5F5F5',
         'fliq-border': '#E5E5E5',

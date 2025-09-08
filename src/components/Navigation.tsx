@@ -18,7 +18,7 @@ export default function Navigation() {
       <nav className="absolute top-0 left-0 right-0 z-50 bg-transparent">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex justify-between items-center">
-            <Link href="/" className="text-2xl font-black bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent hover:scale-105 transition-transform">
+            <Link href="/" className="text-2xl font-black bg-gradient-to-r from-brand-green to-brand-greenDark bg-clip-text text-transparent hover:scale-105 transition-transform">
               Fliq
             </Link>
             {/* Clean landing page - no wallet connection */}
@@ -35,7 +35,7 @@ export default function Navigation() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-8">
-              <Link href="/" className="text-2xl font-bold text-fliq-green">
+              <Link href="/" className="text-2xl font-bold text-brand-green">
                 Fliq
               </Link>
               <div className="flex space-x-6">
@@ -83,7 +83,7 @@ export default function Navigation() {
       {/* Mobile Top Bar */}
       <div className="md:hidden bg-white shadow-sm border-b border-fliq-border">
         <div className="flex justify-between items-center px-4 h-16">
-          <Link href="/" className="text-xl font-bold text-fliq-green">
+          <Link href="/" className="text-xl font-bold text-brand-green">
             Fliq
           </Link>
           <WalletConnectButton />

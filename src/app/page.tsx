@@ -7,10 +7,10 @@ export default function HomePage() {
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-indigo-50 to-emerald-50">
-        {/* Floating Orbs */}
+      <div className="absolute inset-0 bg-white">
+        {/* Floating Orbs - Updated to brand colors */}
         <motion.div 
-          className="absolute top-20 left-20 w-96 h-96 bg-gradient-to-r from-violet-400 to-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-30"
+          className="absolute top-20 left-20 w-96 h-96 bg-gradient-to-r from-brand-green/20 to-brand-green/10 rounded-full mix-blend-multiply filter blur-xl opacity-60"
           animate={{
             x: [0, 100, 0],
             y: [0, -100, 0],
@@ -23,7 +23,7 @@ export default function HomePage() {
           }}
         />
         <motion.div 
-          className="absolute top-40 right-20 w-96 h-96 bg-gradient-to-r from-emerald-400 to-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-30"
+          className="absolute top-40 right-20 w-96 h-96 bg-gradient-to-r from-brand-green/15 to-brand-green/5 rounded-full mix-blend-multiply filter blur-xl opacity-60"
           animate={{
             x: [0, -100, 0],
             y: [0, 100, 0],
@@ -36,7 +36,7 @@ export default function HomePage() {
           }}
         />
         <motion.div 
-          className="absolute bottom-20 left-1/2 w-96 h-96 bg-gradient-to-r from-pink-400 to-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-20"
+          className="absolute bottom-20 left-1/2 w-96 h-96 bg-gradient-to-r from-brand-green/10 to-brand-green/5 rounded-full mix-blend-multiply filter blur-xl opacity-40"
           animate={{
             x: [0, 50, 0],
             y: [0, -50, 0],
@@ -60,7 +60,7 @@ export default function HomePage() {
             transition={{ duration: 0.6 }}
             className="mb-8"
           >
-            <span className="inline-flex items-center px-6 py-3 bg-white/80 backdrop-blur-sm text-emerald-700 rounded-full text-sm font-semibold border border-emerald-200 shadow-lg">
+            <span className="inline-flex items-center px-6 py-3 bg-white/90 backdrop-blur-sm text-brand-green rounded-full text-sm font-semibold border border-brand-green/20 shadow-lg">
               <motion.span
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
@@ -79,10 +79,10 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mb-8"
           >
-            <h1 className="text-6xl md:text-8xl font-black mb-6 leading-tight tracking-tight">
+            <h1 className="text-6xl md:text-8xl font-black mb-6 leading-tight tracking-tight text-brand-black">
               Predict the future
               <br />
-              <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-brand-green to-brand-greenDark bg-clip-text text-transparent">
                 in a flick
               </span>
             </h1>
@@ -93,11 +93,11 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl md:text-2xl mb-12 text-slate-600 max-w-2xl mx-auto leading-relaxed font-light"
+            className="text-xl md:text-2xl mb-12 text-brand-gray max-w-2xl mx-auto leading-relaxed font-light"
           >
             The simplest way to predict crypto prices.
             <br />
-            <span className="font-semibold text-slate-800">Just swipe and win.</span>
+            <span className="font-semibold text-brand-black">Just swipe and win.</span>
           </motion.p>
 
           {/* CTA Button */}
@@ -111,13 +111,13 @@ export default function HomePage() {
               <motion.button
                 whileHover={{ 
                   scale: 1.05,
-                  boxShadow: "0 20px 40px -12px rgba(16, 185, 129, 0.4)"
+                  boxShadow: "0 20px 40px -12px rgba(108, 192, 74, 0.4)"
                 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative inline-flex items-center justify-center px-12 py-5 text-xl font-bold text-white bg-gradient-to-r from-emerald-500 to-blue-600 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300"
+                className="group relative inline-flex items-center justify-center px-12 py-5 text-xl font-bold text-white bg-brand-green rounded-2xl shadow-2xl overflow-hidden transition-all duration-300"
               >
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  className="absolute inset-0 bg-brand-greenDark opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 />
                 <span className="relative z-10 flex items-center gap-3">
                   Launch App
@@ -148,8 +148,8 @@ export default function HomePage() {
               className="text-center p-6 bg-white/50 backdrop-blur-sm rounded-2xl border border-white/20 shadow-lg"
             >
               <div className="text-3xl mb-3">⚡</div>
-              <h3 className="font-bold text-slate-800 mb-2">Instant</h3>
-              <p className="text-slate-600 text-sm">One swipe to place your bet</p>
+              <h3 className="font-bold text-brand-black mb-2">Instant</h3>
+              <p className="text-brand-gray text-sm">One swipe to place your bet</p>
             </motion.div>
             
             <motion.div
@@ -157,8 +157,8 @@ export default function HomePage() {
               className="text-center p-6 bg-white/50 backdrop-blur-sm rounded-2xl border border-white/20 shadow-lg"
             >
               <div className="text-3xl mb-3">🎯</div>
-              <h3 className="font-bold text-slate-800 mb-2">Simple</h3>
-              <p className="text-slate-600 text-sm">Just predict up or down</p>
+              <h3 className="font-bold text-brand-black mb-2">Simple</h3>
+              <p className="text-brand-gray text-sm">Just predict up or down</p>
             </motion.div>
             
             <motion.div
@@ -166,8 +166,8 @@ export default function HomePage() {
               className="text-center p-6 bg-white/50 backdrop-blur-sm rounded-2xl border border-white/20 shadow-lg"
             >
               <div className="text-3xl mb-3">💰</div>
-              <h3 className="font-bold text-slate-800 mb-2">Profitable</h3>
-              <p className="text-slate-600 text-sm">Win real rewards</p>
+              <h3 className="font-bold text-brand-black mb-2">Profitable</h3>
+              <p className="text-brand-gray text-sm">Win real rewards</p>
             </motion.div>
           </motion.div>
 

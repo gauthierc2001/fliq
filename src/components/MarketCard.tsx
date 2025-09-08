@@ -110,7 +110,7 @@ export default function MarketCard({ market, onSwipe }: MarketCardProps) {
         </button>
         <button
           onClick={() => onSwipe?.(market.id, 'YES')}
-          className="py-3 px-4 bg-fliq-green text-white font-semibold rounded-xl hover:bg-[#4AB844] transition-colors"
+          className="py-3 px-4 bg-brand-green text-white font-semibold rounded-xl hover:bg-brand-greenDark transition-colors"
         >
           YES (Swipe →)
         </button>
