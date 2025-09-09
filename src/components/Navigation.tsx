@@ -39,7 +39,7 @@ export default function Navigation() {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:block bg-white shadow-sm border-b border-fliq-border">
+      <nav className="hidden md:block bg-black shadow-sm border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
              <div className="flex items-center space-x-8">
@@ -47,9 +47,9 @@ export default function Navigation() {
                 <Image 
                   src="/logo.png" 
                   alt="Fliq" 
-                  width={80} 
-                  height={40}
-                  className="h-7 w-auto"
+                  width={100} 
+                  height={50}
+                  className="h-9 w-auto"
                 />
                </Link>
               <div className="flex space-x-6">
@@ -60,7 +60,7 @@ export default function Navigation() {
                     className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${
                       pathname === item.href
                         ? 'bg-brand-green text-white'
-                        : 'text-brand-gray hover:text-brand-black hover:bg-brand-bgGray'
+                        : 'text-gray-300 hover:text-white hover:bg-gray-800'
                     }`}
                   >
                     <item.icon className={`w-4 h-4 mr-2 ${
@@ -77,7 +77,7 @@ export default function Navigation() {
       </nav>
 
       {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-fliq-border z-50">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 z-50">
         <div className="grid grid-cols-3">
           {navItems.map((item) => (
             <Link
@@ -85,12 +85,12 @@ export default function Navigation() {
               href={item.href}
               className={`flex flex-col items-center py-3 px-4 text-xs transition-colors ${
                 pathname === item.href
-                  ? 'text-brand-green bg-brand-bgGray'
-                  : 'text-brand-gray'
+                  ? 'text-brand-green bg-gray-800'
+                  : 'text-gray-400'
               }`}
             >
               <item.icon className={`w-5 h-5 mb-1 ${
-                pathname === item.href ? 'text-brand-green' : 'text-brand-gray'
+                pathname === item.href ? 'text-brand-green' : 'text-gray-400'
               }`} />
               {item.label}
             </Link>
@@ -99,15 +99,15 @@ export default function Navigation() {
       </div>
 
       {/* Mobile Top Bar */}
-      <div className="md:hidden bg-white shadow-sm border-b border-fliq-border">
+      <div className="md:hidden bg-black shadow-sm border-b border-gray-800">
          <div className="flex justify-between items-center px-4 h-16">
            <Link href="/" className="hover:scale-105 transition-transform">
             <Image 
               src="/logo.png" 
               alt="Fliq" 
-              width={70} 
-              height={35}
-              className="h-6 w-auto"
+              width={80} 
+              height={40}
+              className="h-7 w-auto"
             />
            </Link>
           <WalletConnectButton />

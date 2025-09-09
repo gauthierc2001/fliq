@@ -172,16 +172,30 @@ export default function UserPage() {
                 width={80}
                 height={80}
                 className="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-brand-green object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement
+                  target.style.display = 'none'
+                  const fallback = target.nextElementSibling as HTMLElement
+                  if (fallback) fallback.style.display = 'flex'
+                }}
               />
-            ) : (
-              <div className="w-20 h-20 bg-brand-bgGray rounded-full mx-auto mb-4 flex items-center justify-center">
-                <User className="w-10 h-10 text-brand-gray" />
-              </div>
-            )}
+            ) : null}
+            <div className={`w-20 h-20 bg-brand-green rounded-full mx-auto mb-4 flex items-center justify-center ${
+              user.avatar ? 'hidden' : 'flex'
+            }`}>
+              <span className="text-2xl font-bold text-white">
+                {user.username 
+                  ? user.username.slice(0, 2).toUpperCase()
+                  : user.wallet.slice(0, 2).toUpperCase()
+                }
+              </span>
+            </div>
             
             {/* User Info */}
             <div className="mb-4">
-              <div className="text-lg font-bold text-brand-black">{user.username}</div>
+              <div className="text-lg font-bold text-brand-black">
+                {user.username || `${user.wallet.slice(0, 4)}...${user.wallet.slice(-4)}`}
+              </div>
               <button
                 onClick={() => setIsEditing(!isEditing)}
                 className="flex items-center justify-center space-x-2 px-3 py-1 text-sm text-brand-green hover:bg-brand-bgGray rounded-lg transition-colors mx-auto mt-2"

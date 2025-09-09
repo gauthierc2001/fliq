@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import { TrendingDown, TrendingUp } from 'lucide-react'
+import { TrendingDown, TrendingUp, Coins } from 'lucide-react'
 import Image from 'next/image'
 
 interface Market {
@@ -54,7 +54,7 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
   }, [market.yesShare])
 
   return (
-    <div className="bg-white rounded-3xl shadow-2xl border border-brand-border p-6 sm:p-8 w-full h-full flex flex-col justify-between relative overflow-hidden min-h-[480px]">
+    <div className="bg-white rounded-3xl shadow-2xl border border-brand-border p-5 sm:p-6 w-full h-full flex flex-col relative overflow-hidden min-h-[500px] max-h-[520px]">
       {/* Background gradient for visual appeal */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-green to-brand-greenDark"></div>
       
@@ -67,7 +67,7 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
               alt={`${market.symbol} logo`}
               width={48}
               height={48}
-              className="w-12 h-12 rounded-full mr-3"
+              className="w-12 h-12 rounded-full mr-3 object-cover"
               unoptimized
               onError={(e) => {
                 // Hide broken image and show fallback
@@ -79,13 +79,18 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
             />
           ) : null}
           <div 
-            className={`w-12 h-12 rounded-full bg-brand-green flex items-center justify-center mr-3 ${
+            className={`w-12 h-12 rounded-full bg-gradient-to-br from-brand-green to-brand-greenDark flex items-center justify-center mr-3 ${
               market.logoUrl ? 'hidden' : 'flex'
-            }`}
+            } shadow-lg border-2 border-white`}
           >
-            <span className="text-white font-bold text-lg">
-              {market.symbol.slice(0, 2).toUpperCase()}
-            </span>
+            {/* Try to show initials first, fallback to coin icon */}
+            {market.symbol.length >= 2 ? (
+              <span className="text-white font-black text-sm">
+                {market.symbol.slice(0, 2).toUpperCase()}
+              </span>
+            ) : (
+              <Coins className="w-6 h-6 text-white" />
+            )}
           </div>
           <div className="text-3xl font-black text-brand-green">{market.symbol.toUpperCase()}</div>
         </div>
@@ -144,25 +149,25 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
       </div>
 
       {/* Action Buttons */}
-      <div className="space-y-3">
-        <div className="grid grid-cols-2 gap-4">
+      <div className="space-y-3 mt-auto">
+        <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => onSwipe?.(market.id, 'NO')}
-            className="py-4 px-6 bg-brand-black text-white font-bold rounded-2xl hover:bg-gray-800 transition-all duration-200 transform hover:scale-105 flex items-center justify-center space-x-2"
+            className="py-3 px-4 bg-brand-black text-white font-bold rounded-xl hover:bg-gray-800 transition-all duration-200 hover:scale-[1.02] flex items-center justify-center space-x-2 text-sm shadow-lg"
           >
-            <TrendingDown className="w-5 h-5" />
+            <TrendingDown className="w-4 h-4" />
             <span>NO</span>
           </button>
           <button
             onClick={() => onSwipe?.(market.id, 'YES')}
-            className="py-4 px-6 bg-brand-green text-white font-bold rounded-2xl hover:bg-brand-greenDark transition-all duration-200 transform hover:scale-105 flex items-center justify-center space-x-2"
+            className="py-3 px-4 bg-brand-green text-white font-bold rounded-xl hover:bg-brand-greenDark transition-all duration-200 hover:scale-[1.02] flex items-center justify-center space-x-2 text-sm shadow-lg"
           >
-            <TrendingUp className="w-5 h-5" />
+            <TrendingUp className="w-4 h-4" />
             <span>YES</span>
           </button>
         </div>
         
-        <div className="text-center">
+        <div className="text-center px-2">
           <div className="text-xs text-brand-gray">
             Stake: <span className="font-bold text-brand-black">{wagerAmount} $FLIQ</span> per bet
           </div>
