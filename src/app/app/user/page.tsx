@@ -41,6 +41,9 @@ export default function UserPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
   const [editForm, setEditForm] = useState({ username: '', avatar: '' })
+  const [avatarKey, setAvatarKey] = useState(0) // For cache busting
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [previewAvatar, setPreviewAvatar] = useState('')
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -63,6 +66,7 @@ export default function UserPage() {
   }, [])
 
   const handleProfileUpdate = useCallback(async () => {
+    setIsUpdating(true)
     try {
       const response = await fetch('/api/user/profile', {
         method: 'PUT',
@@ -73,12 +77,16 @@ export default function UserPage() {
       if (response.ok) {
         const { user: updatedUser } = await response.json()
         setUser(updatedUser)
+        setAvatarKey(prev => prev + 1) // Force image reload
         setIsEditing(false)
+        setPreviewAvatar('')
       } else {
         console.error('Failed to update profile')
       }
     } catch (error) {
       console.error('Profile update error:', error)
+    } finally {
+      setIsUpdating(false)
     }
   }, [editForm])
 
@@ -167,11 +175,12 @@ export default function UserPage() {
           <div className="mb-6">
             {user.avatar ? (
               <Image 
-                src={user.avatar} 
+                src={`${user.avatar}${user.avatar.includes('?') ? '&' : '?'}v=${avatarKey}`} 
                 alt="Profile"
                 width={80}
                 height={80}
                 className="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-brand-green object-cover"
+                key={avatarKey} // Force component remount
                 onError={(e) => {
                   const target = e.target as HTMLImageElement
                   target.style.display = 'none'
@@ -223,22 +232,53 @@ export default function UserPage() {
                   <input
                     type="url"
                     value={editForm.avatar}
-                    onChange={(e) => setEditForm(prev => ({ ...prev, avatar: e.target.value }))}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      setEditForm(prev => ({ ...prev, avatar: value }))
+                      // Set preview with a small delay to avoid too many updates
+                      const timeoutId = setTimeout(() => {
+                        if (value && value.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
+                          setPreviewAvatar(value)
+                        } else {
+                          setPreviewAvatar('')
+                        }
+                      }, 500)
+                      return () => clearTimeout(timeoutId)
+                    }}
                     placeholder="https://example.com/avatar.jpg"
                     className="w-full px-3 py-2 border border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green"
                   />
+                  {/* Avatar Preview */}
+                  {previewAvatar && (
+                    <div className="mt-2">
+                      <div className="text-xs text-brand-gray mb-1">Preview:</div>
+                      <Image
+                        src={previewAvatar}
+                        alt="Avatar preview"
+                        width={40}
+                        height={40}
+                        className="w-10 h-10 rounded-full border border-brand-border object-cover"
+                        onError={() => setPreviewAvatar('')}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="flex space-x-2">
                   <button
                     onClick={handleProfileUpdate}
-                    className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-brand-green text-white rounded-lg hover:bg-brand-greenDark transition-colors"
+                    disabled={isUpdating}
+                    className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-brand-green text-white rounded-lg hover:bg-brand-greenDark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Save className="w-4 h-4" />
-                    <span>Save</span>
+                    <span>{isUpdating ? 'Saving...' : 'Save'}</span>
                   </button>
                   <button
-                    onClick={() => setIsEditing(false)}
-                    className="flex items-center justify-center px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                    onClick={() => {
+                      setIsEditing(false)
+                      setPreviewAvatar('')
+                    }}
+                    disabled={isUpdating}
+                    className="flex items-center justify-center px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors disabled:opacity-50"
                   >
                     <X className="w-4 h-4" />
                   </button>

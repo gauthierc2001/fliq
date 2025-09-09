@@ -1,16 +1,17 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { getCurrentPrice, getCoinGeckoId } from '@/lib/prices'
+import { getCoinDetails, getCoinGeckoId } from '@/lib/prices'
 
 // Force dynamic rendering - this route uses database
 export const dynamic = 'force-dynamic'
 
+// Verified CoinGecko coins with correct IDs and available logos
 const COINS = [
   { symbol: 'bitcoin', name: 'Bitcoin', ticker: 'BTC' },
   { symbol: 'ethereum', name: 'Ethereum', ticker: 'ETH' },
   { symbol: 'solana', name: 'Solana', ticker: 'SOL' },
   { symbol: 'cardano', name: 'Cardano', ticker: 'ADA' },
-  { symbol: 'avalanche-2', name: 'Avalanche', ticker: 'AVAX' },
+  { symbol: 'binancecoin', name: 'BNB', ticker: 'BNB' },
   { symbol: 'chainlink', name: 'Chainlink', ticker: 'LINK' }
 ]
 
@@ -21,40 +22,52 @@ export async function POST() {
     let createdCount = 0
     
     for (const coin of COINS) {
-      // Get current price
-      const coinId = getCoinGeckoId(coin.symbol)
-      const currentPrice = await getCurrentPrice(coinId)
-      
-      for (const duration of DURATIONS) {
-        const startTime = new Date()
-        const endTime = new Date(startTime.getTime() + duration * 60 * 1000)
+      try {
+        // Get current price and logo from CoinGecko
+        const coinId = getCoinGeckoId(coin.symbol)
+        const { price: currentPrice, image: logoUrl } = await getCoinDetails(coinId)
         
-        // Check if market already exists for this timeframe
-        const existingMarket = await prisma.market.findFirst({
-          where: {
-            symbol: coin.symbol,
-            durationMin: duration,
-            resolved: false,
-            endTime: {
-              gt: new Date()
-            }
-          }
-        })
+        if (currentPrice === 0) {
+          console.warn(`Skipping ${coin.symbol} - price fetch failed`)
+          continue
+        }
         
-        if (!existingMarket) {
-          await prisma.market.create({
-            data: {
+        for (const duration of DURATIONS) {
+          const startTime = new Date()
+          const endTime = new Date(startTime.getTime() + duration * 60 * 1000)
+          
+          // Check if market already exists for this timeframe
+          const existingMarket = await prisma.market.findFirst({
+            where: {
               symbol: coin.symbol,
-              title: `${coin.ticker} ↑ in ${duration}m?`,
               durationMin: duration,
-              startTime,
-              endTime,
-              startPrice: currentPrice
+              resolved: false,
+              endTime: {
+                gt: new Date()
+              }
             }
           })
-          createdCount++
+          
+          if (!existingMarket) {
+            await prisma.market.create({
+              data: {
+                symbol: coin.symbol,
+                title: `${coin.ticker} ↑ in ${duration}m?`,
+                durationMin: duration,
+                startTime,
+                endTime,
+                startPrice: currentPrice,
+                logoUrl: logoUrl || null // Store logo URL from CoinGecko
+              }
+            })
+            createdCount++
+          }
         }
+      } catch (error) {
+        console.error(`Error processing coin ${coin.symbol}:`, error)
+        // Continue with other coins
       }
+    }
     }
     
     return NextResponse.json({
@@ -63,6 +76,9 @@ export async function POST() {
     })
   } catch (error) {
     console.error('Error seeding markets:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json({ 
+      error: 'Internal server error',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
   }
 }

@@ -5,10 +5,14 @@ const prisma = new PrismaClient()
 async function main() {
   console.log('🌱 Seeding initial markets...')
   
+  // Verified CoinGecko coins with correct IDs and available logos
   const coins = [
     { symbol: 'bitcoin', name: 'Bitcoin', ticker: 'BTC' },
     { symbol: 'ethereum', name: 'Ethereum', ticker: 'ETH' },
-    { symbol: 'solana', name: 'Solana', ticker: 'SOL' }
+    { symbol: 'solana', name: 'Solana', ticker: 'SOL' },
+    { symbol: 'cardano', name: 'Cardano', ticker: 'ADA' },
+    { symbol: 'binancecoin', name: 'BNB', ticker: 'BNB' },
+    { symbol: 'chainlink', name: 'Chainlink', ticker: 'LINK' }
   ]
   
   const durations = [1, 3, 5] // minutes
@@ -41,7 +45,8 @@ async function main() {
             durationMin: duration,
             startTime,
             endTime,
-            startPrice: mockPrice
+            startPrice: mockPrice,
+            logoUrl: null // Will be populated by real market generation
           }
         })
         

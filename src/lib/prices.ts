@@ -68,49 +68,28 @@ export async function getCurrentPrice(coinId: string, retries = 2): Promise<numb
 
 export function getCoinGeckoId(symbol: string): string {
   const mapping: Record<string, string> = {
-    // Major cryptos
+    // Major cryptos - verified CoinGecko IDs
     'bitcoin': 'bitcoin',
     'ethereum': 'ethereum', 
     'solana': 'solana',
     'cardano': 'cardano',
-    'avalanche-2': 'avalanche-2',
+    'binancecoin': 'binancecoin', // BNB
     'chainlink': 'chainlink',
-    'binancecoin': 'binancecoin',
-    'polygon': 'matic-network',
+    'polygon': 'matic-network', // MATIC
     
-    // Solana memecoins
-    'dogwifcoin': 'dogwifcoin',
-    'bonk': 'bonk',
-    'book-of-meme': 'book-of-meme',
-    'jeo-boden': 'jeo-boden',
-    'cat-in-a-dogs-world': 'cat-in-a-dogs-world',
-    'popcat': 'popcat',
-    'Jupiter': 'jupiter-exchange-solana',
-    'wen-4': 'wen-4',
-    'slerf': 'slerf',
-    'mother-iggy': 'mother-iggy',
-    'daddy-tate': 'daddy-tate',
-    'ponke': 'ponke',
-    'myro': 'myro',
-    'tensor': 'tensor',
-    'jito-governance-token': 'jito-governance-token',
-    'hivemapper': 'hivemapper',
-    'goatseus-maximus': 'goatseus-maximus',
-    'peanut-the-squirrel': 'peanut-the-squirrel',
-    'act-i-the-ai-prophecy': 'act-i-the-ai-prophecy',
-    'gigachad-2': 'gigachad-2',
-    'retardio': 'retardio',
-    'moo-deng': 'moo-deng',
-    'fwog': 'fwog',
-    'smoking-chicken-fish': 'smoking-chicken-fish',
-    
-    // Popular memecoins
-    'mog-coin': 'mog-coin',
-    'pepe': 'pepe',
-    'dogecoin': 'dogecoin',
-    'shiba-inu': 'shiba-inu'
+    // Other major coins (commented out for now - focus on stable ones)
+    // 'dogecoin': 'dogecoin',
+    // 'shiba-inu': 'shiba-inu',
+    // 'pepe': 'pepe'
   }
-  return mapping[symbol] || symbol
+  const coinId = mapping[symbol] || symbol
+  
+  // Log if we're using fallback
+  if (!mapping[symbol] && symbol !== coinId) {
+    console.warn(`Using fallback CoinGecko ID for symbol: ${symbol} -> ${coinId}`)
+  }
+  
+  return coinId
 }
 
 export async function getCoinDetails(coinId: string): Promise<{ price: number; image: string }> {
