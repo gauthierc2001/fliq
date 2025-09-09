@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { calculateOdds } from '@/lib/betting'
 
+// Force dynamic rendering - this route uses database
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const markets = await prisma.market.findMany({

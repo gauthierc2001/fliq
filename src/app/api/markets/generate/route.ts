@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { generateMarketData, getFallbackMarkets } from '@/lib/marketGenerator'
 
+// Force dynamic rendering - this route should not be statically generated
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   // Add basic rate limiting for production
   const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'

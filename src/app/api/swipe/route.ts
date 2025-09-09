@@ -3,6 +3,9 @@ import { prisma } from '@/lib/prisma'
 import { getUserFromRequest } from '@/lib/auth'
 import { calculateOdds, STAKE_AMOUNT } from '@/lib/betting'
 
+// Force dynamic rendering - this route uses database and auth
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const user = await getUserFromRequest(request)
