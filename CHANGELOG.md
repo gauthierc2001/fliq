@@ -8,6 +8,6 @@ Behavior-preserving repository hardening.
 - Fixed dynamic route params typing in `src/app/api/prices/[symbol]/route.ts`
 - Prisma: stable singleton, safe DATABASE_URL query param append in prod
 - Nonce: cryptographically strong randomness via `crypto.getRandomValues`
-- Docker: add .dockerignore; ensure prod-only deps; keep migration on start
-- README: deterministic install/build, Docker, production build instructions
+- Docker: add .dockerignore; ensure prod-only deps; keep migration on start; regenerate lockfile during build
+- README: updated install/build instructions for dependency changes
 

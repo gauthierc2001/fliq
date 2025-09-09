@@ -48,8 +48,8 @@ NEXT_PUBLIC_BASE_URL="http://localhost:3000"
 ### Installation
 
 ```bash
-# Deterministic install and dev
-npm ci
+# Install dependencies and dev
+npm install
 npx prisma generate
 npx prisma db push
 npm run dev
@@ -58,7 +58,7 @@ npm run dev
 
 ```bash
 # From a clean clone
-npm ci
+npm install
 npm run build
 # Start
 npm start

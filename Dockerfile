@@ -7,14 +7,15 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat python3 make g++ linux-headers udev
 WORKDIR /app
 
-# Copy package files and install ALL dependencies (including dev for build)
-COPY package.json package-lock.json* ./
-RUN npm ci --legacy-peer-deps
+# Copy package files and regenerate lockfile for stable versions
+COPY package.json ./
+RUN npm install --legacy-peer-deps
 
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/package-lock.json ./package-lock.json
 COPY . .
 
 # Disable telemetry during build
