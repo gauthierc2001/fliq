@@ -4,18 +4,33 @@ const globalForPrisma = globalThis as unknown as { prisma: PrismaClient | undefi
 
 function buildDatabaseUrl(): string | undefined {
   const base = process.env.DATABASE_URL
+  
+  // Log environment info for debugging
+  if (process.env.NODE_ENV === 'production') {
+    console.log('[Prisma] Production mode detected')
+    console.log('[Prisma] DATABASE_URL exists:', !!base)
+    console.log('[Prisma] DATABASE_URL length:', base?.length || 0)
+  }
+  
   if (!base) {
     // Only throw in production or when actually trying to use the database
     if (process.env.NODE_ENV === 'production') {
+      console.error('[Prisma] DATABASE_URL is not set in production environment')
+      console.error('[Prisma] Available env vars:', Object.keys(process.env).filter(k => k.includes('DATABASE') || k.includes('PG')))
       throw new Error('DATABASE_URL is not set in production')
     }
     // Return undefined for build time
     return undefined
   }
+  
   if (process.env.NODE_ENV !== 'production') return base
+  
   const hasQuery = base.includes('?')
   const params = 'connection_limit=10&pool_timeout=10'
-  return hasQuery ? `${base}&${params}` : `${base}?${params}`
+  const finalUrl = hasQuery ? `${base}&${params}` : `${base}?${params}`
+  
+  console.log('[Prisma] Database URL configured with connection pooling')
+  return finalUrl
 }
 
 // Create a lazy initialization wrapper

@@ -30,7 +30,20 @@ export async function GET() {
     
     return NextResponse.json({ markets: marketsWithOdds })
   } catch (error) {
-    console.error('Error fetching markets:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    console.error('[API] Error fetching markets:', error)
+    console.error('[API] Error stack:', error instanceof Error ? error.stack : 'No stack trace')
+    console.error('[API] DATABASE_URL exists:', !!process.env.DATABASE_URL)
+    
+    // Return more detailed error in production for debugging
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const isDatabaseError = errorMessage.includes('DATABASE_URL') || errorMessage.includes('prisma') || errorMessage.includes('connect')
+    
+    return NextResponse.json({ 
+      error: 'Internal server error',
+      details: process.env.NODE_ENV === 'production' ? {
+        type: isDatabaseError ? 'database' : 'unknown',
+        message: errorMessage
+      } : undefined
+    }, { status: 500 })
   }
 }

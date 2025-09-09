@@ -10,6 +10,7 @@ export interface JWTPayload {
 export function signJWT(payload: JWTPayload): string {
   const secret = process.env.JWT_SECRET
   if (!secret || secret.length < 32) {
+    console.error('[Auth] JWT_SECRET issue - exists:', !!secret, 'length:', secret?.length || 0)
     throw new Error('JWT_SECRET must be at least 32 characters long')
   }
   return jwt.sign(payload, secret, { expiresIn: '7d' })
