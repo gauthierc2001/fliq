@@ -5,34 +5,17 @@ import { generateMarketData, getFallbackMarkets } from '@/lib/marketGenerator'
 // Force dynamic rendering - this route should not be statically generated
 export const dynamic = 'force-dynamic'
 
-export async function POST(request: NextRequest) {
-  // Add basic rate limiting for production
-  const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
-  console.log(`Market generation request from IP: ${clientIP}`)
-  
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function POST(_request: NextRequest) {
   try {
-    console.log('Starting market generation...')
     let createdCount = 0
     let usedFallback = false
-    
-    // Check existing active markets
-    const activeMarkets = await prisma.market.count({
-      where: {
-        resolved: false,
-        endTime: {
-          gt: new Date()
-        }
-      }
-    })
-    
-    console.log(`Found ${activeMarkets} active markets`)
     
     let marketDataToCreate
     
     try {
       // Try to get live market data from CoinGecko
       marketDataToCreate = await generateMarketData()
-      console.log(`Generated ${marketDataToCreate.length} markets from CoinGecko`)
     } catch (error) {
       console.warn('CoinGecko unavailable, using fallback markets:', error)
       marketDataToCreate = getFallbackMarkets()
@@ -66,7 +49,6 @@ export async function POST(request: NextRequest) {
             }
           })
           createdCount++
-          console.log(`Created market: ${marketData.ticker} ${marketData.durationMin}m`)
         }
       } catch (error) {
         console.error(`Error creating market ${marketData.ticker}:`, error)
@@ -83,8 +65,6 @@ export async function POST(request: NextRequest) {
         }
       }
     })
-    
-    console.log(`Market generation complete. Created: ${createdCount}, Total active: ${finalCount}`)
     
     return NextResponse.json({
       success: true,

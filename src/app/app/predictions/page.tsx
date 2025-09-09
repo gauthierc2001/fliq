@@ -58,23 +58,19 @@ export default function PredictionsPage() {
   const fetchMarkets = useCallback(async () => {
     try {
       setMarketError(null)
-      console.log('Fetching markets...')
       
       const response = await fetch('/api/markets/list')
       if (response.ok) {
         const { markets } = await response.json()
-        console.log(`Found ${markets.length} markets`)
         
         // If no markets available, generate some
         if (markets.length === 0) {
-          console.log('No markets found, generating new ones...')
           setIsGeneratingMarkets(true)
           
           try {
             const generateResponse = await fetch('/api/markets/generate', { method: 'POST' })
             if (generateResponse.ok) {
               const generationResult = await generateResponse.json()
-              console.log('Generation result:', generationResult)
               
               // Show warning if using fallback data
               if (generationResult.warning) {
@@ -85,7 +81,6 @@ export default function PredictionsPage() {
               const retryResponse = await fetch('/api/markets/list')
               if (retryResponse.ok) {
                 const { markets: newMarkets } = await retryResponse.json()
-                console.log(`After generation: ${newMarkets.length} markets`)
                 setMarkets(newMarkets)
               } else {
                 throw new Error('Failed to fetch markets after generation')
@@ -165,8 +160,7 @@ export default function PredictionsPage() {
     }
   }
 
-  const handleSkip = (marketId: string) => {
-    console.log(`Skipped market: ${marketId}`)
+  const handleSkip = () => {
     // Skip functionality handled in SwipeDeck component
   }
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { TrendingDown, TrendingUp } from 'lucide-react'
 
 interface Market {
@@ -39,14 +39,16 @@ export default function MarketCard({ market, onSwipe }: MarketCardProps) {
     return () => clearInterval(timer)
   }, [])
 
-  const formatTime = (ms: number) => {
+  const formatTime = useCallback((ms: number) => {
     const minutes = Math.floor(ms / 60000)
     const seconds = Math.floor((ms % 60000) / 1000)
     return `${minutes}:${seconds.toString().padStart(2, '0')}`
-  }
+  }, [])
 
-  const yesPercentage = Math.round(market.yesShare * 100)
-  const noPercentage = 100 - yesPercentage
+  const { yesPercentage, noPercentage } = useMemo(() => {
+    const yes = Math.round(market.yesShare * 100)
+    return { yesPercentage: yes, noPercentage: 100 - yes }
+  }, [market.yesShare])
 
   return (
     <div className="bg-white rounded-3xl shadow-2xl border border-brand-border p-8 w-full h-full flex flex-col justify-between relative overflow-hidden">

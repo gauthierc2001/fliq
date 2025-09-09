@@ -7,9 +7,10 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat python3 make g++ linux-headers udev
 WORKDIR /app
 
-# Copy package files and regenerate lockfile for stable versions
-COPY package.json ./
-RUN npm install --legacy-peer-deps
+# Copy package files for dependency caching
+COPY package.json package-lock.json* ./
+# Use npm ci for faster, reproducible builds with lockfile
+RUN npm ci --legacy-peer-deps
 
 # Rebuild the source code only when needed
 FROM base AS builder

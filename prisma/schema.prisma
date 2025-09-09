@@ -39,6 +39,10 @@ model Market {
   noBets      Int      @default(0)
   swipes      Swipe[]
   createdAt   DateTime @default(now())
+
+  // Indexes for common queries
+  @@index([resolved, endTime])
+  @@index([symbol, durationMin, resolved])
 }
 
 model Swipe {
@@ -55,6 +59,10 @@ model Swipe {
 
   user   User   @relation(fields: [userId], references: [id])
   market Market @relation(fields: [marketId], references: [id])
+
+  // Indexes for common queries
+  @@index([userId, createdAt])
+  @@index([marketId, settled])
 }
 
 enum Outcome {
@@ -68,4 +76,7 @@ model Nonce {
   wallet    String
   nonce     String
   createdAt DateTime @default(now())
+
+  // Index for nonce cleanup queries
+  @@index([wallet, createdAt])
 }
