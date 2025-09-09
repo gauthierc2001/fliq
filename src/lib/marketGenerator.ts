@@ -14,7 +14,7 @@ export const MAJOR_COINS: CoinData[] = [
   { symbol: 'solana', name: 'Solana', ticker: 'SOL', coinGeckoId: 'solana' },
   
   // Top Solana Memecoins & Popular Memes
-  { symbol: 'dogwifcoin', name: 'dogwifhat', ticker: 'WIF', coinGeckoId: 'dogwifcoin' },
+  { symbol: 'dogwifcoin', name: 'Dogwifhat', ticker: 'WIF', coinGeckoId: 'dogwifcoin' },
   { symbol: 'bonk', name: 'Bonk', ticker: 'BONK', coinGeckoId: 'bonk' },
   { symbol: 'book-of-meme', name: 'Book of Meme', ticker: 'BOME', coinGeckoId: 'book-of-meme' },
   { symbol: 'jeo-boden', name: 'Jeo Boden', ticker: 'BODEN', coinGeckoId: 'jeo-boden' },
@@ -95,30 +95,30 @@ export function getFallbackMarkets(): MarketData[] {
   return [
     {
       symbol: 'bitcoin',
-      title: 'Will BTC go ↑ in 5m?',
-      durationMin: 5,
+      title: 'Will BTC go ↑ in 1m?',
+      durationMin: 1,
       startTime: now,
-      endTime: new Date(now.getTime() + 5 * 60 * 1000),
+      endTime: new Date(now.getTime() + 1 * 60 * 1000),
       startPrice: 45000,
       ticker: 'BTC',
       logoUrl: undefined // Will show fallback logo
     },
     {
       symbol: 'ethereum',
-      title: 'Will ETH go ↑ in 15m?',
-      durationMin: 15,
+      title: 'Will ETH go ↑ in 3m?',
+      durationMin: 3,
       startTime: now,
-      endTime: new Date(now.getTime() + 15 * 60 * 1000),
+      endTime: new Date(now.getTime() + 3 * 60 * 1000),
       startPrice: 2800,
       ticker: 'ETH',
       logoUrl: undefined // Will show fallback logo
     },
     {
       symbol: 'solana',
-      title: 'Will SOL go ↑ in 30m?',
-      durationMin: 30,
+      title: 'Will SOL go ↑ in 5m?',
+      durationMin: 5,
       startTime: now,
-      endTime: new Date(now.getTime() + 30 * 60 * 1000),
+      endTime: new Date(now.getTime() + 5 * 60 * 1000),
       startPrice: 85,
       ticker: 'SOL',
       logoUrl: undefined // Will show fallback logo

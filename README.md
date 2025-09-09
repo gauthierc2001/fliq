@@ -6,7 +6,7 @@ A Tinder-style crypto prediction market where users swipe to predict price movem
 
 - **Live Crypto Markets**: Real-time prices from CoinGecko API
 - **Tinder-Style Swipe UI**: Swipe left (NO), right (YES), or up (SKIP)
-- **Quick Resolution**: 5, 15, and 30-minute prediction windows
+- **Quick Resolution**: 1, 3, and 5-minute prediction windows
 - **Profile System**: Customizable usernames and avatars
 - **Wallet-Based**: Solana wallet authentication required
 
@@ -169,7 +169,7 @@ model Market {
   id          String   @id @default(cuid())
   symbol      String   // coin symbol
   title       String   // prediction question
-  durationMin Int      // 5, 15, or 30 minutes
+  durationMin Int      // 1, 3, or 5 minutes
   startTime   DateTime
   endTime     DateTime
   startPrice  Float

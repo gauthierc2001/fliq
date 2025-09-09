@@ -10,7 +10,7 @@ async function main() {
     { symbol: 'bitcoin', name: 'Bitcoin', ticker: 'BTC', coinGeckoId: 'bitcoin' },
     { symbol: 'ethereum', name: 'Ethereum', ticker: 'ETH', coinGeckoId: 'ethereum' },
     { symbol: 'solana', name: 'Solana', ticker: 'SOL', coinGeckoId: 'solana' },
-    { symbol: 'dogwifcoin', name: 'dogwifhat', ticker: 'WIF', coinGeckoId: 'dogwifcoin' },
+    { symbol: 'dogwifcoin', name: 'Dogwifhat', ticker: 'WIF', coinGeckoId: 'dogwifcoin' },
     { symbol: 'bonk', name: 'Bonk', ticker: 'BONK', coinGeckoId: 'bonk' },
     { symbol: 'pepe', name: 'Pepe', ticker: 'PEPE', coinGeckoId: 'pepe' },
     { symbol: 'dogecoin', name: 'Dogecoin', ticker: 'DOGE', coinGeckoId: 'dogecoin' },

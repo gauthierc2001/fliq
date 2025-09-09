@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 // Profile update validation schema
 const profileUpdateSchema = z.object({
   username: z.string().min(1).max(50).optional(),
-  avatar: z.string().url().optional().or(z.literal(''))
+  avatar: z.string().url().optional().or(z.literal('')).or(z.literal(null))
 })
 
 export async function PUT(request: NextRequest) {
@@ -38,7 +38,7 @@ export async function PUT(request: NextRequest) {
       where: { id: user.id },
       data: {
         ...(username !== undefined && { username }),
-        ...(avatar !== undefined && { avatar: avatar || null })
+        ...(avatar !== undefined && { avatar: avatar === '' ? null : avatar })
       }
     })
     
