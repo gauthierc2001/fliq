@@ -7,6 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "start:production": "prisma migrate deploy && node server.js",
+    "migrate:deploy": "prisma migrate deploy",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
     "db:migrate": "prisma migrate dev",
@@ -35,7 +36,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-swipeable": "^7.0.2",
-    "tweetnacl": "^1.0.3"
+    "tweetnacl": "^1.0.3",
+    "zod": "^3.22.4"
   },
   "overrides": {},
   "devDependencies": {

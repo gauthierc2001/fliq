@@ -2,9 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getUserFromRequest } from '@/lib/auth'
 import { calculateOdds, STAKE_AMOUNT } from '@/lib/betting'
+import { z } from 'zod'
 
 // Force dynamic rendering - this route uses database and auth
 export const dynamic = 'force-dynamic'
+
+// Input validation schema
+const swipeSchema = z.object({
+  marketId: z.string().min(1),
+  side: z.enum(['YES', 'NO'])
+})
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,16 +22,17 @@ export async function POST(request: NextRequest) {
     }
     
     const body = await request.json()
-    const { marketId, side } = body
     
-    // Validate input
-    if (!marketId || typeof marketId !== 'string') {
-      return NextResponse.json({ error: 'Invalid marketId' }, { status: 400 })
+    // Validate input with Zod
+    const parseResult = swipeSchema.safeParse(body)
+    if (!parseResult.success) {
+      return NextResponse.json({ 
+        error: 'Invalid request', 
+        details: parseResult.error.flatten() 
+      }, { status: 400 })
     }
     
-    if (!side || !['YES', 'NO'].includes(side)) {
-      return NextResponse.json({ error: 'Invalid side - must be YES or NO' }, { status: 400 })
-    }
+    const { marketId, side } = parseResult.data
     
     // Check user balance
     if (user.balance < STAKE_AMOUNT) {

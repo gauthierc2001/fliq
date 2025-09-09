@@ -22,7 +22,7 @@ A Tinder-style crypto prediction market where users swipe to predict price movem
 
 ### Environment Variables
 
-Copy `env.template` to `.env.local` and fill in the values:
+Create a `.env` file in the root directory with your values:
 
 ```bash
 # Database - Railway PostgreSQL or local instance
@@ -70,7 +70,29 @@ npm start
 docker build -t fliq:latest .
 docker run -p 3000:3000 --env-file .env fliq:latest
 ```
-```
+
+### Railway Deployment
+
+1. **Set Environment Variables in Railway:**
+   ```
+   DATABASE_URL=postgresql://postgres:password@postgres.railway.internal:5432/railway
+   JWT_SECRET=your_secure_random_string_here
+   NEXT_PUBLIC_SOLANA_NETWORK=mainnet-beta
+   NEXT_PUBLIC_BASE_URL=https://your-app.up.railway.app
+   COINGECKO_API_KEY=your_api_key_if_you_have_one
+   TWITTER_CLIENT_ID=your_twitter_client_id
+   TWITTER_CLIENT_SECRET=your_twitter_client_secret
+   ```
+
+2. **Database Setup:**
+   - Railway automatically provisions PostgreSQL
+   - Migrations run automatically on deploy via `start:production` script
+   - Connection pooling is configured in `src/lib/prisma.ts`
+
+3. **Build Configuration:**
+   - Uses Dockerfile for consistent builds
+   - Prisma client generated during build
+   - Standalone Next.js output for smaller images
 
 ## API Endpoints
 

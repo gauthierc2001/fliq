@@ -39,10 +39,16 @@
 - **Docker**: Updated to regenerate lockfile during build (`npm install` instead of `npm ci`)
 - **Railway**: Confirmed environment variable setup and migration strategy
 
+### Database & Deployment
+- **Database URL**: Set Railway PostgreSQL connection string
+- **Static Generation Fix**: Added `export const dynamic = 'force-dynamic'` to all API routes that use database/cookies to prevent build-time database access errors
+- **Routes Fixed**: All auth, markets, leaderboard, swipe, and cron routes now properly marked as dynamic
+
 ### Verification
 - ✅ `npm run lint` - No errors or warnings
 - ✅ `npm run typecheck` - All types valid
-- ✅ `npm run build` - Production build succeeds
+- ✅ `npm run build` - Production build succeeds without database errors
 - ✅ Dependencies all on stable versions
 - ✅ Tailwind CSS properly configured with brand colors
+- ✅ All API routes properly configured for dynamic rendering
 
