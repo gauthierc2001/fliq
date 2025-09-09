@@ -11,7 +11,7 @@ async function main() {
     { symbol: 'solana', name: 'Solana', ticker: 'SOL' }
   ]
   
-  const durations = [10, 30, 60] // minutes
+  const durations = [1, 3, 5] // minutes
   
   for (const coin of coins) {
     for (const duration of durations) {

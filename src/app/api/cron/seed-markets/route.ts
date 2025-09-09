@@ -14,7 +14,7 @@ const COINS = [
   { symbol: 'chainlink', name: 'Chainlink', ticker: 'LINK' }
 ]
 
-const DURATIONS = [5, 15, 30] // minutes - quick resolution times
+const DURATIONS = [1, 3, 5] // minutes - quick resolution times
 
 export async function POST() {
   try {
