@@ -35,7 +35,7 @@ export default function PredictionsPage() {
   const [isSwipeLoading, setIsSwipeLoading] = useState(false)
   const [marketError, setMarketError] = useState<string | null>(null)
   const [isGeneratingMarkets, setIsGeneratingMarkets] = useState(false)
-  const [skippedMarkets, setSkippedMarkets] = useState<Set<string>>(new Set())
+  // Removed unused skippedMarkets state
 
   const checkAuth = useCallback(async () => {
     try {
@@ -167,7 +167,7 @@ export default function PredictionsPage() {
 
   const handleSkip = (marketId: string) => {
     console.log(`Skipped market: ${marketId}`)
-    setSkippedMarkets(prev => new Set([...prev, marketId]))
+    // Skip functionality handled in SwipeDeck component
   }
 
   if (isLoading || isGeneratingMarkets) {

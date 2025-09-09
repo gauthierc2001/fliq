@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSwipeable } from 'react-swipeable'
 import { motion } from 'framer-motion'
 import MarketCard from './MarketCard'
@@ -36,7 +36,7 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading }: Swipe
 
   const currentMarket = markets[currentIndex]
 
-  const handleSwipe = async (marketId: string, side: 'YES' | 'NO') => {
+  const handleSwipe = useCallback(async (marketId: string, side: 'YES' | 'NO') => {
     if (isAnimating || !currentMarket) return
 
     setIsAnimating(true)
@@ -59,9 +59,9 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading }: Swipe
       setSwipeDirection(null)
       console.error('Swipe error:', error)
     }
-  }
+  }, [isAnimating, currentMarket, onSwipe, markets.length])
 
-  const handleSkip = () => {
+  const handleSkip = useCallback(() => {
     if (isAnimating || !currentMarket) return
     
     setIsAnimating(true)
@@ -79,7 +79,7 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading }: Swipe
       setIsAnimating(false)
       setSwipeDirection(null)
     }, 300)
-  }
+  }, [isAnimating, currentMarket, onSkip, markets.length])
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => currentMarket && handleSwipe(currentMarket.id, 'NO'),
@@ -115,7 +115,7 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading }: Swipe
 
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
-  }, [currentMarket, isAnimating])
+  }, [currentMarket, isAnimating, handleSkip, handleSwipe])
 
   if (!currentMarket) {
     return (

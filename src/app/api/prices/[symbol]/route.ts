@@ -3,10 +3,10 @@ import { getCurrentPrice, getCoinGeckoId } from '@/lib/prices'
 
 export async function GET(
   _request: NextRequest,
-  context: { params: { symbol: string } }
+  { params }: { params: { symbol: string } }
 ) {
   try {
-    const { symbol } = context.params
+    const { symbol } = params
     const coinId = getCoinGeckoId(symbol)
     const price = await getCurrentPrice(coinId)
     

@@ -11,10 +11,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
     
-    const { marketId, side } = await request.json()
+    const body = await request.json()
+    const { marketId, side } = body
     
-    if (!marketId || !side || !['YES', 'NO'].includes(side)) {
-      return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
+    // Validate input
+    if (!marketId || typeof marketId !== 'string') {
+      return NextResponse.json({ error: 'Invalid marketId' }, { status: 400 })
+    }
+    
+    if (!side || !['YES', 'NO'].includes(side)) {
+      return NextResponse.json({ error: 'Invalid side - must be YES or NO' }, { status: 400 })
     }
     
     // Check user balance

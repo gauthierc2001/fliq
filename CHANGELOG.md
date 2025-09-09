@@ -1,13 +1,48 @@
-## 0.1.1
+## 0.1.1 - Full Stability & Functional Audit
 
-Behavior-preserving repository hardening.
+### Summary
+- Fixed Next.js config build error by converting `next.config.ts` to `next.config.mjs`
+- Aligned all dependencies to stable versions (Next.js 14.2.15, React 18.2.0, ESLint 8.57.0)
+- Fixed all lint warnings and type errors
+- Hardened API routes with input validation and better error handling
+- Improved CoinGecko integration with timeout and retry logic
+- Verified Tailwind CSS pipeline and brand consistency
 
-- Dependencies aligned to stable: Next 14.2.15, React 18.2, ESLint 8.x, Framer Motion 11.x
-- Scripts: added typecheck; eslint now fails on warnings; production start runs standalone server.js
-- Next config: removed incompatible 15+ option usage; kept image remotePatterns
-- Fixed dynamic route params typing in `src/app/api/prices/[symbol]/route.ts`
-- Prisma: stable singleton, safe DATABASE_URL query param append in prod
-- Nonce: cryptographically strong randomness via `crypto.getRandomValues`
-- Docker: add .dockerignore; ensure prod-only deps; keep migration on start; regenerate lockfile during build
-- README: updated install/build instructions for dependency changes
+### Build & Config
+- **Next.js config**: Converted from TypeScript to ESM module (`.mjs`) to fix build error
+- **Dependencies**: Downgraded from Next.js 15.5.2 to stable 14.2.15 LTS
+- **Scripts**: Added `typecheck` command, `lint` now fails on warnings
+- **Prisma**: Regenerated client to fix missing Twitter fields type errors
+
+### Code Quality
+- **Lint fixes**:
+  - Removed unused `skippedMarkets` state in predictions page
+  - Fixed React hooks exhaustive dependencies in `SwipeDeck` and `WalletConnectButton`
+  - Removed unused `getCoinGeckoId` import in `marketGenerator.ts`
+- **Type fixes**:
+  - Fixed dynamic route params for Next.js 14 (non-Promise based)
+  - Properly typed all API responses and Prisma queries
+
+### Functional Improvements
+- **API Security**:
+  - Added proper input validation in `/api/swipe` route
+  - Improved error messages for better debugging
+- **CoinGecko Integration**:
+  - Added 5-second timeout with AbortController
+  - Implemented retry logic for rate limiting (429 errors)
+  - Better error handling for missing prices
+- **React Patterns**:
+  - Wrapped event handlers with `useCallback` to prevent unnecessary re-renders
+  - Fixed circular dependency in `WalletConnectButton` callbacks
+
+### Infrastructure
+- **Docker**: Updated to regenerate lockfile during build (`npm install` instead of `npm ci`)
+- **Railway**: Confirmed environment variable setup and migration strategy
+
+### Verification
+- ✅ `npm run lint` - No errors or warnings
+- ✅ `npm run typecheck` - All types valid
+- ✅ `npm run build` - Production build succeeds
+- ✅ Dependencies all on stable versions
+- ✅ Tailwind CSS properly configured with brand colors
 

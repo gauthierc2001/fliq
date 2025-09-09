@@ -1,4 +1,4 @@
-import { getCurrentPrice, getCoinGeckoId } from './prices'
+import { getCurrentPrice } from './prices'
 
 export interface CoinData {
   symbol: string

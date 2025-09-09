@@ -20,6 +20,80 @@ export default function WalletConnectButton() {
   const router = useRouter()
   const pathname = usePathname()
 
+  const handleAuthNoTwitterPrompt = useCallback(async () => {
+    if (!publicKey || !signMessage) return
+
+    setIsLoading(true)
+    try {
+      const wallet = publicKey.toString()
+
+      // Get nonce
+      const nonceResponse = await fetch('/api/auth/nonce', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ wallet }),
+      })
+
+      if (!nonceResponse.ok) throw new Error('Failed to get nonce')
+
+      const { nonce } = await nonceResponse.json()
+
+      // Sign message
+      const message = `Sign this message to authenticate with Fliq: ${nonce}`
+      const encodedMessage = new TextEncoder().encode(message)
+      const signature = await signMessage(encodedMessage)
+
+      // Verify signature
+      const verifyResponse = await fetch('/api/auth/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          wallet,
+          signature: bs58.encode(signature),
+          nonce,
+        }),
+      })
+
+      if (!verifyResponse.ok) throw new Error('Failed to verify signature')
+
+      const { user } = await verifyResponse.json()
+      setUser(user)
+      
+      // Only redirect if we're on the landing page
+      if (pathname === '/') {
+        router.push('/app/predictions')
+      }
+    } catch (error) {
+      console.error('Auth error:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [publicKey, signMessage, router, pathname])
+
+  const handleTwitterConnect = useCallback(async () => {
+    try {
+      const response = await fetch('/api/auth/twitter')
+      if (response.ok) {
+        const { authUrl } = await response.json()
+        // Open Twitter auth in a popup
+        const popup = window.open(authUrl, 'twitter-auth', 'width=600,height=600')
+        
+        // Listen for popup to close or message from popup
+        const checkClosed = setInterval(() => {
+          if (popup?.closed) {
+            clearInterval(checkClosed)
+            // Refresh user data after Twitter connection attempt
+            if (connected && publicKey && signMessage) {
+              handleAuthNoTwitterPrompt()
+            }
+          }
+        }, 1000)
+      }
+    } catch (error) {
+      console.error('Twitter connect error:', error)
+    }
+  }, [connected, publicKey, signMessage, handleAuthNoTwitterPrompt])
+
   const handleAuth = useCallback(async () => {
     if (!publicKey || !signMessage) return
 
@@ -82,7 +156,7 @@ export default function WalletConnectButton() {
     } finally {
       setIsLoading(false)
     }
-  }, [publicKey, signMessage, router, pathname])
+  }, [publicKey, signMessage, router, pathname, handleTwitterConnect])
 
   useEffect(() => {
     if (connected && publicKey && signMessage && !user) {
@@ -92,30 +166,6 @@ export default function WalletConnectButton() {
       setUser(null)
     }
   }, [connected, publicKey, signMessage, user, handleAuth])
-
-  const handleTwitterConnect = async () => {
-    try {
-      const response = await fetch('/api/auth/twitter')
-      if (response.ok) {
-        const { authUrl } = await response.json()
-        // Open Twitter auth in a popup
-        const popup = window.open(authUrl, 'twitter-auth', 'width=600,height=600')
-        
-        // Listen for popup to close or message from popup
-        const checkClosed = setInterval(() => {
-          if (popup?.closed) {
-            clearInterval(checkClosed)
-            // Refresh user data after Twitter connection attempt
-            if (connected) {
-              handleAuth()
-            }
-          }
-        }, 1000)
-      }
-    } catch (error) {
-      console.error('Twitter connect error:', error)
-    }
-  }
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
