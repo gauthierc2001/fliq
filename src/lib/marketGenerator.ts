@@ -1,4 +1,4 @@
-import { getCurrentPrice } from './prices'
+import { getCurrentPrice, getCoinDetails } from './prices'
 
 export interface CoinData {
   symbol: string
@@ -28,6 +28,7 @@ export interface MarketData {
   endTime: Date
   startPrice: number
   ticker: string
+  logoUrl?: string
 }
 
 export async function generateMarketData(): Promise<MarketData[]> {
@@ -35,7 +36,7 @@ export async function generateMarketData(): Promise<MarketData[]> {
   
   for (const coin of MAJOR_COINS) {
     try {
-      const price = await getCurrentPrice(coin.coinGeckoId)
+      const details = await getCoinDetails(coin.coinGeckoId)
       
       for (const duration of RESOLUTION_TIMES) {
         const startTime = new Date()
@@ -47,12 +48,13 @@ export async function generateMarketData(): Promise<MarketData[]> {
           durationMin: duration,
           startTime,
           endTime,
-          startPrice: price,
-          ticker: coin.ticker
+          startPrice: details.price,
+          ticker: coin.ticker,
+          logoUrl: details.image
         })
       }
     } catch (error) {
-      console.error(`Failed to fetch price for ${coin.ticker}:`, error)
+      console.error(`Failed to fetch details for ${coin.ticker}:`, error)
       // Continue with other coins - don't fail completely
     }
   }

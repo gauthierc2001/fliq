@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { TrendingDown, TrendingUp } from 'lucide-react'
+import Image from 'next/image'
 
 interface Market {
   id: string
@@ -17,14 +18,16 @@ interface Market {
   noMultiplier: number
   yesShare: number
   timeLeft: number
+  logoUrl?: string
 }
 
 interface MarketCardProps {
   market: Market
   onSwipe?: (marketId: string, side: 'YES' | 'NO') => void
+  wagerAmount?: number
 }
 
-export default function MarketCard({ market, onSwipe }: MarketCardProps) {
+export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: MarketCardProps) {
   const [timeLeft, setTimeLeft] = useState(market.timeLeft)
 
   useEffect(() => {
@@ -51,13 +54,31 @@ export default function MarketCard({ market, onSwipe }: MarketCardProps) {
   }, [market.yesShare])
 
   return (
-    <div className="bg-white rounded-3xl shadow-2xl border border-brand-border p-8 w-full h-full flex flex-col justify-between relative overflow-hidden">
+    <div className="bg-white rounded-3xl shadow-2xl border border-brand-border p-6 sm:p-8 w-full h-full flex flex-col justify-between relative overflow-hidden min-h-[480px]">
       {/* Background gradient for visual appeal */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-green to-brand-greenDark"></div>
       
       {/* Header */}
       <div className="text-center mb-6">
-        <div className="text-3xl font-black text-brand-green mb-2">{market.symbol.toUpperCase()}</div>
+        <div className="flex items-center justify-center mb-4">
+          {market.logoUrl ? (
+            <Image
+              src={market.logoUrl}
+              alt={`${market.symbol} logo`}
+              width={48}
+              height={48}
+              className="w-12 h-12 rounded-full mr-3"
+              unoptimized
+            />
+          ) : (
+            <div className="w-12 h-12 rounded-full bg-brand-green flex items-center justify-center mr-3">
+              <span className="text-white font-bold text-lg">
+                {market.symbol.slice(0, 2).toUpperCase()}
+              </span>
+            </div>
+          )}
+          <div className="text-3xl font-black text-brand-green">{market.symbol.toUpperCase()}</div>
+        </div>
         <h3 className="text-lg font-bold text-brand-black mb-2">{market.title}</h3>
         <div className="text-sm text-brand-gray">
           Starting price: <span className="font-bold text-brand-black">${market.startPrice.toLocaleString()}</span>
@@ -133,7 +154,7 @@ export default function MarketCard({ market, onSwipe }: MarketCardProps) {
         
         <div className="text-center">
           <div className="text-xs text-brand-gray">
-            Stake: <span className="font-bold text-brand-black">100 $FLIQ</span> per bet
+            Stake: <span className="font-bold text-brand-black">{wagerAmount} $FLIQ</span> per bet
           </div>
           <div className="text-xs text-brand-lightGray mt-1">
             Swipe or tap to predict

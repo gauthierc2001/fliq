@@ -27,9 +27,10 @@ interface SwipeDeckProps {
   onSwipe: (marketId: string, side: 'YES' | 'NO') => Promise<void>
   onSkip?: (marketId: string) => void
   isLoading?: boolean
+  wagerAmount?: number
 }
 
-export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading }: SwipeDeckProps) {
+export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading, wagerAmount = 100 }: SwipeDeckProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | 'up' | null>(null)
@@ -130,9 +131,11 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading }: Swipe
   }
 
   return (
-    <div className="relative w-full max-w-sm mx-auto h-[500px]" style={{ perspective: '1000px' }}>
-      {/* Card Stack - show 3 cards for depth */}
-      {markets.slice(currentIndex, currentIndex + 3).map((market, index) => (
+    <div className="relative w-full max-w-sm mx-auto" style={{ perspective: '1000px' }}>
+      {/* Main card container with proper spacing */}
+      <div className="relative h-[520px] mb-20">
+        {/* Card Stack - show 3 cards for depth */}
+        {markets.slice(currentIndex, currentIndex + 3).map((market, index) => (
         <motion.div
           key={market.id}
           className={`absolute inset-0 ${index === 0 ? 'z-30' : index === 1 ? 'z-20' : 'z-10'}`}
@@ -164,14 +167,15 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading }: Swipe
               transition: isAnimating ? 'transform 0.3s ease-out, opacity 0.3s ease-out' : 'none'
             }}
           >
-            <MarketCard market={market} onSwipe={index === 0 ? handleSwipe : undefined} />
+            <MarketCard market={market} onSwipe={index === 0 ? handleSwipe : undefined} wagerAmount={wagerAmount} />
           </div>
         </motion.div>
-      ))}
+        ))}
 
-      {/* Background cards for visual depth */}
-      <div className="absolute inset-0 -z-20 scale-90 opacity-20">
-        <div className="w-full h-full bg-white rounded-2xl border border-gray-200" />
+        {/* Background cards for visual depth */}
+        <div className="absolute inset-0 -z-20 scale-90 opacity-20">
+          <div className="w-full h-full bg-white rounded-2xl border border-gray-200" />
+        </div>
       </div>
 
       {/* Swipe Indicators */}
@@ -197,7 +201,7 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading }: Swipe
       </div>
 
       {/* Action Buttons */}
-      <div className="absolute -bottom-16 left-0 right-0">
+      <div className="absolute -bottom-20 left-0 right-0">
         <div className="flex justify-center items-center space-x-4">
           <button
             onClick={() => currentMarket && handleSwipe(currentMarket.id, 'NO')}

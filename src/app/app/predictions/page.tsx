@@ -37,7 +37,8 @@ export default function PredictionsPage() {
   const [isSwipeLoading, setIsSwipeLoading] = useState(false)
   const [marketError, setMarketError] = useState<string | null>(null)
   const [isGeneratingMarkets, setIsGeneratingMarkets] = useState(false)
-  // Removed unused skippedMarkets state
+  const [wagerAmount, setWagerAmount] = useState(100) // Default wager amount
+  const [tempWagerInput, setTempWagerInput] = useState('100') // For input field
 
   const checkAuth = useCallback(async () => {
     try {
@@ -130,8 +131,8 @@ export default function PredictionsPage() {
     
     if (!user || isSwipeLoading) return
 
-    if (user.balance < 100) {
-      alert('Insufficient balance! You need at least 100 $FLIQ to bet.')
+    if (user.balance < wagerAmount) {
+      alert(`Insufficient balance! You need at least ${wagerAmount} $FLIQ to bet.`)
       return
     }
 
@@ -141,7 +142,7 @@ export default function PredictionsPage() {
       const response = await fetch('/api/swipe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ marketId, side }),
+        body: JSON.stringify({ marketId, side, stake: wagerAmount }),
       })
 
       if (response.ok) {
@@ -164,6 +165,22 @@ export default function PredictionsPage() {
 
   const handleSkip = () => {
     // Skip functionality handled in SwipeDeck component
+  }
+
+  const handleSetWager = () => {
+    const amount = parseInt(tempWagerInput)
+    if (isNaN(amount) || amount < 1 || amount > 100000) {
+      alert('Please enter a valid wager amount between 1 and 100,000 FLIQ')
+      return
+    }
+    
+    if (user && amount > user.balance) {
+      alert(`You don't have enough balance. Your current balance is ${user.balance} FLIQ`)
+      return
+    }
+    
+    setWagerAmount(amount)
+    alert(`Wager amount set to ${amount} FLIQ`)
   }
 
   if (isLoading || isGeneratingMarkets) {
@@ -202,6 +219,40 @@ export default function PredictionsPage() {
                 {user.totalPnL > 0 ? '+' : ''}{user.totalPnL} Total P&L
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Wager Amount Input */}
+      {user && (
+        <div className="max-w-sm mx-auto mb-8">
+          <div className="bg-white rounded-lg shadow-sm border border-fliq-border p-4">
+            <h3 className="text-lg font-semibold text-fliq-dark mb-3 text-center">Set Wager Amount</h3>
+            <div className="flex space-x-2">
+              <input
+                type="number"
+                value={tempWagerInput}
+                onChange={(e) => setTempWagerInput(e.target.value)}
+                min="1"
+                max="100000"
+                placeholder="Enter amount"
+                className="flex-1 px-3 py-2 border border-fliq-border rounded-lg focus:outline-none focus:ring-2 focus:ring-fliq-green text-center"
+              />
+              <button
+                onClick={handleSetWager}
+                className="px-4 py-2 bg-fliq-green text-white font-semibold rounded-lg hover:bg-fliq-green-dark transition-colors"
+              >
+                Set
+              </button>
+            </div>
+            <div className="text-center mt-2">
+              <div className="text-sm text-fliq-gray">
+                Current wager: <span className="font-bold text-fliq-dark">{wagerAmount} $FLIQ</span>
+              </div>
+              <div className="text-xs text-fliq-gray">
+                Range: 1 - 100,000 FLIQ
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -248,6 +299,7 @@ export default function PredictionsPage() {
           onSwipe={handleSwipe}
           onSkip={handleSkip}
           isLoading={isSwipeLoading}
+          wagerAmount={wagerAmount}
         />
       </div>
 
@@ -285,7 +337,7 @@ export default function PredictionsPage() {
             </div>
           </div>
           <div className="mt-4 text-center text-xs text-[#B5B5B5]">
-            Each bet costs 100 $FLIQ • Multipliers based on market sentiment
+            Each bet costs {wagerAmount} $FLIQ • Multipliers based on market sentiment
           </div>
         </div>
       </div>

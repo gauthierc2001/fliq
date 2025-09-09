@@ -10,7 +10,8 @@ export const dynamic = 'force-dynamic'
 // Input validation schema
 const swipeSchema = z.object({
   marketId: z.string().min(1),
-  side: z.enum(['YES', 'NO'])
+  side: z.enum(['YES', 'NO']),
+  stake: z.number().min(1).max(100000).optional()
 })
 
 export async function POST(request: NextRequest) {
@@ -32,10 +33,11 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
     
-    const { marketId, side } = parseResult.data
+    const { marketId, side, stake } = parseResult.data
+    const actualStake = stake || STAKE_AMOUNT // Use custom stake or default
     
     // Check user balance
-    if (user.balance < STAKE_AMOUNT) {
+    if (user.balance < actualStake) {
       return NextResponse.json({ error: 'Insufficient balance' }, { status: 400 })
     }
     
@@ -60,7 +62,7 @@ export async function POST(request: NextRequest) {
           userId: user.id,
           marketId,
           side: side as 'YES' | 'NO',
-          stake: STAKE_AMOUNT,
+          stake: actualStake,
           payoutMult
         }
       })
@@ -69,7 +71,7 @@ export async function POST(request: NextRequest) {
       await tx.user.update({
         where: { id: user.id },
         data: {
-          balance: { decrement: STAKE_AMOUNT }
+          balance: { decrement: actualStake }
         }
       })
       
@@ -87,7 +89,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({
       swipe: result,
-      newBalance: user.balance - STAKE_AMOUNT
+      newBalance: user.balance - actualStake
     })
   } catch (error) {
     console.error('Error creating swipe:', error)

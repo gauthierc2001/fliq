@@ -35,6 +35,7 @@ model Market {
   outcome     Outcome?
   yesBets     Int      @default(0)
   noBets      Int      @default(0)
+  logoUrl     String?  // CoinGecko logo URL
   swipes      Swipe[]
   createdAt   DateTime @default(now())
 

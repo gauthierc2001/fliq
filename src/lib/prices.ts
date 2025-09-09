@@ -6,6 +6,7 @@ export interface CoinPrice {
   symbol: string
   price: number
   timestamp: number
+  image?: string
 }
 
 async function fetchWithTimeout(url: string, options: RequestInit, timeout: number): Promise<Response> {
@@ -75,4 +76,34 @@ export function getCoinGeckoId(symbol: string): string {
     'chainlink': 'chainlink'
   }
   return mapping[symbol] || symbol
+}
+
+export async function getCoinDetails(coinId: string): Promise<{ price: number; image: string }> {
+  try {
+    const response = await fetchWithTimeout(
+      `${COINGECKO_BASE_URL}/coins/${coinId}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`,
+      {
+        headers: process.env.COINGECKO_API_KEY ? {
+          'X-CG-Demo-API-Key': process.env.COINGECKO_API_KEY
+        } : {}
+      },
+      TIMEOUT_MS
+    )
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    
+    const data = await response.json()
+    
+    return {
+      price: data.market_data?.current_price?.usd || 0,
+      image: data.image?.large || data.image?.small || ''
+    }
+  } catch (error) {
+    console.error('Error fetching coin details:', error)
+    // Return fallback
+    const price = await getCurrentPrice(coinId)
+    return { price, image: '' }
+  }
 }

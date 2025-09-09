@@ -45,7 +45,8 @@ export async function POST(_request: NextRequest) {
               durationMin: marketData.durationMin,
               startTime: marketData.startTime,
               endTime: marketData.endTime,
-              startPrice: marketData.startPrice
+              startPrice: marketData.startPrice,
+              logoUrl: marketData.logoUrl
             }
           })
           createdCount++
@@ -90,7 +91,8 @@ export async function POST(_request: NextRequest) {
             durationMin: marketData.durationMin,
             startTime: marketData.startTime,
             endTime: marketData.endTime,
-            startPrice: marketData.startPrice
+            startPrice: marketData.startPrice,
+            logoUrl: marketData.logoUrl
           }
         })
         fallbackCreated++
