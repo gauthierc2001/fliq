@@ -40,6 +40,18 @@ async function main() {
         // Get a mock price for seeding (in production, this would fetch real prices)
         const mockPrice = Math.random() * 50000 + 20000 // Random price between 20k-70k
         
+        // Try to fetch real logo from CoinGecko
+        let logoUrl = null
+        try {
+          const response = await fetch(`https://api.coingecko.com/api/v3/coins/${coin.coinGeckoId}?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false&sparkline=false`)
+          if (response.ok) {
+            const data = await response.json()
+            logoUrl = data.image?.large || data.image?.small || null
+          }
+        } catch (error) {
+          console.warn(`Failed to fetch logo for ${coin.ticker}:`, error.message)
+        }
+        
         await prisma.market.create({
           data: {
             symbol: coin.symbol,
@@ -48,11 +60,11 @@ async function main() {
             startTime,
             endTime,
             startPrice: mockPrice,
-            logoUrl: null // Will use fallback logo in UI
+            logoUrl: logoUrl
           }
         })
         
-        console.log(`📊 Created ${coin.ticker} ${duration}m market`)
+        console.log(`📊 Created ${coin.ticker} ${duration}m market${logoUrl ? ' with logo' : ' (no logo)'}`)
       }
     }
   }
