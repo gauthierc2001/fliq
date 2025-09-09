@@ -41,14 +41,30 @@
 
 ### Database & Deployment
 - **Database URL**: Set Railway PostgreSQL connection string
-- **Static Generation Fix**: Added `export const dynamic = 'force-dynamic'` to all API routes that use database/cookies to prevent build-time database access errors
-- **Routes Fixed**: All auth, markets, leaderboard, swipe, and cron routes now properly marked as dynamic
+- **Prisma Client**: Implemented lazy initialization with Proxy to prevent build-time database connection attempts
+- **Static Generation Fix**: Added `export const dynamic = 'force-dynamic'` to all API routes that use database/cookies
+- **Routes Fixed**: All 16 API routes now properly marked as dynamic (auth, markets, leaderboard, swipe, cron)
+
+### Security & Validation
+- **Input Validation**: Added Zod schemas for request validation
+  - `/api/swipe`: Validates marketId and side (YES/NO)
+  - `/api/auth/nonce`: Validates Solana wallet address format
+- **Error Handling**: Improved error responses with validation details
+
+### Dependencies
+- Added `zod@^3.22.4` for runtime input validation
+- All other dependencies remain on stable versions
+
+### Documentation
+- **README**: Added Railway deployment section with environment variables
+- **Database Setup**: Instructions for PostgreSQL configuration
+- **Build Process**: Documented Dockerfile and standalone Next.js build
 
 ### Verification
 - ✅ `npm run lint` - No errors or warnings
-- ✅ `npm run typecheck` - All types valid
+- ✅ `npm run typecheck` - All types valid  
 - ✅ `npm run build` - Production build succeeds without database errors
-- ✅ Dependencies all on stable versions
-- ✅ Tailwind CSS properly configured with brand colors
 - ✅ All API routes properly configured for dynamic rendering
+- ✅ Input validation working on critical endpoints
+- ✅ Railway deployment ready with proper environment handling
 
