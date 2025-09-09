@@ -1,25 +1,38 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { calculateOdds } from '@/lib/betting'
 import { getCurrentPrice, getCoinGeckoId } from '@/lib/prices'
 
 // Force dynamic rendering - this route uses database
 export const dynamic = 'force-dynamic'
 
-async function resolveExpiredMarkets() {
+export async function POST() {
   try {
-    // Find markets that need resolution
+    // Find ALL markets that need resolution (including very old ones)
     const marketsToResolve = await prisma.market.findMany({
       where: {
-        resolved: false,
-        endTime: {
-          lte: new Date()
-        }
+        resolved: false
       }
     })
     
+    let resolvedCount = 0
+    let results = []
+    
+    console.log(`🔍 Found ${marketsToResolve.length} unresolved markets`)
+    
     for (const market of marketsToResolve) {
       try {
+        // Check if market has expired
+        const isExpired = market.endTime <= new Date()
+        if (!isExpired) {
+          results.push({
+            market: market.symbol,
+            status: 'skipped',
+            reason: 'Not expired yet',
+            endTime: market.endTime
+          })
+          continue
+        }
+        
         // Get current price
         const coinId = getCoinGeckoId(market.symbol)
         const currentPrice = await getCurrentPrice(coinId)
@@ -52,6 +65,7 @@ async function resolveExpiredMarkets() {
           }
         })
         
+        let userUpdates = 0
         // Process each swipe
         for (const swipe of swipes) {
           let win: boolean
@@ -88,65 +102,48 @@ async function resolveExpiredMarkets() {
               }
             }
           })
+          
+          userUpdates++
         }
         
-        console.log(`✅ Resolved market ${market.symbol} with outcome ${outcome} (${marketsToResolve.length} markets)`)
+        results.push({
+          market: market.symbol,
+          status: 'resolved',
+          outcome,
+          startPrice: market.startPrice,
+          endPrice: currentPrice,
+          swipesProcessed: userUpdates,
+          endTime: market.endTime
+        })
+        
+        resolvedCount++
+        console.log(`✅ Resolved ${market.symbol}: ${outcome} (${userUpdates} swipes processed)`)
       } catch (error) {
         console.error(`❌ Error resolving market ${market.id}:`, error)
+        results.push({
+          market: market.symbol,
+          status: 'error',
+          error: error instanceof Error ? error.message : 'Unknown error'
+        })
       }
     }
     
-    if (marketsToResolve.length > 0) {
-      console.log(`📊 Auto-resolved ${marketsToResolve.length} expired markets`)
-    }
+    return NextResponse.json({
+      message: `Admin resolved ${resolvedCount} out of ${marketsToResolve.length} markets`,
+      resolvedCount,
+      totalMarkets: marketsToResolve.length,
+      results
+    })
   } catch (error) {
-    console.error('❌ Error in auto-resolution:', error)
+    console.error('Error in admin resolve:', error)
+    return NextResponse.json({ 
+      error: 'Internal server error',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
   }
 }
 
+// Allow GET requests for manual testing
 export async function GET() {
-  try {
-    // First, resolve any expired markets
-    await resolveExpiredMarkets()
-    
-    // Then get active markets
-    const markets = await prisma.market.findMany({
-      where: {
-        resolved: false,
-        endTime: {
-          gt: new Date()
-        }
-      },
-      orderBy: {
-        endTime: 'asc'
-      }
-    })
-    
-    const marketsWithOdds = markets.map(market => {
-      const odds = calculateOdds(market.yesBets, market.noBets)
-      return {
-        ...market,
-        ...odds,
-        timeLeft: Math.max(0, market.endTime.getTime() - Date.now())
-      }
-    })
-    
-    return NextResponse.json({ markets: marketsWithOdds })
-  } catch (error) {
-    console.error('[API] Error fetching markets:', error)
-    console.error('[API] Error stack:', error instanceof Error ? error.stack : 'No stack trace')
-    console.error('[API] DATABASE_URL exists:', !!process.env.DATABASE_URL)
-    
-    // Return more detailed error in production for debugging
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    const isDatabaseError = errorMessage.includes('DATABASE_URL') || errorMessage.includes('prisma') || errorMessage.includes('connect')
-    
-    return NextResponse.json({ 
-      error: 'Internal server error',
-      details: process.env.NODE_ENV === 'production' ? {
-        type: isDatabaseError ? 'database' : 'unknown',
-        message: errorMessage
-      } : undefined
-    }, { status: 500 })
-  }
+  return POST()
 }
