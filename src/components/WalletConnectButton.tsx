@@ -11,6 +11,8 @@ interface User {
   wallet: string
   balance: number
   totalPnL: number
+  username?: string
+  avatar?: string
 }
 
 export default function WalletConnectButton() {
@@ -70,29 +72,6 @@ export default function WalletConnectButton() {
     }
   }, [publicKey, signMessage, router, pathname])
 
-  const handleTwitterConnect = useCallback(async () => {
-    try {
-      const response = await fetch('/api/auth/twitter')
-      if (response.ok) {
-        const { authUrl } = await response.json()
-        // Open Twitter auth in a popup
-        const popup = window.open(authUrl, 'twitter-auth', 'width=600,height=600')
-        
-        // Listen for popup to close or message from popup
-        const checkClosed = setInterval(() => {
-          if (popup?.closed) {
-            clearInterval(checkClosed)
-            // Refresh user data after Twitter connection attempt
-            if (connected && publicKey && signMessage) {
-              handleAuthNoTwitterPrompt()
-            }
-          }
-        }, 1000)
-      }
-    } catch (error) {
-      console.error('Twitter connect error:', error)
-    }
-  }, [connected, publicKey, signMessage, handleAuthNoTwitterPrompt])
 
   const handleAuth = useCallback(async () => {
     if (!publicKey || !signMessage) return
@@ -137,26 +116,12 @@ export default function WalletConnectButton() {
       if (pathname === '/') {
         router.push('/app/predictions')
       }
-      
-      // Prompt for Twitter connection after successful wallet connection
-      // Only if user doesn't already have Twitter connected
-      if (!user.twitterHandle && pathname.startsWith('/app')) {
-        // Small delay to ensure wallet connection UI has updated
-        setTimeout(() => {
-          const shouldConnectTwitter = confirm(
-            'Connect your Twitter/X account to show your profile on the leaderboard and unlock social features!'
-          )
-          if (shouldConnectTwitter) {
-            handleTwitterConnect()
-          }
-        }, 1000)
-      }
     } catch (error) {
       console.error('Auth error:', error)
     } finally {
       setIsLoading(false)
     }
-  }, [publicKey, signMessage, router, pathname, handleTwitterConnect])
+  }, [publicKey, signMessage, router, pathname])
 
   useEffect(() => {
     if (connected && publicKey && signMessage && !user) {

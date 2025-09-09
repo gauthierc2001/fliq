@@ -5,16 +5,15 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import UserHistory from '@/components/UserHistory'
-import { User, Twitter } from 'lucide-react'
+import { User, Edit3, Save, X } from 'lucide-react'
 
 interface UserData {
   id: string
   wallet: string
   balance: number
   totalPnL: number
-  twitterHandle?: string
-  twitterName?: string
-  twitterAvatar?: string
+  username?: string
+  avatar?: string
 }
 
 interface Swipe {
@@ -40,6 +39,8 @@ export default function UserPage() {
   const [user, setUser] = useState<UserData | null>(null)
   const [history, setHistory] = useState<Swipe[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editForm, setEditForm] = useState({ username: '', avatar: '' })
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -48,6 +49,7 @@ export default function UserPage() {
         const { user, history } = await response.json()
         setUser(user)
         setHistory(history)
+        setEditForm({ username: user.username || '', avatar: user.avatar || '' })
       } else {
         console.error('Failed to fetch user data - staying in app')
         // Don't redirect, just show error state
@@ -59,6 +61,26 @@ export default function UserPage() {
       setIsLoading(false)
     }
   }, [])
+
+  const handleProfileUpdate = useCallback(async () => {
+    try {
+      const response = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editForm)
+      })
+      
+      if (response.ok) {
+        const { user: updatedUser } = await response.json()
+        setUser(updatedUser)
+        setIsEditing(false)
+      } else {
+        console.error('Failed to update profile')
+      }
+    } catch (error) {
+      console.error('Profile update error:', error)
+    }
+  }, [editForm])
 
   useEffect(() => {
     if (connected) {
@@ -83,17 +105,6 @@ export default function UserPage() {
     )
   }
 
-  const handleTwitterConnect = async () => {
-    try {
-      const response = await fetch('/api/auth/twitter')
-      if (response.ok) {
-        const { authUrl } = await response.json()
-        window.open(authUrl, 'twitter-auth', 'width=600,height=600')
-      }
-    } catch (error) {
-      console.error('Twitter connect error:', error)
-    }
-  }
 
   if (!connected) {
     return (
@@ -121,7 +132,16 @@ export default function UserPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <div className="text-lg font-semibold text-gray-600">Failed to load profile</div>
+          <div className="bg-white rounded-lg shadow-sm border border-brand-border p-8 max-w-md mx-auto">
+            <div className="text-lg font-semibold text-red-500 mb-2">Failed to load profile</div>
+            <p className="text-brand-gray mb-4">There was an error loading your profile data.</p>
+            <button
+              onClick={fetchUserData}
+              className="px-4 py-2 bg-brand-green text-white rounded-lg hover:bg-brand-greenDark transition-colors"
+            >
+              Retry
+            </button>
+          </div>
         </div>
       </div>
     )
@@ -145,13 +165,13 @@ export default function UserPage() {
         <div className="bg-white rounded-2xl shadow-lg border border-brand-border p-8 max-w-md mx-auto mb-6">
           {/* Avatar Section */}
           <div className="mb-6">
-            {user.twitterAvatar ? (
+            {user.avatar ? (
               <Image 
-                src={user.twitterAvatar} 
+                src={user.avatar} 
                 alt="Profile"
                 width={80}
                 height={80}
-                className="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-brand-green"
+                className="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-brand-green object-cover"
               />
             ) : (
               <div className="w-20 h-20 bg-brand-bgGray rounded-full mx-auto mb-4 flex items-center justify-center">
@@ -159,20 +179,57 @@ export default function UserPage() {
               </div>
             )}
             
-            {/* Twitter Info */}
-            {user.twitterHandle ? (
-              <div className="mb-4">
-                <div className="text-lg font-bold text-brand-black">{user.twitterName}</div>
-                <div className="text-brand-green font-medium">@{user.twitterHandle}</div>
-              </div>
-            ) : (
+            {/* User Info */}
+            <div className="mb-4">
+              <div className="text-lg font-bold text-brand-black">{user.username}</div>
               <button
-                onClick={handleTwitterConnect}
-                className="mb-4 flex items-center justify-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors mx-auto"
+                onClick={() => setIsEditing(!isEditing)}
+                className="flex items-center justify-center space-x-2 px-3 py-1 text-sm text-brand-green hover:bg-brand-bgGray rounded-lg transition-colors mx-auto mt-2"
               >
-                <Twitter className="w-4 h-4" />
-                <span>Connect Twitter</span>
+                <Edit3 className="w-4 h-4" />
+                <span>Edit Profile</span>
               </button>
+            </div>
+
+            {/* Edit Form */}
+            {isEditing && (
+              <div className="space-y-4 p-4 bg-brand-bgGray rounded-lg">
+                <div>
+                  <label className="block text-sm font-medium text-brand-black mb-1">Username</label>
+                  <input
+                    type="text"
+                    value={editForm.username}
+                    onChange={(e) => setEditForm(prev => ({ ...prev, username: e.target.value }))}
+                    placeholder={`${user.wallet.slice(0, 4)}...${user.wallet.slice(-4)}`}
+                    className="w-full px-3 py-2 border border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-brand-black mb-1">Avatar URL</label>
+                  <input
+                    type="url"
+                    value={editForm.avatar}
+                    onChange={(e) => setEditForm(prev => ({ ...prev, avatar: e.target.value }))}
+                    placeholder="https://example.com/avatar.jpg"
+                    className="w-full px-3 py-2 border border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green"
+                  />
+                </div>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={handleProfileUpdate}
+                    className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-brand-green text-white rounded-lg hover:bg-brand-greenDark transition-colors"
+                  >
+                    <Save className="w-4 h-4" />
+                    <span>Save</span>
+                  </button>
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="flex items-center justify-center px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
             )}
           </div>
 

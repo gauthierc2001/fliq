@@ -17,7 +17,9 @@ export async function GET(request: NextRequest) {
         id: user.id,
         wallet: user.wallet,
         balance: user.balance,
-        totalPnL: user.totalPnL
+        totalPnL: user.totalPnL,
+        username: user.username || `${user.wallet.slice(0, 4)}...${user.wallet.slice(-4)}`,
+        avatar: user.avatar
       }
     })
   } catch (error) {

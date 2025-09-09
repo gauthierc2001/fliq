@@ -25,6 +25,8 @@ interface User {
   wallet: string
   balance: number
   totalPnL: number
+  username?: string
+  avatar?: string
 }
 
 export default function PredictionsPage() {
@@ -253,9 +255,9 @@ export default function PredictionsPage() {
       <div className="mt-12 max-w-2xl mx-auto">
         <div className="bg-white rounded-lg shadow-sm border border-fliq-border p-6">
           <h2 className="text-lg font-semibold mb-4 text-center text-fliq-dark">How to Play</h2>
-          <div className="grid md:grid-cols-2 gap-4 text-sm">
+          <div className="grid md:grid-cols-3 gap-4 text-sm">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-fliq-bg-gray rounded-full flex items-center justify-center text-fliq-dark">
+              <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white">
                 ←
               </div>
               <div>
@@ -264,7 +266,16 @@ export default function PredictionsPage() {
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-[#57C84D] rounded-full flex items-center justify-center text-white">
+              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
+                ↑
+              </div>
+              <div>
+                <div className="font-medium text-fliq-dark">Swipe Up = SKIP</div>
+                <div className="text-fliq-gray">Skip this market</div>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-brand-green rounded-full flex items-center justify-center text-white">
                 →
               </div>
               <div>

@@ -35,9 +35,8 @@ export async function GET(request: NextRequest) {
         wallet: user.wallet,
         balance: user.balance,
         totalPnL: user.totalPnL,
-        twitterHandle: user.twitterHandle,
-        twitterName: user.twitterName,
-        twitterAvatar: user.twitterAvatar
+        username: user.username || `${user.wallet.slice(0, 4)}...${user.wallet.slice(-4)}`,
+        avatar: user.avatar
       },
       history: swipes
     })

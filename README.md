@@ -7,7 +7,7 @@ A Tinder-style crypto prediction market where users swipe to predict price movem
 - **Live Crypto Markets**: Real-time prices from CoinGecko API
 - **Tinder-Style Swipe UI**: Swipe left (NO), right (YES), or up (SKIP)
 - **Quick Resolution**: 5, 15, and 30-minute prediction windows
-- **Social Integration**: Connect Twitter/X for profile and leaderboard
+- **Profile System**: Customizable usernames and avatars
 - **Wallet-Based**: Solana wallet authentication required
 
 ## Tech Stack
@@ -16,7 +16,7 @@ A Tinder-style crypto prediction market where users swipe to predict price movem
 - **Animations**: Framer Motion
 - **Wallet**: Solana Wallet Adapter
 - **Database**: PostgreSQL with Prisma
-- **APIs**: CoinGecko (crypto prices), Twitter OAuth 2.0
+- **APIs**: CoinGecko (crypto prices)
 
 ## Setup
 
@@ -37,11 +37,7 @@ NEXT_PUBLIC_SOLANA_NETWORK="devnet"  # or "mainnet-beta" for production
 # CoinGecko API Key (optional but recommended)
 COINGECKO_API_KEY="your-coingecko-api-key"
 
-# Twitter OAuth 2.0 (for social features)
-TWITTER_CLIENT_ID="your-twitter-client-id"
-TWITTER_CLIENT_SECRET="your-twitter-client-secret"
-
-# Base URL (for OAuth callbacks)
+# Base URL
 NEXT_PUBLIC_BASE_URL="http://localhost:3000"
 ```
 
@@ -80,8 +76,6 @@ docker run -p 3000:3000 --env-file .env fliq:latest
    NEXT_PUBLIC_SOLANA_NETWORK=mainnet-beta
    NEXT_PUBLIC_BASE_URL=https://your-app.up.railway.app
    COINGECKO_API_KEY=your_api_key_if_you_have_one
-   TWITTER_CLIENT_ID=your_twitter_client_id
-   TWITTER_CLIENT_SECRET=your_twitter_client_secret
    ```
 
 2. **Database Setup:**
@@ -108,22 +102,19 @@ docker run -p 3000:3000 --env-file .env fliq:latest
 - `GET /api/auth/nonce` - Get signing nonce
 - `POST /api/auth/logout` - Logout user
 
-### Twitter Integration
-- `GET /api/auth/twitter` - Get Twitter OAuth URL
-- `POST /api/auth/twitter` - Handle OAuth callback
-- `GET /api/auth/twitter/callback` - OAuth redirect handler
 
 ### User & Betting
 - `GET /api/user/history` - Get user betting history
+- `PUT /api/user/profile` - Update user profile (username, avatar)
 - `POST /api/swipe` - Place a bet (swipe)
-- `GET /api/leaderboard` - Get leaderboard with social profiles
+- `GET /api/leaderboard` - Get leaderboard with user profiles
 
 ## User Flow
 
 1. **Landing Page**: Click "Launch App"
 2. **Connect Wallet**: Solana wallet authentication
-3. **Twitter Prompt**: Optional social connection (auto-prompted)
-4. **Predict Markets**: Swipe/click on crypto predictions
+3. **Predict Markets**: Swipe/click on crypto predictions (Left=NO, Right=YES, Up=SKIP)
+4. **Profile**: Edit username and avatar
 5. **View Results**: Check profile and leaderboard
 
 ## Swipe Actions

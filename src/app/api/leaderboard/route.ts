@@ -12,9 +12,8 @@ export async function GET() {
         wallet: true,
         balance: true,
         totalPnL: true,
-        twitterHandle: true,
-        twitterName: true,
-        twitterAvatar: true
+        username: true,
+        avatar: true
       },
       orderBy: [
         { totalPnL: 'desc' },
@@ -23,15 +22,14 @@ export async function GET() {
       take: 100
     })
     
-    // Include Twitter info in leaderboard
+    // Format leaderboard data
     const leaderboard = users.map((user, index) => ({
       rank: index + 1,
       wallet: user.wallet,
       balance: user.balance,
       totalPnL: user.totalPnL,
-      twitterHandle: user.twitterHandle,
-      twitterName: user.twitterName,
-      twitterAvatar: user.twitterAvatar
+      username: user.username || `${user.wallet.slice(0, 4)}...${user.wallet.slice(-4)}`,
+      avatar: user.avatar
     }))
     
     return NextResponse.json({ leaderboard })
