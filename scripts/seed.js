@@ -5,14 +5,16 @@ const prisma = new PrismaClient()
 async function main() {
   console.log('🌱 Seeding initial markets...')
   
-  // Verified CoinGecko coins with correct IDs and available logos
+  // Use a subset of major coins for seeding (same as marketGenerator.ts)
   const coins = [
-    { symbol: 'bitcoin', name: 'Bitcoin', ticker: 'BTC' },
-    { symbol: 'ethereum', name: 'Ethereum', ticker: 'ETH' },
-    { symbol: 'solana', name: 'Solana', ticker: 'SOL' },
-    { symbol: 'cardano', name: 'Cardano', ticker: 'ADA' },
-    { symbol: 'binancecoin', name: 'BNB', ticker: 'BNB' },
-    { symbol: 'chainlink', name: 'Chainlink', ticker: 'LINK' }
+    { symbol: 'bitcoin', name: 'Bitcoin', ticker: 'BTC', coinGeckoId: 'bitcoin' },
+    { symbol: 'ethereum', name: 'Ethereum', ticker: 'ETH', coinGeckoId: 'ethereum' },
+    { symbol: 'solana', name: 'Solana', ticker: 'SOL', coinGeckoId: 'solana' },
+    { symbol: 'dogwifcoin', name: 'dogwifhat', ticker: 'WIF', coinGeckoId: 'dogwifcoin' },
+    { symbol: 'bonk', name: 'Bonk', ticker: 'BONK', coinGeckoId: 'bonk' },
+    { symbol: 'pepe', name: 'Pepe', ticker: 'PEPE', coinGeckoId: 'pepe' },
+    { symbol: 'dogecoin', name: 'Dogecoin', ticker: 'DOGE', coinGeckoId: 'dogecoin' },
+    { symbol: 'shiba-inu', name: 'Shiba Inu', ticker: 'SHIB', coinGeckoId: 'shiba-inu' }
   ]
   
   const durations = [1, 3, 5] // minutes
@@ -46,7 +48,7 @@ async function main() {
             startTime,
             endTime,
             startPrice: mockPrice,
-            logoUrl: null // Will be populated by real market generation
+            logoUrl: null // Will use fallback logo in UI
           }
         })
         

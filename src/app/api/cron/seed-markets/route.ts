@@ -1,19 +1,10 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { getCoinDetails, getCoinGeckoId } from '@/lib/prices'
+import { getCoinDetails } from '@/lib/prices'
+import { MAJOR_COINS } from '@/lib/marketGenerator'
 
 // Force dynamic rendering - this route uses database
 export const dynamic = 'force-dynamic'
-
-// Verified CoinGecko coins with correct IDs and available logos
-const COINS = [
-  { symbol: 'bitcoin', name: 'Bitcoin', ticker: 'BTC' },
-  { symbol: 'ethereum', name: 'Ethereum', ticker: 'ETH' },
-  { symbol: 'solana', name: 'Solana', ticker: 'SOL' },
-  { symbol: 'cardano', name: 'Cardano', ticker: 'ADA' },
-  { symbol: 'binancecoin', name: 'BNB', ticker: 'BNB' },
-  { symbol: 'chainlink', name: 'Chainlink', ticker: 'LINK' }
-]
 
 const DURATIONS = [1, 3, 5] // minutes - quick resolution times
 
@@ -21,16 +12,10 @@ export async function POST() {
   try {
     let createdCount = 0
     
-    for (const coin of COINS) {
+    for (const coin of MAJOR_COINS) {
       try {
-        // Get current price and logo from CoinGecko
-        const coinId = getCoinGeckoId(coin.symbol)
-        const { price: currentPrice, image: logoUrl } = await getCoinDetails(coinId)
-        
-        if (currentPrice === 0) {
-          console.warn(`Skipping ${coin.symbol} - price fetch failed`)
-          continue
-        }
+        // Get current price and logo
+        const coinDetails = await getCoinDetails(coin.coinGeckoId)
         
         for (const duration of DURATIONS) {
           const startTime = new Date()
@@ -56,18 +41,17 @@ export async function POST() {
                 durationMin: duration,
                 startTime,
                 endTime,
-                startPrice: currentPrice,
-                logoUrl: logoUrl || null // Store logo URL from CoinGecko
+                startPrice: coinDetails.price,
+                logoUrl: coinDetails.image
               }
             })
             createdCount++
           }
         }
       } catch (error) {
-        console.error(`Error processing coin ${coin.symbol}:`, error)
-        // Continue with other coins
+        console.error(`Failed to fetch details for ${coin.ticker}:`, error)
+        // Continue with other coins - don't fail completely
       }
-    }
     }
     
     return NextResponse.json({
@@ -76,9 +60,6 @@ export async function POST() {
     })
   } catch (error) {
     console.error('Error seeding markets:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { getCoinDetails, getCoinGeckoId } from '@/lib/prices'
+import { getCurrentPrice, getCoinGeckoId } from '@/lib/prices'
 
 // Force dynamic rendering - this route uses database
 export const dynamic = 'force-dynamic'
@@ -21,14 +21,9 @@ export async function POST() {
     
     for (const market of marketsToResolve) {
       try {
-        // Get current price (with error handling)
+        // Get current price
         const coinId = getCoinGeckoId(market.symbol)
-        const { price: currentPrice } = await getCoinDetails(coinId)
-        
-        if (currentPrice === 0) {
-          console.warn(`Failed to get price for ${market.symbol}, skipping resolution`)
-          continue
-        }
+        const currentPrice = await getCurrentPrice(coinId)
         
         // Determine outcome
         let outcome: 'YES' | 'NO' | 'PUSH'
