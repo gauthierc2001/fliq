@@ -54,12 +54,12 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
   }, [market.yesShare])
 
   return (
-    <div className="bg-white rounded-3xl shadow-2xl border border-brand-border p-5 sm:p-6 w-full h-full flex flex-col relative overflow-hidden min-h-[500px] max-h-[520px]">
+    <div className="bg-white rounded-3xl shadow-2xl border border-brand-border p-4 sm:p-5 w-full h-full flex flex-col relative overflow-hidden min-h-[520px] max-h-[530px]">
       {/* Background gradient for visual appeal */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-green to-brand-greenDark"></div>
       
       {/* Header */}
-      <div className="text-center mb-6">
+      <div className="text-center mb-4">
         <div className="flex items-center justify-center mb-4">
           {market.logoUrl ? (
             <Image
@@ -101,7 +101,7 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
       </div>
 
       {/* Timer */}
-      <div className="text-center mb-6">
+      <div className="text-center mb-4">
         <div className="bg-brand-bgGray rounded-2xl p-4 mb-2">
           <div className="text-4xl font-mono font-black text-brand-black">
             {formatTime(timeLeft)}
@@ -114,7 +114,7 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
       </div>
 
       {/* Odds Bar */}
-      <div className="mb-6">
+      <div className="mb-4">
         <div className="flex justify-between text-sm mb-2">
           <span className="text-fliq-dark font-medium">YES {yesPercentage}%</span>
           <span className="text-fliq-dark font-medium">NO {noPercentage}%</span>
@@ -128,7 +128,7 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
       </div>
 
       {/* Multipliers */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-2 gap-4 mb-4">
         <div className="text-center">
           <div className="text-sm text-fliq-dark">YES pays</div>
           <div className="text-lg font-bold text-fliq-dark">
@@ -144,12 +144,12 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
       </div>
 
       {/* Bet Counts */}
-      <div className="text-center text-sm text-fliq-dark mb-4">
+      <div className="text-center text-sm text-fliq-dark mb-3">
         {market.yesBets + market.noBets} total bets
       </div>
 
       {/* Action Buttons */}
-      <div className="space-y-3 mt-auto">
+      <div className="space-y-2 mt-auto">
         <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => onSwipe?.(market.id, 'NO')}

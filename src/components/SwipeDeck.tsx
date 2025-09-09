@@ -132,51 +132,40 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading, wagerAm
   }
 
   return (
-    <div className="relative w-full max-w-sm mx-auto" style={{ perspective: '1000px' }}>
+    <div className="relative w-full max-w-sm mx-auto">
       {/* Main card container with proper spacing */}
-      <div className="relative h-[520px] mb-20">
-        {/* Card Stack - show 3 cards for depth */}
-        {markets.slice(currentIndex, currentIndex + 3).map((market, index) => (
-        <motion.div
-          key={market.id}
-          className={`absolute inset-0 ${index === 0 ? 'z-30' : index === 1 ? 'z-20' : 'z-10'}`}
-          initial={index === 0 ? {} : { scale: 0.95 - (index * 0.05), y: index * 8 }}
-          animate={{
-            scale: 1 - (index * 0.05),
-            y: index * 8,
-            opacity: 1 - (index * 0.3),
-            zIndex: 30 - index
-          }}
-          style={{
-            transformOrigin: 'center bottom'
-          }}
-        >
-          <div
-            {...(index === 0 ? swipeHandlers : {})}
-            className={`h-full ${index === 0 ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'} ${
-              isAnimating && index === 0
-                ? swipeDirection === 'right'
-                  ? 'transform translate-x-full rotate-12 opacity-0'
-                  : swipeDirection === 'left'
-                  ? 'transform -translate-x-full -rotate-12 opacity-0'
-                  : swipeDirection === 'up'
-                  ? 'transform -translate-y-full scale-90 opacity-0'
-                  : ''
-                : ''
-            } ${isLoading ? 'pointer-events-none opacity-50' : ''}`}
-            style={{ 
-              transition: isAnimating ? 'transform 0.3s ease-out, opacity 0.3s ease-out' : 'none'
-            }}
+      <div className="relative h-[530px] mb-24">
+        {/* Single Card - No stacking */}
+        {currentMarket && (
+          <motion.div
+            key={currentMarket.id}
+            className="absolute inset-0 z-30"
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.95, opacity: 0 }}
+            transition={{ duration: 0.2 }}
           >
-            <MarketCard market={market} onSwipe={index === 0 ? handleSwipe : undefined} wagerAmount={wagerAmount} />
-          </div>
-        </motion.div>
-        ))}
-
-        {/* Background cards for visual depth */}
-        <div className="absolute inset-0 -z-20 scale-90 opacity-20">
-          <div className="w-full h-full bg-white rounded-2xl border border-gray-200" />
-        </div>
+            <div
+              {...swipeHandlers}
+              className={`h-full cursor-grab active:cursor-grabbing ${
+                isAnimating 
+                  ? swipeDirection === 'right'
+                    ? 'transform translate-x-full rotate-12 opacity-0'
+                    : swipeDirection === 'left'
+                    ? 'transform -translate-x-full -rotate-12 opacity-0'
+                    : swipeDirection === 'up'
+                    ? 'transform -translate-y-full scale-90 opacity-0'
+                    : ''
+                  : ''
+              } ${isLoading ? 'pointer-events-none opacity-50' : ''}`}
+              style={{ 
+                transition: isAnimating ? 'transform 0.3s ease-out, opacity 0.3s ease-out' : 'none'
+              }}
+            >
+              <MarketCard market={currentMarket} onSwipe={handleSwipe} wagerAmount={wagerAmount} />
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {/* Swipe Indicators */}

@@ -17,16 +17,16 @@ export default function Navigation() {
 
   if (pathname === '/') {
     return (
-      <nav className="absolute top-0 left-0 right-0 z-50 bg-transparent">
+      <nav className="absolute top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-6 py-6">
            <div className="flex justify-between items-center">
              <Link href="/" className="hover:scale-105 transition-transform">
               <Image 
                 src="/logo.png" 
                 alt="Fliq" 
-                width={80} 
-                height={40}
-                className="h-8 w-auto"
+                width={100} 
+                height={50}
+                className="h-9 w-auto"
               />
              </Link>
              {/* Clean landing page - no wallet connection */}
