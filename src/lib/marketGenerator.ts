@@ -8,14 +8,40 @@ export interface CoinData {
 }
 
 export const MAJOR_COINS: CoinData[] = [
+  // Major Cryptocurrencies
   { symbol: 'bitcoin', name: 'Bitcoin', ticker: 'BTC', coinGeckoId: 'bitcoin' },
   { symbol: 'ethereum', name: 'Ethereum', ticker: 'ETH', coinGeckoId: 'ethereum' },
   { symbol: 'solana', name: 'Solana', ticker: 'SOL', coinGeckoId: 'solana' },
-  { symbol: 'binancecoin', name: 'BNB', ticker: 'BNB', coinGeckoId: 'binancecoin' },
-  { symbol: 'cardano', name: 'Cardano', ticker: 'ADA', coinGeckoId: 'cardano' },
-  { symbol: 'avalanche-2', name: 'Avalanche', ticker: 'AVAX', coinGeckoId: 'avalanche-2' },
-  { symbol: 'chainlink', name: 'Chainlink', ticker: 'LINK', coinGeckoId: 'chainlink' },
-  { symbol: 'polygon', name: 'Polygon', ticker: 'MATIC', coinGeckoId: 'matic-network' }
+  
+  // Top Solana Memecoins & Popular Memes
+  { symbol: 'dogwifcoin', name: 'dogwifhat', ticker: 'WIF', coinGeckoId: 'dogwifcoin' },
+  { symbol: 'bonk', name: 'Bonk', ticker: 'BONK', coinGeckoId: 'bonk' },
+  { symbol: 'book-of-meme', name: 'Book of Meme', ticker: 'BOME', coinGeckoId: 'book-of-meme' },
+  { symbol: 'jeo-boden', name: 'Jeo Boden', ticker: 'BODEN', coinGeckoId: 'jeo-boden' },
+  { symbol: 'cat-in-a-dogs-world', name: 'MEW', ticker: 'MEW', coinGeckoId: 'cat-in-a-dogs-world' },
+  { symbol: 'popcat', name: 'Popcat', ticker: 'POPCAT', coinGeckoId: 'popcat' },
+  { symbol: 'Jupiter', name: 'Jupiter', ticker: 'JUP', coinGeckoId: 'jupiter-exchange-solana' },
+  { symbol: 'wen-4', name: 'Wen', ticker: 'WEN', coinGeckoId: 'wen-4' },
+  { symbol: 'slerf', name: 'Slerf', ticker: 'SLERF', coinGeckoId: 'slerf' },
+  { symbol: 'mother-iggy', name: 'Mother Iggy', ticker: 'MOTHER', coinGeckoId: 'mother-iggy' },
+  { symbol: 'daddy-tate', name: 'Daddy Tate', ticker: 'DADDY', coinGeckoId: 'daddy-tate' },
+  { symbol: 'ponke', name: 'Ponke', ticker: 'PONKE', coinGeckoId: 'ponke' },
+  { symbol: 'mog-coin', name: 'Mog Coin', ticker: 'MOG', coinGeckoId: 'mog-coin' },
+  { symbol: 'pepe', name: 'Pepe', ticker: 'PEPE', coinGeckoId: 'pepe' },
+  { symbol: 'dogecoin', name: 'Dogecoin', ticker: 'DOGE', coinGeckoId: 'dogecoin' },
+  { symbol: 'shiba-inu', name: 'Shiba Inu', ticker: 'SHIB', coinGeckoId: 'shiba-inu' },
+  { symbol: 'myro', name: 'Myro', ticker: 'MYRO', coinGeckoId: 'myro' },
+  { symbol: 'tensor', name: 'Tensor', ticker: 'TNSR', coinGeckoId: 'tensor' },
+  { symbol: 'jito-governance-token', name: 'Jito', ticker: 'JTO', coinGeckoId: 'jito-governance-token' },
+  { symbol: 'hivemapper', name: 'Hivemapper', ticker: 'HONEY', coinGeckoId: 'hivemapper' },
+  { symbol: 'goatseus-maximus', name: 'Goatseus Maximus', ticker: 'GOAT', coinGeckoId: 'goatseus-maximus' },
+  { symbol: 'peanut-the-squirrel', name: 'Peanut the Squirrel', ticker: 'PNUT', coinGeckoId: 'peanut-the-squirrel' },
+  { symbol: 'act-i-the-ai-prophecy', name: 'Act I', ticker: 'ACT', coinGeckoId: 'act-i-the-ai-prophecy' },
+  { symbol: 'gigachad-2', name: 'GIGA', ticker: 'GIGA', coinGeckoId: 'gigachad-2' },
+  { symbol: 'retardio', name: 'Retardio', ticker: 'RETARDIO', coinGeckoId: 'retardio' },
+  { symbol: 'moo-deng', name: 'Moo Deng', ticker: 'MOODENG', coinGeckoId: 'moo-deng' },
+  { symbol: 'fwog', name: 'Fwog', ticker: 'FWOG', coinGeckoId: 'fwog' },
+  { symbol: 'smoking-chicken-fish', name: 'Smoking Chicken Fish', ticker: 'SCF', coinGeckoId: 'smoking-chicken-fish' }
 ]
 
 export const RESOLUTION_TIMES = [5, 15, 30] // minutes
