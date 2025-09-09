@@ -21,13 +21,13 @@ export default function Navigation() {
         <div className="max-w-7xl mx-auto px-6 py-6">
            <div className="flex justify-between items-center">
              <Link href="/" className="hover:scale-105 transition-transform">
-               <Image 
-                 src="/fliq-logo.png" 
-                 alt="Fliq" 
-                 width={80} 
-                 height={40}
-                 className="h-8 w-auto"
-               />
+              <Image 
+                src="/logo.png" 
+                alt="Fliq" 
+                width={80} 
+                height={40}
+                className="h-8 w-auto"
+              />
              </Link>
              {/* Clean landing page - no wallet connection */}
            </div>
@@ -44,13 +44,13 @@ export default function Navigation() {
           <div className="flex justify-between items-center h-16">
              <div className="flex items-center space-x-8">
                <Link href="/" className="hover:scale-105 transition-transform">
-                 <Image 
-                   src="/fliq-logo.png" 
-                   alt="Fliq" 
-                   width={80} 
-                   height={40}
-                   className="h-7 w-auto"
-                 />
+                <Image 
+                  src="/logo.png" 
+                  alt="Fliq" 
+                  width={80} 
+                  height={40}
+                  className="h-7 w-auto"
+                />
                </Link>
               <div className="flex space-x-6">
                 {navItems.map((item) => (
@@ -102,13 +102,13 @@ export default function Navigation() {
       <div className="md:hidden bg-white shadow-sm border-b border-fliq-border">
          <div className="flex justify-between items-center px-4 h-16">
            <Link href="/" className="hover:scale-105 transition-transform">
-             <Image 
-               src="/fliq-logo.png" 
-               alt="Fliq" 
-               width={70} 
-               height={35}
-               className="h-6 w-auto"
-             />
+            <Image 
+              src="/logo.png" 
+              alt="Fliq" 
+              width={70} 
+              height={35}
+              className="h-6 w-auto"
+            />
            </Link>
           <WalletConnectButton />
         </div>

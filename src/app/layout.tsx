@@ -13,6 +13,14 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Fliq - Predict the future in a flick",
   description: "A Solana-powered prediction market with mobile-first swipe UX",
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
+  manifest: "/site.webmanifest",
+  themeColor: "#6BC04A",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
 };
 
 export default function RootLayout({

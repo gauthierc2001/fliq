@@ -83,7 +83,7 @@ export default function HomePage() {
           >
             <div className="mb-6">
               <Image 
-                src="/fliq-logo.png" 
+                src="/logo.png" 
                 alt="Fliq" 
                 width={200} 
                 height={100}
