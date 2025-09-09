@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { verifyJWT } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
+// Force dynamic rendering - this route uses database and cookies
+export const dynamic = 'force-dynamic'
+
 // Twitter OAuth 2.0 configuration
 const TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID
 const TWITTER_CLIENT_SECRET = process.env.TWITTER_CLIENT_SECRET

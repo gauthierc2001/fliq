@@ -3,6 +3,9 @@ import { prisma } from '@/lib/prisma'
 import { createSignMessage, verifySignature } from '@/lib/solana'
 import { signJWT } from '@/lib/auth'
 
+// Force dynamic rendering - this route uses database and sets cookies
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const { wallet, signature, nonce } = await request.json()

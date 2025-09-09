@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getCurrentPrice, getCoinGeckoId } from '@/lib/prices'
 
+// Force dynamic rendering - this route uses database
+export const dynamic = 'force-dynamic'
+
 export async function POST() {
   try {
     // Find markets that need resolution
