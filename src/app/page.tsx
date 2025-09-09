@@ -2,8 +2,7 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Rocket, Zap, Target, DollarSign, ArrowRight } from 'lucide-react'
-import Image from 'next/image'
+import { Zap, Target, DollarSign, ArrowRight } from 'lucide-react'
 
 export default function HomePage() {
   return (
@@ -55,42 +54,13 @@ export default function HomePage() {
       <div className="relative z-10 flex flex-col justify-center min-h-screen">
         <div className="container mx-auto px-6 text-center">
           
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-8"
-          >
-            <span className="inline-flex items-center px-6 py-3 bg-white/90 backdrop-blur-sm text-brand-green rounded-full text-sm font-semibold border border-brand-green/20 shadow-lg">
-              <motion.span
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-                className="mr-2"
-              >
-                <Rocket className="w-4 h-4 inline text-brand-green" />
-              </motion.span>
-              Powered by Solana
-            </span>
-          </motion.div>
-          
-          {/* Logo and Main Headline */}
+          {/* Main Headline */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mb-8"
           >
-            <div className="mb-6">
-              <Image 
-                src="/logo.png" 
-                alt="Fliq" 
-                width={200} 
-                height={100}
-                className="h-16 w-auto mx-auto"
-                priority
-              />
-            </div>
             <h1 className="text-6xl md:text-8xl font-black mb-6 leading-tight tracking-tight text-brand-black">
               Predict the future
               <br />
