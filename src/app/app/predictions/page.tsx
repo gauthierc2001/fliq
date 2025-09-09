@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { useRouter } from 'next/navigation'
 import SwipeDeck from '@/components/SwipeDeck'
 
 interface Market {
@@ -30,7 +29,6 @@ interface User {
 
 export default function PredictionsPage() {
   const { connected } = useWallet()
-  const router = useRouter()
   const [markets, setMarkets] = useState<Market[]>([])
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)

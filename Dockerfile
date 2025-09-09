@@ -50,8 +50,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 
-# Install only Prisma CLI for migrations
-RUN npm install --production --no-save prisma@^6.15.0 && \
+# Install only Prisma CLI for migrations and ensure prod deps
+RUN npm install --omit=dev --no-save prisma@^6.15.0 && \
     chown -R nextjs:nodejs /app
 
 USER nextjs

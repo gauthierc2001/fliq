@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getCurrentPrice, getCoinGeckoId } from '@/lib/prices'
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ symbol: string }> }
+  _request: NextRequest,
+  context: { params: { symbol: string } }
 ) {
   try {
-    const { symbol } = await params
+    const { symbol } = context.params
     const coinId = getCoinGeckoId(symbol)
     const price = await getCurrentPrice(coinId)
     

@@ -1,3 +1,31 @@
+# Railway Deployment Notes
+
+## Environment
+
+Set the following variables in Railway:
+
+- DATABASE_URL
+- JWT_SECRET (>=32 chars)
+- NEXT_PUBLIC_BASE_URL (your Railway domain)
+- NEXT_PUBLIC_SOLANA_NETWORK (mainnet-beta or devnet)
+- COINGECKO_API_KEY (optional)
+- TWITTER_CLIENT_ID / TWITTER_CLIENT_SECRET (optional)
+
+## Build & Start
+
+Project uses Dockerfile. Railway will build with `dockerfile` builder.
+
+Start command: `npm run start:production`
+
+`start:production` runs `prisma migrate deploy` then starts the Next.js standalone server.
+
+## Healthcheck
+
+Configure a healthcheck hitting `/` or `/api/leaderboard` with 200 expectation.
+
+## Database
+
+Ensure Postgres is provisioned and `DATABASE_URL` is set. Prisma migrations are applied on boot.
 # Railway Deployment Guide for Fliq
 
 ## Prerequisites

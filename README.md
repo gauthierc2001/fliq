@@ -48,17 +48,28 @@ NEXT_PUBLIC_BASE_URL="http://localhost:3000"
 ### Installation
 
 ```bash
-# Install dependencies
-npm install
-
-# Generate Prisma client
+# Deterministic install and dev
+npm ci
 npx prisma generate
-
-# Run database migrations
 npx prisma db push
-
-# Start development server
 npm run dev
+
+### Production build
+
+```bash
+# From a clean clone
+npm ci
+npm run build
+# Start
+npm start
+```
+
+### Docker
+
+```bash
+docker build -t fliq:latest .
+docker run -p 3000:3000 --env-file .env fliq:latest
+```
 ```
 
 ## API Endpoints
