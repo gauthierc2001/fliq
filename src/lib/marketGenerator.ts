@@ -74,7 +74,8 @@ export function getFallbackMarkets(): MarketData[] {
       startTime: now,
       endTime: new Date(now.getTime() + 5 * 60 * 1000),
       startPrice: 45000,
-      ticker: 'BTC'
+      ticker: 'BTC',
+      logoUrl: undefined // Will show fallback logo
     },
     {
       symbol: 'ethereum',
@@ -83,7 +84,8 @@ export function getFallbackMarkets(): MarketData[] {
       startTime: now,
       endTime: new Date(now.getTime() + 15 * 60 * 1000),
       startPrice: 2800,
-      ticker: 'ETH'
+      ticker: 'ETH',
+      logoUrl: undefined // Will show fallback logo
     },
     {
       symbol: 'solana',
@@ -92,7 +94,8 @@ export function getFallbackMarkets(): MarketData[] {
       startTime: now,
       endTime: new Date(now.getTime() + 30 * 60 * 1000),
       startPrice: 85,
-      ticker: 'SOL'
+      ticker: 'SOL',
+      logoUrl: undefined // Will show fallback logo
     }
   ]
 }

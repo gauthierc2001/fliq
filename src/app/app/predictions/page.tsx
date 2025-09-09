@@ -18,6 +18,7 @@ interface Market {
   noMultiplier: number
   yesShare: number
   timeLeft: number
+  logoUrl?: string
 }
 
 interface User {

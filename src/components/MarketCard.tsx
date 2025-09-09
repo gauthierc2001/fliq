@@ -69,14 +69,24 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
               height={48}
               className="w-12 h-12 rounded-full mr-3"
               unoptimized
+              onError={(e) => {
+                // Hide broken image and show fallback
+                const target = e.target as HTMLImageElement
+                target.style.display = 'none'
+                const fallback = target.nextElementSibling as HTMLElement
+                if (fallback) fallback.style.display = 'flex'
+              }}
             />
-          ) : (
-            <div className="w-12 h-12 rounded-full bg-brand-green flex items-center justify-center mr-3">
-              <span className="text-white font-bold text-lg">
-                {market.symbol.slice(0, 2).toUpperCase()}
-              </span>
-            </div>
-          )}
+          ) : null}
+          <div 
+            className={`w-12 h-12 rounded-full bg-brand-green flex items-center justify-center mr-3 ${
+              market.logoUrl ? 'hidden' : 'flex'
+            }`}
+          >
+            <span className="text-white font-bold text-lg">
+              {market.symbol.slice(0, 2).toUpperCase()}
+            </span>
+          </div>
           <div className="text-3xl font-black text-brand-green">{market.symbol.toUpperCase()}</div>
         </div>
         <h3 className="text-lg font-bold text-brand-black mb-2">{market.title}</h3>

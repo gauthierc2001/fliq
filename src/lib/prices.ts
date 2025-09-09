@@ -91,6 +91,12 @@ export async function getCoinDetails(coinId: string): Promise<{ price: number; i
     )
     
     if (!response.ok) {
+      if (response.status === 429) {
+        console.warn('CoinGecko rate limit hit for coin details')
+        // Fallback to basic price fetch
+        const price = await getCurrentPrice(coinId)
+        return { price, image: '' }
+      }
       throw new Error(`HTTP error! status: ${response.status}`)
     }
     
@@ -102,8 +108,13 @@ export async function getCoinDetails(coinId: string): Promise<{ price: number; i
     }
   } catch (error) {
     console.error('Error fetching coin details:', error)
-    // Return fallback
-    const price = await getCurrentPrice(coinId)
-    return { price, image: '' }
+    // Graceful fallback - always try to get price at minimum
+    try {
+      const price = await getCurrentPrice(coinId)
+      return { price, image: '' }
+    } catch (priceError) {
+      console.error('Even price fallback failed:', priceError)
+      return { price: 0, image: '' }
+    }
   }
 }
