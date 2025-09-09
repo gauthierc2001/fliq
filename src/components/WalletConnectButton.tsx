@@ -22,57 +22,6 @@ export default function WalletConnectButton() {
   const router = useRouter()
   const pathname = usePathname()
 
-  const handleAuthNoTwitterPrompt = useCallback(async () => {
-    if (!publicKey || !signMessage) return
-
-    setIsLoading(true)
-    try {
-      const wallet = publicKey.toString()
-
-      // Get nonce
-      const nonceResponse = await fetch('/api/auth/nonce', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ wallet }),
-      })
-
-      if (!nonceResponse.ok) throw new Error('Failed to get nonce')
-
-      const { nonce } = await nonceResponse.json()
-
-      // Sign message
-      const message = `Sign this message to authenticate with Fliq: ${nonce}`
-      const encodedMessage = new TextEncoder().encode(message)
-      const signature = await signMessage(encodedMessage)
-
-      // Verify signature
-      const verifyResponse = await fetch('/api/auth/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          wallet,
-          signature: bs58.encode(signature),
-          nonce,
-        }),
-      })
-
-      if (!verifyResponse.ok) throw new Error('Failed to verify signature')
-
-      const { user } = await verifyResponse.json()
-      setUser(user)
-      
-      // Only redirect if we're on the landing page
-      if (pathname === '/') {
-        router.push('/app/predictions')
-      }
-    } catch (error) {
-      console.error('Auth error:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [publicKey, signMessage, router, pathname])
-
-
   const handleAuth = useCallback(async () => {
     if (!publicKey || !signMessage) return
 

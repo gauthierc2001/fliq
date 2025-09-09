@@ -228,10 +228,6 @@ model Swipe {
 3. Check browser console for errors
 4. Try manual market generation: `curl http://localhost:3000/api/markets/generate`
 
-### Twitter Connection Issues
-1. Verify OAuth credentials in environment
-2. Check redirect URL in Twitter app settings
-3. Ensure popup blockers are disabled
 
 ### Wallet Connection Problems
 1. Ensure Solana wallet extension is installed
