@@ -175,10 +175,17 @@ export async function GET() {
       }
     })
     
-    // Trigger market rotation if we have too few markets
-    const MIN_MARKETS_THRESHOLD = 8
-    if (marketsWithOdds.length < MIN_MARKETS_THRESHOLD) {
-      console.log(`⚠️ Only ${marketsWithOdds.length} markets available, triggering rotation...`)
+    // Trigger market rotation if we have too few markets OR low diversity
+    const MIN_MARKETS_THRESHOLD = 12 // Increased from 8 for better diversity
+    const uniqueCoinsInMarkets = new Set(marketsWithOdds.map(m => m.symbol)).size
+    const MIN_UNIQUE_COINS_THRESHOLD = 8 // Need at least 8 different coins
+    
+    if (marketsWithOdds.length < MIN_MARKETS_THRESHOLD || uniqueCoinsInMarkets < MIN_UNIQUE_COINS_THRESHOLD) {
+      console.log(`⚠️ Triggering rotation: ${marketsWithOdds.length} markets (need ${MIN_MARKETS_THRESHOLD}), ${uniqueCoinsInMarkets} unique coins (need ${MIN_UNIQUE_COINS_THRESHOLD})`)
+      console.log(`Current coins: ${Array.from(new Set(marketsWithOdds.map(m => m.symbol))).join(', ')}`)
+      
+      // Clear cache to force fresh data after rotation
+      cachedMarkets = null
       
       // Trigger market rotation in background (don't wait for it)
       fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/cron/market-rotation`, {

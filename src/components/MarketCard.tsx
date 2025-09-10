@@ -84,6 +84,24 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
     return `${minutes}:${seconds.toString().padStart(2, '0')}`
   }, [])
 
+  const formatPrice = useCallback((price: number) => {
+    if (price === 0) {
+      return 'Loading...' // Better than showing $0
+    }
+    
+    if (price >= 1000) {
+      return price.toLocaleString() // e.g., "45,000"
+    } else if (price >= 1) {
+      return price.toFixed(2) // e.g., "2.34"  
+    } else if (price >= 0.01) {
+      return price.toFixed(4) // e.g., "0.0234"
+    } else if (price >= 0.0001) {
+      return price.toFixed(6) // e.g., "0.000234"
+    } else {
+      return price.toExponential(2) // e.g., "2.34e-7" for very small numbers
+    }
+  }, [])
+
   const { yesPercentage, noPercentage } = useMemo(() => {
     const yes = Math.round(market.yesShare * 100)
     return { yesPercentage: yes, noPercentage: 100 - yes }
@@ -136,7 +154,7 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
         </div>
         <h3 className="text-lg font-bold text-brand-black mb-2">{market.title}</h3>
         <div className="text-sm text-brand-gray">
-          Starting price: <span className="font-bold text-brand-black">${market.startPrice.toLocaleString()}</span>
+          Starting price: <span className="font-bold text-brand-black">${formatPrice(market.startPrice)}</span>
         </div>
       </div>
 

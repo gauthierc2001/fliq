@@ -183,8 +183,11 @@ export async function getCoinDetails(coinId: string): Promise<{ price: number; i
       }
     }
     
+    const price = data.market_data?.current_price?.usd || 0
+    console.log(`📊 Fetched price for ${coinId}: $${price}`)
+    
     return {
-      price: data.market_data?.current_price?.usd || 0,
+      price,
       image: imageUrl
     }
   } catch (error) {
@@ -209,11 +212,34 @@ export async function getCoinDetails(coinId: string): Promise<{ price: number; i
         'bonk': 0.00002,
         'pepe': 0.000001,
         'dogecoin': 0.08,
-        'shiba-inu': 0.000008
+        'shiba-inu': 0.000008,
+        'floki': 0.0001,
+        'book-of-meme': 0.01,
+        'jeo-boden': 0.02,
+        'cat-in-a-dogs-world': 0.005,
+        'popcat': 1.2,
+        'jupiter-exchange-solana': 0.8,
+        'wen-4': 0.00005,
+        'mother-iggy': 0.05,
+        'goatseus-maximus': 0.6,
+        'peanut-the-squirrel': 1.1,
+        'act-i-the-ai-prophecy': 0.4,
+        'gigachad-2': 0.02,
+        'retardio': 0.3,
+        'first-convicted-raccon': 0.015,
+        'moo-deng': 0.25,
+        'fwog': 0.18,
+        'smoking-chicken-fish': 0.12,
+        'troll-2': 0.008,
+        'aura-on-sol': 0.006,
+        'useless-3': 0.0003,
+        'fartcoin': 0.45,
+        'neet': 0.35,
+        'pump-fun': 0.9
       }
       
       const fallbackPrice = fallbackPrices[coinId] || 1 // Default to $1 if no specific fallback
-      console.log(`Using fallback price ${fallbackPrice} for ${coinId}`)
+      console.log(`🔄 Using fallback price $${fallbackPrice} for ${coinId} (API failed)`)
       return { price: fallbackPrice, image: '' }
     }
   }

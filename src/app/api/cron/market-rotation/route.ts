@@ -55,32 +55,57 @@ export async function POST() {
     let createdCount = 0
     const now = new Date()
     
-    // Use random selection of coins for diversity (15-20 coins per rotation)
-    const selectedCoins = getRandomCoins(Math.min(20, MAJOR_COINS.length))
-    console.log(`🎲 Selected ${selectedCoins.length} random coins for diversity:`, selectedCoins.map(c => c.ticker).join(', '))
+    // Check current coin diversity - how many unique coins are in active markets
+    const uniqueCoins = new Set(currentMarkets.map(m => m.symbol))
+    const coinsInMarkets = Array.from(uniqueCoins)
+    console.log(`📊 Current active coins: ${coinsInMarkets.length} unique coins:`, coinsInMarkets.join(', '))
     
-    // Create markets for each selected coin and duration combination
-    for (const coin of selectedCoins) {
-      for (const duration of DURATIONS) {
-        try {
-          // Count existing markets for this coin/duration
-          const existingCount = currentMarkets.filter(m => 
-            m.symbol === coin.symbol && 
-            m.durationMin === duration
-          ).length
-          
-          // Create new markets if needed
-          const marketsToCreate = TARGET_MARKETS_PER_COIN - existingCount
-          
-          if (marketsToCreate > 0) {
-            // Get current price and logo
-            const coinDetails = await getCoinDetails(coin.coinGeckoId)
-            const logoUrl = getCryptoLogo(coin.symbol)
-            const ticker = getCryptoTicker(coin.symbol)
+    // If we have low diversity (same coins appearing too much), force diversity
+    const MIN_UNIQUE_COINS = 12 // Minimum different coins we want to see
+    const shouldForceDiversity = uniqueCoins.size < MIN_UNIQUE_COINS || currentMarkets.length < MIN_TOTAL_MARKETS
+    
+    if (shouldForceDiversity) {
+      console.log(`🎲 Forcing diversity: Only ${uniqueCoins.size} unique coins, need at least ${MIN_UNIQUE_COINS}`)
+      
+      // Get coins that are NOT currently in markets for maximum diversity
+      const coinsNotInMarkets = MAJOR_COINS.filter(coin => !uniqueCoins.has(coin.symbol))
+      const diversityCoins = coinsNotInMarkets.length > 0 
+        ? shuffleArray(coinsNotInMarkets).slice(0, 10) // Priority to unused coins
+        : getRandomCoins(15) // Fallback to random selection
+      
+      console.log(`🎯 Priority coins for diversity:`, diversityCoins.map(c => c.ticker).join(', '))
+      
+      // Create markets for diversity coins (force creation)
+      for (const coin of diversityCoins) {
+        for (const duration of DURATIONS) {
+          try {
+            // Force create at least one market per coin/duration for diversity
+            const existingCount = currentMarkets.filter(m => 
+              m.symbol === coin.symbol && 
+              m.durationMin === duration
+            ).length
             
-            for (let i = 0; i < marketsToCreate; i++) {
-              // Stagger start times slightly to create variety
-              const startTime = new Date(now.getTime() + (i * 5000)) // 5 second intervals
+            if (existingCount === 0) { // Only create if this coin/duration combo doesn't exist
+              // Get current price and logo
+              const coinDetails = await getCoinDetails(coin.coinGeckoId)
+              const logoUrl = getCryptoLogo(coin.symbol)
+              const ticker = getCryptoTicker(coin.symbol)
+              
+              // Log price details for debugging
+              console.log(`💰 ${ticker} price details:`, { 
+                symbol: coin.symbol, 
+                coinGeckoId: coin.coinGeckoId, 
+                price: coinDetails.price 
+              })
+              
+              // Validate price before creating market
+              if (coinDetails.price <= 0) {
+                console.warn(`⚠️ Invalid price ${coinDetails.price} for ${ticker}, skipping market creation`)
+                continue
+              }
+              
+              // Create market for diversity
+              const startTime = new Date(now.getTime() + (createdCount * 2000)) // 2 second intervals
               const endTime = new Date(startTime.getTime() + duration * 60 * 1000)
               
               await prisma.market.create({
@@ -95,12 +120,60 @@ export async function POST() {
                 }
               })
               createdCount++
-              console.log(`✅ Created ${ticker} ${duration}m market`)
+              console.log(`✅ Created diversity market: ${ticker} ${duration}m (price: $${coinDetails.price})`)
             }
           }
         } catch (error) {
-          console.error(`❌ Failed to create markets for ${coin.ticker}:`, error)
+          console.error(`❌ Failed to create diversity market for ${coin.ticker}:`, error)
           // Continue with other coins - don't fail completely
+        }
+      }
+    } else {
+      console.log(`✅ Good diversity: ${uniqueCoins.size} unique coins in ${currentMarkets.length} markets`)
+      
+      // Regular rotation logic for maintenance when diversity is good
+      const selectedCoins = getRandomCoins(8) // Smaller selection for maintenance
+      
+      for (const coin of selectedCoins) {
+        for (const duration of DURATIONS) {
+          try {
+            const existingCount = currentMarkets.filter(m => 
+              m.symbol === coin.symbol && 
+              m.durationMin === duration
+            ).length
+            
+            if (existingCount === 0) {
+              const coinDetails = await getCoinDetails(coin.coinGeckoId)
+              const logoUrl = getCryptoLogo(coin.symbol)
+              const ticker = getCryptoTicker(coin.symbol)
+              
+              // Log and validate price
+              console.log(`💰 ${ticker} maintenance price:`, coinDetails.price)
+              if (coinDetails.price <= 0) {
+                console.warn(`⚠️ Invalid price ${coinDetails.price} for ${ticker}, skipping`)
+                continue
+              }
+              
+              const startTime = new Date(now.getTime() + (createdCount * 2000))
+              const endTime = new Date(startTime.getTime() + duration * 60 * 1000)
+              
+              await prisma.market.create({
+                data: {
+                  symbol: coin.symbol,
+                  title: `Will ${ticker} go ↑ in ${duration}m?`,
+                  durationMin: duration,
+                  startTime,
+                  endTime,
+                  startPrice: coinDetails.price,
+                  logoUrl: logoUrl
+                }
+              })
+              createdCount++
+              console.log(`✅ Created maintenance market: ${ticker} ${duration}m (price: $${coinDetails.price})`)
+            }
+          } catch (error) {
+            console.error(`❌ Failed to create maintenance market for ${coin.ticker}:`, error)
+          }
         }
       }
     }
