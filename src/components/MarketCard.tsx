@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { TrendingDown, TrendingUp, Coins } from 'lucide-react'
 import Image from 'next/image'
+import { getCryptoLogo, getCryptoTicker } from '@/lib/cryptoAssets'
 
 interface Market {
   id: string
@@ -30,6 +31,9 @@ interface MarketCardProps {
 export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: MarketCardProps) {
   const [timeLeft, setTimeLeft] = useState(market.timeLeft)
   
+  // Get crypto logo and ticker from our asset system
+  const cryptoLogo = getCryptoLogo(market.symbol)
+  const cryptoTicker = getCryptoTicker(market.symbol)
 
   useEffect(() => {
     setTimeLeft(market.timeLeft)
@@ -63,11 +67,11 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
       <div className="text-center mb-4">
         <div className="flex items-center justify-center mb-4">
           <div className="relative w-12 h-12 mr-3">
-            {market.logoUrl ? (
+            {cryptoLogo ? (
               <>
                 <Image
-                  src={market.logoUrl}
-                  alt={`${market.symbol} logo`}
+                  src={cryptoLogo}
+                  alt={`${cryptoTicker} logo`}
                   width={48}
                   height={48}
                   className="w-12 h-12 rounded-full object-cover shadow-lg border-2 border-white"
@@ -84,28 +88,20 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
                 <div 
                   className="fallback-logo absolute inset-0 w-12 h-12 rounded-full bg-gradient-to-br from-brand-green to-brand-greenDark items-center justify-center shadow-lg border-2 border-white hidden"
                 >
-                  {market.symbol.length >= 2 ? (
-                    <span className="text-white font-black text-sm">
-                      {market.symbol.slice(0, 2).toUpperCase()}
-                    </span>
-                  ) : (
-                    <Coins className="w-6 h-6 text-white" />
-                  )}
+                  <span className="text-white font-black text-sm">
+                    {cryptoTicker.slice(0, 2)}
+                  </span>
                 </div>
               </>
             ) : (
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-green to-brand-greenDark flex items-center justify-center shadow-lg border-2 border-white">
-                {market.symbol.length >= 2 ? (
-                  <span className="text-white font-black text-sm">
-                    {market.symbol.slice(0, 2).toUpperCase()}
-                  </span>
-                ) : (
-                  <Coins className="w-6 h-6 text-white" />
-                )}
+                <span className="text-white font-black text-sm">
+                  {cryptoTicker.slice(0, 2)}
+                </span>
               </div>
             )}
           </div>
-          <div className="text-3xl font-black text-brand-green">{market.title.match(/Will (\w+)/)?.[1] || market.symbol.toUpperCase()}</div>
+          <div className="text-3xl font-black text-brand-green">{cryptoTicker}</div>
         </div>
         <h3 className="text-lg font-bold text-brand-black mb-2">{market.title}</h3>
         <div className="text-sm text-brand-gray">

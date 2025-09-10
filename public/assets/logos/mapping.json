@@ -1,0 +1,27 @@
+{
+  "bitcoin": {
+    "name": "Bitcoin",
+    "ticker": "BTC",
+    "logoFile": "bitcoin.png"
+  },
+  "ethereum": {
+    "name": "Ethereum",
+    "ticker": "ETH",
+    "logoFile": "ethereum.png"
+  },
+  "solana": {
+    "name": "Solana",
+    "ticker": "SOL",
+    "logoFile": "solana.png"
+  },
+  "cardano": {
+    "name": "Cardano",
+    "ticker": "ADA",
+    "logoFile": "cardano.png"
+  },
+  "chainlink": {
+    "name": "Chainlink",
+    "ticker": "LINK",
+    "logoFile": "chainlink.png"
+  }
+}

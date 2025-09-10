@@ -1,4 +1,5 @@
 import { getCurrentPrice, getCoinDetails } from './prices'
+import { getCryptoLogo, getCryptoTicker, getCryptoName } from './cryptoAssets'
 
 export interface CoinData {
   symbol: string
@@ -21,7 +22,7 @@ export const MAJOR_COINS: CoinData[] = [
   { symbol: 'cat-in-a-dogs-world', name: 'MEW', ticker: 'MEW', coinGeckoId: 'cat-in-a-dogs-world' },
   { symbol: 'popcat', name: 'Popcat', ticker: 'POPCAT', coinGeckoId: 'popcat' },
   { symbol: 'Jupiter', name: 'Jupiter', ticker: 'JUP', coinGeckoId: 'jupiter-exchange-solana' },
-  { symbol: 'wen-4', name: 'Wen', ticker: 'WEN', coinGeckoId: 'wen-4' },
+  { symbol: 'wen', name: 'Wen', ticker: 'WEN', coinGeckoId: 'wen-4' },
   { symbol: 'slerf', name: 'Slerf', ticker: 'SLERF', coinGeckoId: 'slerf' },
   { symbol: 'mother-iggy', name: 'Mother Iggy', ticker: 'MOTHER', coinGeckoId: 'mother-iggy' },
   { symbol: 'daddy-tate', name: 'Daddy Tate', ticker: 'DADDY', coinGeckoId: 'daddy-tate' },
@@ -32,12 +33,12 @@ export const MAJOR_COINS: CoinData[] = [
   { symbol: 'shiba-inu', name: 'Shiba Inu', ticker: 'SHIB', coinGeckoId: 'shiba-inu' },
   { symbol: 'myro', name: 'Myro', ticker: 'MYRO', coinGeckoId: 'myro' },
   { symbol: 'tensor', name: 'Tensor', ticker: 'TNSR', coinGeckoId: 'tensor' },
-  { symbol: 'jito-governance-token', name: 'Jito', ticker: 'JTO', coinGeckoId: 'jito-governance-token' },
+  { symbol: 'jito', name: 'Jito', ticker: 'JTO', coinGeckoId: 'jito-governance-token' },
   { symbol: 'hivemapper', name: 'Hivemapper', ticker: 'HONEY', coinGeckoId: 'hivemapper' },
   { symbol: 'goatseus-maximus', name: 'Goatseus Maximus', ticker: 'GOAT', coinGeckoId: 'goatseus-maximus' },
   { symbol: 'peanut-the-squirrel', name: 'Peanut the Squirrel', ticker: 'PNUT', coinGeckoId: 'peanut-the-squirrel' },
   { symbol: 'act-i-the-ai-prophecy', name: 'Act I', ticker: 'ACT', coinGeckoId: 'act-i-the-ai-prophecy' },
-  { symbol: 'gigachad-2', name: 'GIGA', ticker: 'GIGA', coinGeckoId: 'gigachad-2' },
+  { symbol: 'gigachad', name: 'GIGA', ticker: 'GIGA', coinGeckoId: 'gigachad-2' },
   { symbol: 'retardio', name: 'Retardio', ticker: 'RETARDIO', coinGeckoId: 'retardio' },
   { symbol: 'moo-deng', name: 'Moo Deng', ticker: 'MOODENG', coinGeckoId: 'moo-deng' },
   { symbol: 'fwog', name: 'Fwog', ticker: 'FWOG', coinGeckoId: 'fwog' },
@@ -63,7 +64,10 @@ export async function generateMarketData(): Promise<MarketData[]> {
   for (const coin of MAJOR_COINS) {
     try {
       const details = await getCoinDetails(coin.coinGeckoId)
-      console.log(`Fetched ${coin.ticker} details: price=${details.price}, image=${details.image || 'none'}`)
+      const cryptoLogo = getCryptoLogo(coin.symbol)
+      const cryptoTicker = getCryptoTicker(coin.symbol)
+      
+      console.log(`Fetched ${cryptoTicker} details: price=${details.price}, logo=${cryptoLogo ? 'local' : 'fallback'}`)
       
       for (const duration of RESOLUTION_TIMES) {
         const startTime = new Date()
@@ -71,33 +75,36 @@ export async function generateMarketData(): Promise<MarketData[]> {
         
         markets.push({
           symbol: coin.symbol,
-          title: `Will ${coin.ticker} go ↑ in ${duration}m?`,
+          title: `Will ${cryptoTicker} go ↑ in ${duration}m?`,
           durationMin: duration,
           startTime,
           endTime,
           startPrice: details.price,
-          ticker: coin.ticker,
-          logoUrl: details.image || null // Ensure null instead of undefined
+          ticker: cryptoTicker,
+          logoUrl: cryptoLogo // Use our local asset system
         })
       }
     } catch (error) {
       console.error(`Failed to fetch details for ${coin.ticker}:`, error)
       // Continue with other coins - don't fail completely
       
-      // Create fallback markets without logos
+      // Create fallback markets using our local asset system
+      const cryptoLogo = getCryptoLogo(coin.symbol)
+      const cryptoTicker = getCryptoTicker(coin.symbol)
+      
       for (const duration of RESOLUTION_TIMES) {
         const startTime = new Date()
         const endTime = new Date(startTime.getTime() + duration * 60 * 1000)
         
         markets.push({
           symbol: coin.symbol,
-          title: `Will ${coin.ticker} go ↑ in ${duration}m?`,
+          title: `Will ${cryptoTicker} go ↑ in ${duration}m?`,
           durationMin: duration,
           startTime,
           endTime,
           startPrice: 0, // Fallback price
-          ticker: coin.ticker,
-          logoUrl: null
+          ticker: cryptoTicker,
+          logoUrl: cryptoLogo // Use our local asset system even for fallbacks
         })
       }
     }

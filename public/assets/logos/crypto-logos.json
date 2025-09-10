@@ -1,0 +1,242 @@
+{
+  "bitcoin": {
+    "name": "Bitcoin",
+    "ticker": "BTC",
+    "symbol": "bitcoin",
+    "hasLocalLogo": true,
+    "logoFile": "bitcoin.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png"
+  },
+  "ethereum": {
+    "name": "Ethereum",
+    "ticker": "ETH",
+    "symbol": "ethereum",
+    "hasLocalLogo": true,
+    "logoFile": "ethereum.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png"
+  },
+  "solana": {
+    "name": "Solana",
+    "ticker": "SOL",
+    "symbol": "solana",
+    "hasLocalLogo": true,
+    "logoFile": "solana.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/4128/large/solana.png"
+  },
+  "cardano": {
+    "name": "Cardano",
+    "ticker": "ADA",
+    "symbol": "cardano",
+    "hasLocalLogo": true,
+    "logoFile": "cardano.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/975/large/cardano.png"
+  },
+  "chainlink": {
+    "name": "Chainlink",
+    "ticker": "LINK",
+    "symbol": "chainlink",
+    "hasLocalLogo": true,
+    "logoFile": "chainlink.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/877/large/chainlink-new-logo.png"
+  },
+  "avalanche-2": {
+    "name": "Avalanche",
+    "ticker": "AVAX",
+    "symbol": "avalanche-2",
+    "hasLocalLogo": true,
+    "logoFile": "avalanche-2.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/12559/large/Avalanche_Circle_RedWhite_Trans.png"
+  },
+  "binancecoin": {
+    "name": "BNB",
+    "ticker": "BNB",
+    "symbol": "binancecoin",
+    "hasLocalLogo": true,
+    "logoFile": "binancecoin.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png"
+  },
+  "polygon": {
+    "name": "Polygon",
+    "ticker": "MATIC",
+    "symbol": "polygon",
+    "hasLocalLogo": true,
+    "logoFile": "polygon.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/4713/large/matic-token-icon.png"
+  },
+  "dogwifcoin": {
+    "name": "Dogwifhat",
+    "ticker": "WIF",
+    "symbol": "dogwifcoin",
+    "hasLocalLogo": true,
+    "logoFile": "dogwifcoin.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/33767/large/dogwifhat.jpg"
+  },
+  "bonk": {
+    "name": "Bonk",
+    "ticker": "BONK",
+    "symbol": "bonk",
+    "hasLocalLogo": true,
+    "logoFile": "bonk.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/28600/large/bonk.jpg"
+  },
+  "book-of-meme": {
+    "name": "Book of Meme",
+    "ticker": "BOME",
+    "symbol": "book-of-meme",
+    "hasLocalLogo": true,
+    "logoFile": "book-of-meme.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/36829/large/bome.png"
+  },
+  "jeo-boden": {
+    "name": "Jeo Boden",
+    "ticker": "BODEN",
+    "symbol": "jeo-boden",
+    "hasLocalLogo": true,
+    "logoFile": "jeo-boden.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/36513/large/boden.jpg"
+  },
+  "cat-in-a-dogs-world": {
+    "name": "MEW",
+    "ticker": "MEW",
+    "symbol": "cat-in-a-dogs-world",
+    "hasLocalLogo": true,
+    "logoFile": "cat-in-a-dogs-world.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/36478/large/cat_in_a_dogs_world.png"
+  },
+  "popcat": {
+    "name": "Popcat",
+    "ticker": "POPCAT",
+    "symbol": "popcat",
+    "hasLocalLogo": true,
+    "logoFile": "popcat.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/33800/large/popcat.png"
+  },
+  "jupiter-exchange-solana": {
+    "name": "Jupiter",
+    "ticker": "JUP",
+    "symbol": "Jupiter",
+    "hasLocalLogo": true,
+    "logoFile": "jupiter-exchange-solana.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/34188/large/jup.png"
+  },
+  "wen-4": {
+    "name": "Wen",
+    "ticker": "WEN",
+    "symbol": "wen-4",
+    "hasLocalLogo": true,
+    "logoFile": "wen-4.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/35054/large/wen_logo.png"
+  },
+  "pepe": {
+    "name": "Pepe",
+    "ticker": "PEPE",
+    "symbol": "pepe",
+    "hasLocalLogo": true,
+    "logoFile": "pepe.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/29850/large/pepe-token.jpeg"
+  },
+  "dogecoin": {
+    "name": "Dogecoin",
+    "ticker": "DOGE",
+    "symbol": "dogecoin",
+    "hasLocalLogo": true,
+    "logoFile": "dogecoin.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/5/large/dogecoin.png"
+  },
+  "shiba-inu": {
+    "name": "Shiba Inu",
+    "ticker": "SHIB",
+    "symbol": "shiba-inu",
+    "hasLocalLogo": true,
+    "logoFile": "shiba-inu.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/11939/large/shiba.png"
+  },
+  "floki": {
+    "name": "Floki",
+    "ticker": "FLOKI",
+    "symbol": "floki",
+    "hasLocalLogo": true,
+    "logoFile": "floki.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/16746/large/PNG_image.png"
+  },
+  "retardio": {
+    "name": "Retardio",
+    "ticker": "RETARDIO",
+    "symbol": "retardio",
+    "hasLocalLogo": true,
+    "logoFile": "retardio.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/38243/large/retardio_logo.jpg"
+  },
+  "moo-deng": {
+    "name": "Moo Deng",
+    "ticker": "MOODENG",
+    "symbol": "moo-deng",
+    "hasLocalLogo": true,
+    "logoFile": "moo-deng.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/38544/large/moo-deng.png"
+  },
+  "fwog": {
+    "name": "Fwog",
+    "ticker": "FWOG",
+    "symbol": "fwog",
+    "hasLocalLogo": true,
+    "logoFile": "fwog.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/39834/large/fwog.jpg"
+  },
+  "smoking-chicken-fish": {
+    "name": "SCF",
+    "ticker": "SCF",
+    "symbol": "smoking-chicken-fish",
+    "hasLocalLogo": true,
+    "logoFile": "smoking-chicken-fish.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/39949/large/scf.jpg"
+  },
+  "gigachad": {
+    "name": "Gigachad",
+    "ticker": "GIGA",
+    "symbol": "gigachad",
+    "hasLocalLogo": true,
+    "logoFile": "gigachad.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/30824/large/giga.jpg"
+  },
+  "mother-iggy": {
+    "name": "Mother Iggy",
+    "ticker": "MOTHER",
+    "symbol": "mother-iggy",
+    "hasLocalLogo": true,
+    "logoFile": "mother-iggy.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/37034/large/mother_iggy.jpg"
+  },
+  "goatseus-maximus": {
+    "name": "Goatseus Maximus",
+    "ticker": "GOAT",
+    "symbol": "goatseus-maximus",
+    "hasLocalLogo": true,
+    "logoFile": "goatseus-maximus.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/39721/large/goat.png"
+  },
+  "first-convicted-raccon": {
+    "name": "First Convicted Racoon",
+    "ticker": "FRED",
+    "symbol": "first-convicted-raccon",
+    "hasLocalLogo": true,
+    "logoFile": "first-convicted-raccon.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/39885/large/fred.jpg"
+  },
+  "peanut-the-squirrel": {
+    "name": "Peanut the Squirrel",
+    "ticker": "PNUT",
+    "symbol": "peanut-the-squirrel",
+    "hasLocalLogo": true,
+    "logoFile": "peanut-the-squirrel.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/40027/large/Peanut_the_Squirrel.jpg"
+  },
+  "act-i-the-ai-prophecy": {
+    "name": "ACT I",
+    "ticker": "ACT",
+    "symbol": "act-i-the-ai-prophecy",
+    "hasLocalLogo": true,
+    "logoFile": "act-i-the-ai-prophecy.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/40038/large/act_1.jpg"
+  }
+}
