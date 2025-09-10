@@ -18,7 +18,7 @@ const CRYPTO_ASSETS: Record<string, CryptoAsset> = cryptoLogosData as Record<str
 
 /**
  * Get the logo URL for a cryptocurrency symbol
- * Prioritizes local assets, falls back to CoinGecko URLs
+ * Only uses local assets - no external fallbacks
  */
 export function getCryptoLogo(symbol: string): string | null {
   const asset = CRYPTO_ASSETS[symbol]
@@ -28,13 +28,13 @@ export function getCryptoLogo(symbol: string): string | null {
     return null
   }
   
-  // If we have a local logo file, use it
+  // Only use local logo files - no external fallbacks
   if (asset.hasLocalLogo && asset.logoFile) {
     return `/assets/logos/${asset.logoFile}`
   }
   
-  // Otherwise, use the fallback URL (CoinGecko)
-  return asset.fallbackUrl
+  // If no local logo is available, return null instead of fallback
+  return null
 }
 
 /**

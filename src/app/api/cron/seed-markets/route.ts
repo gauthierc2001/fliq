@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getCoinDetails } from '@/lib/prices'
 import { MAJOR_COINS } from '@/lib/marketGenerator'
+import { getCryptoLogo, getCryptoTicker } from '@/lib/cryptoAssets'
 
 // Force dynamic rendering - this route uses database
 export const dynamic = 'force-dynamic'
@@ -16,6 +17,8 @@ export async function POST() {
       try {
         // Get current price and logo
         const coinDetails = await getCoinDetails(coin.coinGeckoId)
+        const logoUrl = getCryptoLogo(coin.symbol)
+        const ticker = getCryptoTicker(coin.symbol)
         
         for (const duration of DURATIONS) {
           const startTime = new Date()
@@ -37,12 +40,12 @@ export async function POST() {
             await prisma.market.create({
               data: {
                 symbol: coin.symbol,
-                title: `${coin.ticker} ↑ in ${duration}m?`,
+                title: `${ticker} ↑ in ${duration}m?`,
                 durationMin: duration,
                 startTime,
                 endTime,
                 startPrice: coinDetails.price,
-                logoUrl: coinDetails.image
+                logoUrl: logoUrl
               }
             })
             createdCount++

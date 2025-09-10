@@ -68,7 +68,7 @@
     "ticker": "WIF",
     "symbol": "dogwifcoin",
     "hasLocalLogo": true,
-    "logoFile": "dogwifcoin.png",
+    "logoFile": "dogwifcoin.jpg",
     "fallbackUrl": "https://coin-images.coingecko.com/coins/images/33767/large/dogwifhat.jpg"
   },
   "bonk": {
@@ -84,7 +84,7 @@
     "ticker": "BOME",
     "symbol": "book-of-meme",
     "hasLocalLogo": true,
-    "logoFile": "book-of-meme.png",
+    "logoFile": "book-of-meme.jpg",
     "fallbackUrl": "https://coin-images.coingecko.com/coins/images/36829/large/bome.png"
   },
   "jeo-boden": {
@@ -100,7 +100,7 @@
     "ticker": "MEW",
     "symbol": "cat-in-a-dogs-world",
     "hasLocalLogo": true,
-    "logoFile": "cat-in-a-dogs-world.png",
+    "logoFile": "cat-in-a-dogs-world.jpg",
     "fallbackUrl": "https://coin-images.coingecko.com/coins/images/36478/large/cat_in_a_dogs_world.png"
   },
   "popcat": {
@@ -196,7 +196,7 @@
     "ticker": "GIGA",
     "symbol": "gigachad",
     "hasLocalLogo": true,
-    "logoFile": "gigachad.png",
+    "logoFile": "gigachad.jpeg",
     "fallbackUrl": "https://coin-images.coingecko.com/coins/images/30824/large/giga.jpg"
   },
   "mother-iggy": {
