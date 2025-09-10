@@ -89,7 +89,7 @@ export default function LeaderboardTable({ leaderboard }: LeaderboardTableProps)
                 {/* User Info */}
                 <div>
                   <div className="font-medium text-brand-black">
-                    {entry.username || entry.wallet.slice(0, 4)}
+                    {entry.username}
                   </div>
                   <div className="text-xs text-brand-gray font-mono">
                     {entry.wallet.slice(0, 6)}...{entry.wallet.slice(-4)}

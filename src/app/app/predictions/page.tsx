@@ -67,30 +67,46 @@ export default function PredictionsPage() {
       if (response.ok) {
         const { markets } = await response.json()
         
-        // If no markets available, generate some
-        if (markets.length === 0) {
+        // If no markets or very few markets available, trigger market rotation
+        if (markets.length < 3) {
           setIsGeneratingMarkets(true)
           
           try {
-            const generateResponse = await fetch('/api/markets/generate', { method: 'POST' })
-            if (generateResponse.ok) {
-              const generationResult = await generateResponse.json()
+            // Use the new market rotation endpoint instead of generate
+            const rotationResponse = await fetch('/api/cron/market-rotation', { method: 'POST' })
+            if (rotationResponse.ok) {
+              const rotationResult = await rotationResponse.json()
+              console.log('Market rotation triggered:', rotationResult)
               
-              // Show warning if using fallback data
-              if (generationResult.warning) {
-                setMarketError(generationResult.warning)
-              }
-              
-              // Fetch markets again after generation
+              // Fetch markets again after rotation
               const retryResponse = await fetch('/api/markets/list')
               if (retryResponse.ok) {
                 const { markets: newMarkets } = await retryResponse.json()
                 setMarkets(newMarkets)
               } else {
-                throw new Error('Failed to fetch markets after generation')
+                throw new Error('Failed to fetch markets after rotation')
               }
             } else {
-              throw new Error('Failed to generate markets')
+              // Fallback to old generate endpoint
+              const generateResponse = await fetch('/api/markets/generate', { method: 'POST' })
+              if (generateResponse.ok) {
+                const generationResult = await generateResponse.json()
+                
+                // Show warning if using fallback data
+                if (generationResult.warning) {
+                  setMarketError(generationResult.warning)
+                }
+                
+                const retryResponse = await fetch('/api/markets/list')
+                if (retryResponse.ok) {
+                  const { markets: newMarkets } = await retryResponse.json()
+                  setMarkets(newMarkets)
+                } else {
+                  throw new Error('Failed to fetch markets after generation')
+                }
+              } else {
+                throw new Error('Failed to generate markets')
+              }
             }
           } finally {
             setIsGeneratingMarkets(false)

@@ -46,7 +46,9 @@ export async function POST(request: NextRequest) {
       where: { id: marketId }
     })
     
-    if (!market || market.resolved || market.endTime <= new Date()) {
+    // Allow swipes until the very last second (no buffer)
+    const now = new Date()
+    if (!market || market.resolved || market.endTime <= now) {
       return NextResponse.json({ error: 'Market not available' }, { status: 400 })
     }
     

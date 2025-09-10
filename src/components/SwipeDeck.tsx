@@ -39,8 +39,8 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading, wagerAm
   // Audio ref for swipe sound
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
-  // Filter out markets with less than 15 seconds remaining
-  const validMarkets = markets.filter(market => market.timeLeft > 15000) // 15 seconds buffer
+  // Filter out markets with less than 5 seconds remaining (reduced from 15s)
+  const validMarkets = markets.filter(market => market.timeLeft > 5000) // 5 seconds buffer
   const currentMarket = validMarkets[currentIndex]
 
   // Initialize audio

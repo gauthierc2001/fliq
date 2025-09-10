@@ -118,7 +118,7 @@ async function resolveExpiredMarkets() {
 
 // Simple in-memory cache for market list
 let cachedMarkets: { data: any; timestamp: number } | null = null
-const CACHE_TTL = 30000 // 30 seconds
+const CACHE_TTL = 10000 // 10 seconds (reduced for more real-time updates)
 
 export async function GET() {
   try {
@@ -129,8 +129,8 @@ export async function GET() {
     }
     
     // Get active markets with timeout and connection resilience
-    // Add 15-second buffer so users have time to bet
-    const minEndTime = new Date(Date.now() + 15000) // 15 seconds from now
+    // Add 5-second buffer so users have time to bet (reduced from 15s)
+    const minEndTime = new Date(Date.now() + 5000) // 5 seconds from now
     
     const markets = await Promise.race([
       prisma.market.findMany({
@@ -171,6 +171,20 @@ export async function GET() {
         timeLeft: Math.max(0, market.endTime.getTime() - Date.now())
       }
     })
+    
+    // Trigger market rotation if we have too few markets
+    const MIN_MARKETS_THRESHOLD = 8
+    if (marketsWithOdds.length < MIN_MARKETS_THRESHOLD) {
+      console.log(`⚠️ Only ${marketsWithOdds.length} markets available, triggering rotation...`)
+      
+      // Trigger market rotation in background (don't wait for it)
+      fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/cron/market-rotation`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      }).catch(err => {
+        console.error('❌ Failed to trigger market rotation:', err)
+      })
+    }
     
     const response = { markets: marketsWithOdds }
     
