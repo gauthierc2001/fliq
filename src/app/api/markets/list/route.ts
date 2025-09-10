@@ -122,6 +122,9 @@ const CACHE_TTL = 10000 // 10 seconds (reduced for more real-time updates)
 
 export async function GET() {
   try {
+    // First, trigger resolution of any expired markets
+    await resolveExpiredMarkets()
+    
     // Check cache first
     if (cachedMarkets && Date.now() - cachedMarkets.timestamp < CACHE_TTL) {
       console.log('[Markets API] Serving from cache')

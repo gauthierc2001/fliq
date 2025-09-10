@@ -23,8 +23,8 @@ export async function POST() {
   try {
     console.log('🔄 Starting market rotation...')
     
-    // First, resolve any expired markets
-    await resolveExpiredMarkets()
+    // First, resolve any expired markets by calling the proper resolution endpoint
+    await triggerMarketResolution()
     
     // Check current market count
     const currentMarkets = await prisma.market.findMany({
@@ -122,35 +122,24 @@ export async function POST() {
   }
 }
 
-async function resolveExpiredMarkets() {
+async function triggerMarketResolution() {
   try {
-    const expiredMarkets = await prisma.market.findMany({
-      where: {
-        resolved: false,
-        endTime: {
-          lte: new Date()
-        }
-      }
+    console.log('🔍 Triggering market resolution...')
+    
+    // Call the proper resolution endpoint internally
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/cron/resolve`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
     })
     
-    if (expiredMarkets.length > 0) {
-      console.log(`🔍 Resolving ${expiredMarkets.length} expired markets...`)
-      
-      // Mark all as resolved with PUSH outcome for now (proper resolution happens in separate cron)
-      await prisma.market.updateMany({
-        where: {
-          id: {
-            in: expiredMarkets.map(m => m.id)
-          }
-        },
-        data: {
-          resolved: true,
-          outcome: 'PUSH'
-        }
-      })
+    if (response.ok) {
+      const result = await response.json()
+      console.log(`✅ Market resolution completed: ${result.resolvedCount} markets resolved`)
+    } else {
+      console.error('❌ Market resolution failed:', await response.text())
     }
   } catch (error) {
-    console.error('❌ Error resolving expired markets:', error)
+    console.error('❌ Error triggering market resolution:', error)
   }
 }
 

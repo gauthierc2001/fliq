@@ -74,9 +74,9 @@ async function resolveUserMarkets(userId: string) {
           }
         })
         
-        // Update user balance and totalPnL
+        // Update user balance and totalPnL for the specific swipe owner
         await prisma.user.update({
-          where: { id: userId },
+          where: { id: swipe.userId },
           data: {
             balance: {
               increment: win ? Math.round(swipe.stake * swipe.payoutMult) : 0
