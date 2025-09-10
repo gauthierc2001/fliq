@@ -12,7 +12,9 @@
     "typecheck": "tsc --noEmit",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
-    "db:seed": "node scripts/seed.js"
+    "db:seed": "node scripts/seed.js",
+    "db:cleanup-fake-prices": "node scripts/cleanup-fake-prices.js",
+    "db:fix-fake-prices": "node scripts/cleanup-fake-prices.js --fix"
   },
   "dependencies": {
     "@prisma/client": "^6.15.0",
