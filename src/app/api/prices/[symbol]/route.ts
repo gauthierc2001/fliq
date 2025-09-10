@@ -31,8 +31,8 @@ export async function GET(
     return NextResponse.json({ 
       error: 'Failed to fetch price',
       details: error instanceof Error ? error.message : 'Unknown error',
-      symbol,
-      coinId: getCoinGeckoId(symbol),
+      symbol: params.symbol,
+      coinId: getCoinGeckoId(params.symbol),
       timestamp: new Date().toISOString()
     }, { status: 500 })
   }

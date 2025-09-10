@@ -122,10 +122,10 @@ export async function POST() {
               createdCount++
               console.log(`✅ Created diversity market: ${ticker} ${duration}m (price: $${coinDetails.price})`)
             }
+          } catch (error) {
+            console.error(`❌ Failed to create diversity market for ${coin.ticker}:`, error)
+            // Continue with other coins - don't fail completely
           }
-        } catch (error) {
-          console.error(`❌ Failed to create diversity market for ${coin.ticker}:`, error)
-          // Continue with other coins - don't fail completely
         }
       }
     } else {
