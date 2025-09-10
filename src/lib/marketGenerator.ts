@@ -42,7 +42,13 @@ export const MAJOR_COINS: CoinData[] = [
   { symbol: 'retardio', name: 'Retardio', ticker: 'RETARDIO', coinGeckoId: 'retardio' },
   { symbol: 'moo-deng', name: 'Moo Deng', ticker: 'MOODENG', coinGeckoId: 'moo-deng' },
   { symbol: 'fwog', name: 'Fwog', ticker: 'FWOG', coinGeckoId: 'fwog' },
-  { symbol: 'smoking-chicken-fish', name: 'Smoking Chicken Fish', ticker: 'SCF', coinGeckoId: 'smoking-chicken-fish' }
+  { symbol: 'smoking-chicken-fish', name: 'Smoking Chicken Fish', ticker: 'SCF', coinGeckoId: 'smoking-chicken-fish' },
+  { symbol: 'troll-2', name: 'Troll', ticker: 'TROLL', coinGeckoId: 'troll-2' },
+  { symbol: 'aura-on-sol', name: 'Aura', ticker: 'AURA', coinGeckoId: 'aura-on-sol' },
+  { symbol: 'useless-3', name: 'Useless', ticker: 'USELESS', coinGeckoId: 'useless-3' },
+  { symbol: 'fartcoin', name: 'Fartcoin', ticker: 'FARTCOIN', coinGeckoId: 'fartcoin' },
+  { symbol: 'neet', name: 'Neet', ticker: 'NEET', coinGeckoId: 'neet' },
+  { symbol: 'pump-fun', name: 'PumpFun', ticker: 'PUMP', coinGeckoId: 'pump-fun' }
 ]
 
 export const RESOLUTION_TIMES = [1, 3, 5] // minutes

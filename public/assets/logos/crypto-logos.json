@@ -236,7 +236,55 @@
     "ticker": "ACT",
     "symbol": "act-i-the-ai-prophecy",
     "hasLocalLogo": true,
-    "logoFile": "act-i-the-ai-prophecy.png",
+    "logoFile": "act-i-the-ai-prophecy.jpg",
     "fallbackUrl": "https://coin-images.coingecko.com/coins/images/40038/large/act_1.jpg"
+  },
+  "troll-2": {
+    "name": "Troll",
+    "ticker": "TROLL",
+    "symbol": "troll-2",
+    "hasLocalLogo": true,
+    "logoFile": "troll-2.jpg",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/37722/large/troll.jpg"
+  },
+  "aura-on-sol": {
+    "name": "Aura",
+    "ticker": "AURA",
+    "symbol": "aura-on-sol",
+    "hasLocalLogo": true,
+    "logoFile": "aura-on-sol.jpg",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/aura/large/aura.jpg"
+  },
+  "useless-3": {
+    "name": "Useless",
+    "ticker": "USELESS",
+    "symbol": "useless-3",
+    "hasLocalLogo": true,
+    "logoFile": "useless-3.png",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/38754/large/useless.png"
+  },
+  "fartcoin": {
+    "name": "Fartcoin",
+    "ticker": "FARTCOIN",
+    "symbol": "fartcoin",
+    "hasLocalLogo": true,
+    "logoFile": "fartcoin.jpg",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/39829/large/fartcoin.jpg"
+  },
+  "neet": {
+    "name": "Neet",
+    "ticker": "NEET",
+    "symbol": "neet",
+    "hasLocalLogo": true,
+    "logoFile": "neet.jpg",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/39583/large/neet.jpg"
+  },
+  "pump-fun": {
+    "name": "PumpFun",
+    "ticker": "PUMP",
+    "symbol": "pump-fun",
+    "hasLocalLogo": true,
+    "logoFile": "pump-fun.jpg",
+    "fallbackUrl": "https://coin-images.coingecko.com/coins/images/39829/large/pump.jpg"
   }
 }
