@@ -28,7 +28,8 @@ export async function GET() {
       wallet: user.wallet,
       balance: user.balance,
       totalPnL: user.totalPnL,
-      username: user.username || `${user.wallet.slice(0, 4)}...${user.wallet.slice(-4)}`,
+      username: user.username, // Keep original username, let frontend handle display logic
+      displayName: user.username || user.wallet.slice(0, 4), // For champion display
       avatar: user.avatar
     }))
     

@@ -9,6 +9,9 @@ interface LeaderboardEntry {
   wallet: string
   balance: number
   totalPnL: number
+  username?: string
+  displayName: string
+  avatar?: string
 }
 
 export default function LeaderboardPage() {
@@ -67,7 +70,7 @@ export default function LeaderboardPage() {
             <div>
               <div className="text-lg font-semibold">Champion</div>
               <div className="text-white/90">
-                {leaderboard[0] ? leaderboard[0].wallet : 'No champion yet'}
+                {leaderboard[0] ? leaderboard[0].displayName : 'No champion yet'}
               </div>
             </div>
           </div>

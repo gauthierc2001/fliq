@@ -9,6 +9,7 @@ interface LeaderboardEntry {
   balance: number
   totalPnL: number
   username?: string
+  displayName: string
   avatar?: string
 }
 
@@ -62,7 +63,7 @@ export default function LeaderboardTable({ leaderboard }: LeaderboardTableProps)
                 {entry.avatar ? (
                   <Image 
                     src={entry.avatar} 
-                    alt={`${entry.username || entry.wallet.slice(0, 4)}'s avatar`}
+                    alt={`${entry.displayName}'s avatar`}
                     width={40}
                     height={40}
                     className="w-10 h-10 rounded-full border border-brand-green object-cover"
@@ -79,17 +80,14 @@ export default function LeaderboardTable({ leaderboard }: LeaderboardTableProps)
                   entry.avatar ? 'hidden' : 'flex'
                 }`}>
                   <span className="text-xs font-bold text-white">
-                    {entry.username 
-                      ? entry.username.slice(0, 2).toUpperCase()
-                      : entry.wallet.slice(0, 2).toUpperCase()
-                    }
+                    {entry.displayName.slice(0, 2).toUpperCase()}
                   </span>
                 </div>
                 
                 {/* User Info */}
                 <div>
                   <div className="font-medium text-brand-black">
-                    {entry.username}
+                    {entry.displayName}
                   </div>
                   <div className="text-xs text-brand-gray font-mono">
                     {entry.wallet.slice(0, 6)}...{entry.wallet.slice(-4)}

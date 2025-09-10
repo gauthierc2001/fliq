@@ -2,22 +2,30 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getCoinDetails } from '@/lib/prices'
 import { getCryptoLogo, getCryptoTicker } from '@/lib/cryptoAssets'
+import { MAJOR_COINS } from '@/lib/marketGenerator'
 
 // Force dynamic rendering - this route uses database
 export const dynamic = 'force-dynamic'
 
 // Market configuration
 const DURATIONS = [1, 3, 5] // minutes - quick resolution times
-const TARGET_MARKETS_PER_COIN = 2 // Target 2 markets per coin per duration
-const MIN_TOTAL_MARKETS = 15 // Minimum total markets to maintain
-const MAJOR_COINS = [
-  { symbol: 'bitcoin', ticker: 'BTC', coinGeckoId: 'bitcoin' },
-  { symbol: 'ethereum', ticker: 'ETH', coinGeckoId: 'ethereum' },
-  { symbol: 'solana', ticker: 'SOL', coinGeckoId: 'solana' },
-  { symbol: 'dogwifcoin', ticker: 'WIF', coinGeckoId: 'dogwifcoin' },
-  { symbol: 'bonk', ticker: 'BONK', coinGeckoId: 'bonk' },
-  { symbol: 'pepe', ticker: 'PEPE', coinGeckoId: 'pepe' }
-]
+const TARGET_MARKETS_PER_COIN = 1 // Reduced to create more diversity (was 2)
+const MIN_TOTAL_MARKETS = 20 // Increased minimum for better variety
+
+// Shuffle function to randomize coin selection
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  return shuffled
+}
+
+// Get a random subset of coins for diversity
+function getRandomCoins(count: number) {
+  return shuffleArray(MAJOR_COINS).slice(0, count)
+}
 
 export async function POST() {
   try {
@@ -47,8 +55,12 @@ export async function POST() {
     let createdCount = 0
     const now = new Date()
     
-    // Create markets for each coin and duration combination
-    for (const coin of MAJOR_COINS) {
+    // Use random selection of coins for diversity (15-20 coins per rotation)
+    const selectedCoins = getRandomCoins(Math.min(20, MAJOR_COINS.length))
+    console.log(`🎲 Selected ${selectedCoins.length} random coins for diversity:`, selectedCoins.map(c => c.ticker).join(', '))
+    
+    // Create markets for each selected coin and duration combination
+    for (const coin of selectedCoins) {
       for (const duration of DURATIONS) {
         try {
           // Count existing markets for this coin/duration
@@ -145,8 +157,8 @@ async function triggerMarketResolution() {
 
 async function createEmergencyMarkets(count: number) {
   try {
-    // Create emergency markets using the most liquid coins
-    const emergencyCoins = MAJOR_COINS.slice(0, 3) // BTC, ETH, SOL
+    // Create emergency markets using a diverse mix of coins
+    const emergencyCoins = getRandomCoins(8) // Use 8 random coins instead of just 3
     const emergencyDurations = [1, 3] // Shorter durations for quick resolution
     
     let created = 0
