@@ -66,6 +66,7 @@ export default function LeaderboardTable({ leaderboard }: LeaderboardTableProps)
                     width={40}
                     height={40}
                     className="w-10 h-10 rounded-full border border-brand-green object-cover"
+                    unoptimized
                     onError={(e) => {
                       const target = e.target as HTMLImageElement
                       target.style.display = 'none'

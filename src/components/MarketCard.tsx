@@ -29,6 +29,15 @@ interface MarketCardProps {
 
 export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: MarketCardProps) {
   const [timeLeft, setTimeLeft] = useState(market.timeLeft)
+  
+  // Debug logging for logo URL
+  useEffect(() => {
+    if (market.logoUrl) {
+      console.log(`Market ${market.symbol} has logo:`, market.logoUrl)
+    } else {
+      console.log(`Market ${market.symbol} has no logo`)
+    }
+  }, [market.symbol, market.logoUrl])
 
   useEffect(() => {
     setTimeLeft(market.timeLeft)
@@ -71,6 +80,7 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
               unoptimized
               onError={(e) => {
                 // Hide broken image and show fallback
+                console.warn(`Failed to load logo for ${market.symbol}:`, market.logoUrl)
                 const target = e.target as HTMLImageElement
                 target.style.display = 'none'
                 const fallback = target.nextElementSibling as HTMLElement
@@ -92,7 +102,7 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
               <Coins className="w-6 h-6 text-white" />
             )}
           </div>
-          <div className="text-3xl font-black text-brand-green">{market.symbol.toUpperCase()}</div>
+          <div className="text-3xl font-black text-brand-green">{market.title.match(/Will (\w+)/)?.[1] || market.symbol.toUpperCase()}</div>
         </div>
         <h3 className="text-lg font-bold text-brand-black mb-2">{market.title}</h3>
         <div className="text-sm text-brand-gray">
@@ -109,7 +119,7 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
           <div className="text-sm text-brand-gray font-medium">time remaining</div>
         </div>
         <div className="text-xs text-brand-gray">
-          {market.durationMin} minute prediction
+          {market.durationMin === 1 ? '60s' : `${market.durationMin}m`} prediction
         </div>
       </div>
 

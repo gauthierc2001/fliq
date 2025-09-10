@@ -80,6 +80,11 @@ export default function UserPage() {
         setAvatarKey(prev => prev + 1) // Force image reload
         setIsEditing(false)
         setPreviewAvatar('')
+        
+        // Force refetch user data to ensure avatar is properly loaded
+        setTimeout(() => {
+          fetchUserData()
+        }, 100)
       } else {
         console.error('Failed to update profile')
       }
@@ -88,7 +93,7 @@ export default function UserPage() {
     } finally {
       setIsUpdating(false)
     }
-  }, [editForm])
+  }, [editForm, fetchUserData])
 
   useEffect(() => {
     if (connected) {
@@ -175,18 +180,20 @@ export default function UserPage() {
           <div className="mb-6">
             {user.avatar ? (
               <Image 
-                src={`${user.avatar}${user.avatar.includes('?') ? '&' : '?'}v=${avatarKey}`} 
+                src={user.avatar} 
                 alt="Profile"
                 width={80}
                 height={80}
                 className="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-brand-green object-cover"
-                key={avatarKey} // Force component remount
+                key={`avatar-${user.id}-${avatarKey}`} // Force component remount with user ID and key
                 onError={(e) => {
+                  console.warn('Failed to load avatar:', user.avatar)
                   const target = e.target as HTMLImageElement
                   target.style.display = 'none'
                   const fallback = target.nextElementSibling as HTMLElement
                   if (fallback) fallback.style.display = 'flex'
                 }}
+                unoptimized
               />
             ) : null}
             <div className={`w-20 h-20 bg-brand-green rounded-full mx-auto mb-4 flex items-center justify-center ${

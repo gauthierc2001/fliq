@@ -54,7 +54,7 @@ export interface MarketData {
   endTime: Date
   startPrice: number
   ticker: string
-  logoUrl?: string
+  logoUrl: string | null
 }
 
 export async function generateMarketData(): Promise<MarketData[]> {
@@ -63,6 +63,7 @@ export async function generateMarketData(): Promise<MarketData[]> {
   for (const coin of MAJOR_COINS) {
     try {
       const details = await getCoinDetails(coin.coinGeckoId)
+      console.log(`Fetched ${coin.ticker} details: price=${details.price}, image=${details.image || 'none'}`)
       
       for (const duration of RESOLUTION_TIMES) {
         const startTime = new Date()
@@ -76,12 +77,29 @@ export async function generateMarketData(): Promise<MarketData[]> {
           endTime,
           startPrice: details.price,
           ticker: coin.ticker,
-          logoUrl: details.image
+          logoUrl: details.image || null // Ensure null instead of undefined
         })
       }
     } catch (error) {
       console.error(`Failed to fetch details for ${coin.ticker}:`, error)
       // Continue with other coins - don't fail completely
+      
+      // Create fallback markets without logos
+      for (const duration of RESOLUTION_TIMES) {
+        const startTime = new Date()
+        const endTime = new Date(startTime.getTime() + duration * 60 * 1000)
+        
+        markets.push({
+          symbol: coin.symbol,
+          title: `Will ${coin.ticker} go ↑ in ${duration}m?`,
+          durationMin: duration,
+          startTime,
+          endTime,
+          startPrice: 0, // Fallback price
+          ticker: coin.ticker,
+          logoUrl: null
+        })
+      }
     }
   }
   
@@ -101,7 +119,7 @@ export function getFallbackMarkets(): MarketData[] {
       endTime: new Date(now.getTime() + 1 * 60 * 1000),
       startPrice: 45000,
       ticker: 'BTC',
-      logoUrl: undefined // Will show fallback logo
+      logoUrl: null // Will show fallback logo
     },
     {
       symbol: 'ethereum',
@@ -111,7 +129,7 @@ export function getFallbackMarkets(): MarketData[] {
       endTime: new Date(now.getTime() + 3 * 60 * 1000),
       startPrice: 2800,
       ticker: 'ETH',
-      logoUrl: undefined // Will show fallback logo
+      logoUrl: null // Will show fallback logo
     },
     {
       symbol: 'solana',
@@ -121,7 +139,7 @@ export function getFallbackMarkets(): MarketData[] {
       endTime: new Date(now.getTime() + 5 * 60 * 1000),
       startPrice: 85,
       ticker: 'SOL',
-      logoUrl: undefined // Will show fallback logo
+      logoUrl: null // Will show fallback logo
     }
   ]
 }

@@ -119,11 +119,25 @@ export async function GET() {
       },
       orderBy: {
         endTime: 'asc'
+      },
+      select: {
+        id: true,
+        symbol: true,
+        title: true,
+        durationMin: true,
+        startTime: true,
+        endTime: true,
+        startPrice: true,
+        yesBets: true,
+        noBets: true,
+        logoUrl: true // Explicitly select logoUrl
       }
     })
     
     const marketsWithOdds = markets.map(market => {
       const odds = calculateOdds(market.yesBets, market.noBets)
+      // Debug logging
+      console.log(`Market ${market.symbol} logoUrl:`, market.logoUrl)
       return {
         ...market,
         ...odds,
