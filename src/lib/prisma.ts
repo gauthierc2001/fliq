@@ -26,7 +26,7 @@ function buildDatabaseUrl(): string | undefined {
   if (process.env.NODE_ENV !== 'production') return base
   
   const hasQuery = base.includes('?')
-  const params = 'connection_limit=5&pool_timeout=5&connect_timeout=5&statement_timeout=10000'
+  const params = 'connection_limit=5&pool_timeout=5&connect_timeout=10&socket_timeout=3'
   const finalUrl = hasQuery ? `${base}&${params}` : `${base}?${params}`
   
   console.log('[Prisma] Database URL configured with connection pooling')
@@ -47,20 +47,8 @@ export const prisma = new Proxy({} as PrismaClient, {
       if (!globalForPrisma.prisma) {
         globalForPrisma.prisma = new PrismaClient({
           datasources: url ? { db: { url } } : undefined,
-          log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
-          __internal: {
-            engine: {
-              endpoint: undefined
-            }
-          }
+          log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error']
         })
-        
-        // Warm up the connection
-        if (process.env.NODE_ENV === 'production') {
-          globalForPrisma.prisma.$connect().catch(err => {
-            console.warn('[Prisma] Initial connection failed:', err.message)
-          })
-        }
       }
       prismaInstance = globalForPrisma.prisma
     }

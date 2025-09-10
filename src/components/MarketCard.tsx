@@ -29,6 +29,15 @@ interface MarketCardProps {
 
 export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: MarketCardProps) {
   const [timeLeft, setTimeLeft] = useState(market.timeLeft)
+  
+  // Debug logging for logo URL
+  useEffect(() => {
+    if (market.logoUrl) {
+      console.log(`Market ${market.symbol} has logo:`, market.logoUrl)
+    } else {
+      console.log(`Market ${market.symbol} has no logo`)
+    }
+  }, [market.symbol, market.logoUrl])
 
   useEffect(() => {
     setTimeLeft(market.timeLeft)

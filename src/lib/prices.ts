@@ -1,6 +1,12 @@
 const COINGECKO_BASE_URL = 'https://api.coingecko.com/api/v3'
-const TIMEOUT_MS = 5000 // 5 second timeout
-const RETRY_DELAY_MS = 1000 // 1 second between retries
+const TIMEOUT_MS = 3000 // 3 second timeout (reduced for faster failure)
+const RETRY_DELAY_MS = 500 // 500ms between retries (faster recovery)
+
+// Circuit breaker to prevent cascading failures
+let failureCount = 0
+let lastFailureTime = 0
+const CIRCUIT_BREAKER_THRESHOLD = 3
+const CIRCUIT_BREAKER_TIMEOUT = 30000 // 30 seconds
 
 export interface CoinPrice {
   symbol: string
@@ -26,7 +32,25 @@ async function fetchWithTimeout(url: string, options: RequestInit, timeout: numb
   }
 }
 
+function isCircuitBreakerOpen(): boolean {
+  if (failureCount >= CIRCUIT_BREAKER_THRESHOLD) {
+    if (Date.now() - lastFailureTime < CIRCUIT_BREAKER_TIMEOUT) {
+      return true
+    } else {
+      // Reset circuit breaker after timeout
+      failureCount = 0
+      lastFailureTime = 0
+    }
+  }
+  return false
+}
+
 export async function getCurrentPrice(coinId: string, retries = 2): Promise<number> {
+  // Check circuit breaker
+  if (isCircuitBreakerOpen()) {
+    throw new Error('CoinGecko API circuit breaker is open')
+  }
+  
   try {
     const response = await fetchWithTimeout(
       `${COINGECKO_BASE_URL}/simple/price?ids=${coinId}&vs_currencies=usd`,
@@ -55,8 +79,14 @@ export async function getCurrentPrice(coinId: string, retries = 2): Promise<numb
       throw new Error(`Price not found for ${coinId}`)
     }
     
+    // Reset failure count on success
+    failureCount = 0
     return price
   } catch (error) {
+    // Increment failure count
+    failureCount++
+    lastFailureTime = Date.now()
+    
     if (error instanceof Error && error.name === 'AbortError') {
       console.error(`CoinGecko request timeout for ${coinId}`)
       throw new Error('Price fetch timeout')

@@ -18,11 +18,17 @@ async function resolveExpiredMarkets() {
       }
     })
     
-    for (const market of marketsToResolve) {
+    // Process markets in parallel for better performance
+    const resolutionPromises = marketsToResolve.map(async (market) => {
       try {
-        // Get current price
+        // Get current price with timeout
         const coinId = getCoinGeckoId(market.symbol)
-        const currentPrice = await getCurrentPrice(coinId)
+        const currentPrice = await Promise.race([
+          getCurrentPrice(coinId),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Price fetch timeout')), 2000)
+          )
+        ]) as number
         
         // Determine outcome
         let outcome: 'YES' | 'NO' | 'PUSH'
@@ -90,26 +96,39 @@ async function resolveExpiredMarkets() {
           })
         }
         
-        console.log(`✅ Resolved market ${market.symbol} with outcome ${outcome} (${marketsToResolve.length} markets)`)
+        console.log(`✅ Resolved market ${market.symbol} with outcome ${outcome}`)
+        return { success: true, marketId: market.id }
       } catch (error) {
         console.error(`❌ Error resolving market ${market.id}:`, error)
+        return { success: false, marketId: market.id, error }
       }
-    }
+    })
+    
+    // Wait for all resolutions to complete
+    const results = await Promise.allSettled(resolutionPromises)
+    const successful = results.filter(r => r.status === 'fulfilled' && r.value.success).length
     
     if (marketsToResolve.length > 0) {
-      console.log(`📊 Auto-resolved ${marketsToResolve.length} expired markets`)
+      console.log(`📊 Auto-resolved ${successful}/${marketsToResolve.length} expired markets`)
     }
   } catch (error) {
     console.error('❌ Error in auto-resolution:', error)
   }
 }
 
+// Simple in-memory cache for market list
+let cachedMarkets: { data: any; timestamp: number } | null = null
+const CACHE_TTL = 30000 // 30 seconds
+
 export async function GET() {
   try {
-    // Skip expensive resolution process on every request
-    // This should be handled by a separate cron job
+    // Check cache first
+    if (cachedMarkets && Date.now() - cachedMarkets.timestamp < CACHE_TTL) {
+      console.log('[Markets API] Serving from cache')
+      return NextResponse.json(cachedMarkets.data)
+    }
     
-    // Get active markets with timeout
+    // Get active markets with timeout and connection resilience
     const markets = await Promise.race([
       prisma.market.findMany({
         where: {
@@ -132,11 +151,12 @@ export async function GET() {
           yesBets: true,
           noBets: true,
           logoUrl: true // Explicitly select logoUrl
-        }
+        },
+        take: 50 // Limit results for performance
       }),
-      // 5 second timeout
+      // 3 second timeout for database query
       new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Database query timeout')), 5000)
+        setTimeout(() => reject(new Error('Database query timeout')), 3000)
       )
     ]) as any[]
     
@@ -149,23 +169,42 @@ export async function GET() {
       }
     })
     
-    return NextResponse.json({ markets: marketsWithOdds })
+    const response = { markets: marketsWithOdds }
+    
+    // Cache the response
+    cachedMarkets = {
+      data: response,
+      timestamp: Date.now()
+    }
+    
+    console.log(`[Markets API] Served ${markets.length} markets, cached for ${CACHE_TTL/1000}s`)
+    return NextResponse.json(response)
   } catch (error) {
     console.error('[API] Error fetching markets:', error)
     console.error('[API] Error stack:', error instanceof Error ? error.stack : 'No stack trace')
     console.error('[API] DATABASE_URL exists:', !!process.env.DATABASE_URL)
     
-    // Return more detailed error in production for debugging
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     const isDatabaseError = errorMessage.includes('DATABASE_URL') || errorMessage.includes('prisma') || errorMessage.includes('connect') || errorMessage.includes('timeout')
     
-    // For database/timeout errors, return empty markets to prevent app crash
+    // For database/timeout errors, return cached data if available, otherwise empty array
     if (isDatabaseError) {
-      console.warn('[API] Database connection issue, returning empty markets')
+      console.warn('[API] Database issue, checking for cached data...')
+      
+      if (cachedMarkets) {
+        console.log('[API] Serving stale cached data due to database error')
+        return NextResponse.json({
+          ...cachedMarkets.data,
+          warning: 'Using cached data due to database connectivity issues'
+        })
+      }
+      
+      // Last resort: return empty markets to prevent app crash
+      console.warn('[API] No cached data available, returning empty markets')
       return NextResponse.json({ 
         markets: [],
-        warning: 'Database temporarily unavailable',
-        error: 'Database connection timeout'
+        error: 'Database temporarily unavailable',
+        message: 'Please try again in a few moments'
       })
     }
     

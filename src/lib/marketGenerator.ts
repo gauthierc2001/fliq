@@ -63,6 +63,7 @@ export async function generateMarketData(): Promise<MarketData[]> {
   for (const coin of MAJOR_COINS) {
     try {
       const details = await getCoinDetails(coin.coinGeckoId)
+      console.log(`Fetched ${coin.ticker} details: price=${details.price}, image=${details.image || 'none'}`)
       
       for (const duration of RESOLUTION_TIMES) {
         const startTime = new Date()
