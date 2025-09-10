@@ -106,38 +106,42 @@ async function resolveExpiredMarkets() {
 
 export async function GET() {
   try {
-    // First, resolve any expired markets
-    await resolveExpiredMarkets()
+    // Skip expensive resolution process on every request
+    // This should be handled by a separate cron job
     
-    // Then get active markets
-    const markets = await prisma.market.findMany({
-      where: {
-        resolved: false,
-        endTime: {
-          gt: new Date()
+    // Get active markets with timeout
+    const markets = await Promise.race([
+      prisma.market.findMany({
+        where: {
+          resolved: false,
+          endTime: {
+            gt: new Date()
+          }
+        },
+        orderBy: {
+          endTime: 'asc'
+        },
+        select: {
+          id: true,
+          symbol: true,
+          title: true,
+          durationMin: true,
+          startTime: true,
+          endTime: true,
+          startPrice: true,
+          yesBets: true,
+          noBets: true,
+          logoUrl: true // Explicitly select logoUrl
         }
-      },
-      orderBy: {
-        endTime: 'asc'
-      },
-      select: {
-        id: true,
-        symbol: true,
-        title: true,
-        durationMin: true,
-        startTime: true,
-        endTime: true,
-        startPrice: true,
-        yesBets: true,
-        noBets: true,
-        logoUrl: true // Explicitly select logoUrl
-      }
-    })
+      }),
+      // 5 second timeout
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database query timeout')), 5000)
+      )
+    ]) as any[]
     
     const marketsWithOdds = markets.map(market => {
       const odds = calculateOdds(market.yesBets, market.noBets)
-      // Debug logging
-      console.log(`Market ${market.symbol} logoUrl:`, market.logoUrl)
       return {
         ...market,
         ...odds,
@@ -153,7 +157,17 @@ export async function GET() {
     
     // Return more detailed error in production for debugging
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    const isDatabaseError = errorMessage.includes('DATABASE_URL') || errorMessage.includes('prisma') || errorMessage.includes('connect')
+    const isDatabaseError = errorMessage.includes('DATABASE_URL') || errorMessage.includes('prisma') || errorMessage.includes('connect') || errorMessage.includes('timeout')
+    
+    // For database/timeout errors, return empty markets to prevent app crash
+    if (isDatabaseError) {
+      console.warn('[API] Database connection issue, returning empty markets')
+      return NextResponse.json({ 
+        markets: [],
+        warning: 'Database temporarily unavailable',
+        error: 'Database connection timeout'
+      })
+    }
     
     return NextResponse.json({ 
       error: 'Internal server error',
