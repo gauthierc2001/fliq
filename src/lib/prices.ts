@@ -1,6 +1,10 @@
 const COINGECKO_BASE_URL = 'https://api.coingecko.com/api/v3'
 const TIMEOUT_MS = 3000 // 3 second timeout (reduced for faster failure)
 const RETRY_DELAY_MS = 500 // 500ms between retries (faster recovery)
+const BACKGROUND_RETRY_INTERVAL = 30000 // 30 seconds between background retries
+
+// Global retry queue for failed price fetches
+const retryQueue = new Map<string, { lastAttempt: number; attempts: number }>()
 
 // Circuit breaker to prevent cascading failures
 let failureCount = 0
@@ -197,50 +201,72 @@ export async function getCoinDetails(coinId: string): Promise<{ price: number; i
       const price = await getCurrentPrice(coinId)
       return { price, image: '' }
     } catch (priceError) {
-      console.error('Even price fallback failed:', priceError)
-      // Return a reasonable fallback price instead of 0 to avoid breaking markets
-      const fallbackPrices: Record<string, number> = {
-        'bitcoin': 45000,
-        'ethereum': 2500,
-        'solana': 100,
-        'cardano': 0.5,
-        'avalanche-2': 30,
-        'binancecoin': 300,
-        'chainlink': 15,
-        'polygon': 1,
-        'dogwifcoin': 2,
-        'bonk': 0.00002,
-        'pepe': 0.000001,
-        'dogecoin': 0.08,
-        'shiba-inu': 0.000008,
-        'floki': 0.0001,
-        'book-of-meme': 0.01,
-        'jeo-boden': 0.02,
-        'cat-in-a-dogs-world': 0.005,
-        'popcat': 1.2,
-        'jupiter-exchange-solana': 0.8,
-        'wen-4': 0.00005,
-        'mother-iggy': 0.05,
-        'goatseus-maximus': 0.6,
-        'peanut-the-squirrel': 1.1,
-        'act-i-the-ai-prophecy': 0.4,
-        'gigachad-2': 0.02,
-        'retardio': 0.3,
-        'first-convicted-raccon': 0.015,
-        'moo-deng': 0.25,
-        'fwog': 0.18,
-        'smoking-chicken-fish': 0.12,
-        'troll-2': 0.008,
-        'aura-on-sol': 0.006,
-        'useless-3': 0.0003,
-        'fartcoin': 0.45,
-        'neet': 0.35,
-        'pump-fun': 0.9
+      console.error('CoinGecko API completely unavailable for', coinId)
+      
+      // Add to retry queue for background retries
+      const now = Date.now()
+      const existing = retryQueue.get(coinId)
+      retryQueue.set(coinId, {
+        lastAttempt: now,
+        attempts: (existing?.attempts || 0) + 1
+      })
+      
+      console.log(`⚠️ Added ${coinId} to retry queue (attempt ${retryQueue.get(coinId)?.attempts})`)
+      
+      // Return -1 to indicate API failure (will hide starting price in UI)
+      // This prevents creating markets with inaccurate prices
+      console.log(`⚠️ Returning price -1 for ${coinId} to hide starting price until API recovers`)
+      return { price: -1, image: '' }
+    }
+  }
+}
+
+// Background retry mechanism for failed price fetches
+export function startBackgroundRetries() {
+  setInterval(async () => {
+    if (retryQueue.size === 0) return
+    
+    console.log(`🔄 Background retry: ${retryQueue.size} coins in retry queue`)
+    
+    for (const [coinId, retryInfo] of retryQueue.entries()) {
+      // Only retry every 30 seconds per coin
+      if (Date.now() - retryInfo.lastAttempt < BACKGROUND_RETRY_INTERVAL) {
+        continue
       }
       
-      const fallbackPrice = fallbackPrices[coinId] || 1 // Default to $1 if no specific fallback
-      console.log(`🔄 Using fallback price $${fallbackPrice} for ${coinId} (API failed)`)
-      return { price: fallbackPrice, image: '' }
+      try {
+        console.log(`🔄 Retrying price fetch for ${coinId} (attempt ${retryInfo.attempts + 1})`)
+        const price = await getCurrentPrice(coinId)
+        
+        if (price > 0) {
+          console.log(`✅ ${coinId} price recovered: $${price}`)
+          retryQueue.delete(coinId) // Remove from retry queue on success
+        }
+      } catch (error) {
+        // Update retry info
+        retryQueue.set(coinId, {
+          lastAttempt: Date.now(),
+          attempts: retryInfo.attempts + 1
+        })
+        
+        // Remove from queue after 10 failed attempts to prevent infinite retries
+        if (retryInfo.attempts >= 10) {
+          console.warn(`❌ Removing ${coinId} from retry queue after 10 failed attempts`)
+          retryQueue.delete(coinId)
+        }
+      }
     }
+  }, 10000) // Check every 10 seconds
+}
+
+// Get retry queue status for monitoring
+export function getRetryQueueStatus() {
+  return {
+    queueSize: retryQueue.size,
+    coins: Array.from(retryQueue.entries()).map(([coinId, info]) => ({
+      coinId,
+      attempts: info.attempts,
+      lastAttempt: new Date(info.lastAttempt).toISOString()
+    }))
   }
 }

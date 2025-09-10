@@ -89,6 +89,11 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
       return 'Loading...' // Better than showing $0
     }
     
+    // Special value -1 indicates price fetch failed and should be hidden
+    if (price === -1) {
+      return null // Will trigger hiding the price display
+    }
+    
     if (price >= 1000) {
       return price.toLocaleString() // e.g., "45,000"
     } else if (price >= 1) {
@@ -153,9 +158,18 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
           <div className="text-3xl font-black text-brand-green">{cryptoTicker}</div>
         </div>
         <h3 className="text-lg font-bold text-brand-black mb-2">{market.title}</h3>
-        <div className="text-sm text-brand-gray">
-          Starting price: <span className="font-bold text-brand-black">${formatPrice(market.startPrice)}</span>
-        </div>
+        {(() => {
+          const formattedPrice = formatPrice(market.startPrice)
+          if (formattedPrice === null) {
+            // Hide starting price when CoinGecko API failed
+            return null
+          }
+          return (
+            <div className="text-sm text-brand-gray">
+              Starting price: <span className="font-bold text-brand-black">${formattedPrice}</span>
+            </div>
+          )
+        })()}
       </div>
 
       {/* Timer */}

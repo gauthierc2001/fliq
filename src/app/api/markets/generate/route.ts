@@ -27,8 +27,12 @@ export async function POST(_request: NextRequest) {
         const ticker = getCryptoTicker(coin.symbol)
         
         // Validate price is real and not a fallback
-        if (coinDetails.price <= 0) {
-          console.warn(`⚠️ Invalid price ${coinDetails.price} for ${coin.ticker}, skipping`)
+        if (coinDetails.price <= 0 || coinDetails.price === -1) {
+          if (coinDetails.price === -1) {
+            console.warn(`⚠️ CoinGecko API failed for ${coin.ticker}, skipping until API recovers`)
+          } else {
+            console.warn(`⚠️ Invalid price ${coinDetails.price} for ${coin.ticker}, skipping`)
+          }
           continue
         }
         
@@ -72,20 +76,10 @@ export async function POST(_request: NextRequest) {
           }
         }
       } catch (error) {
-        console.error(`❌ Failed to process ${coin.ticker} - skipping:`, error.message)
+        console.error(`❌ Failed to process ${coin.ticker} - skipping:`, error instanceof Error ? error.message : String(error))
         // Continue with other coins - NO FALLBACK PRICES
       }
     }
-    
-    // Get final count
-    const finalCount = await prisma.market.count({
-      where: {
-        resolved: false,
-        endTime: {
-          gt: new Date()
-        }
-      }
-    })
     
     // Get final count
     const finalCount = await prisma.market.count({

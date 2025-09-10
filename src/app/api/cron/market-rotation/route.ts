@@ -99,8 +99,12 @@ export async function POST() {
               })
               
               // Validate price before creating market
-              if (coinDetails.price <= 0) {
-                console.warn(`⚠️ Invalid price ${coinDetails.price} for ${ticker}, skipping market creation`)
+              if (coinDetails.price <= 0 || coinDetails.price === -1) {
+                if (coinDetails.price === -1) {
+                  console.warn(`⚠️ CoinGecko API failed for ${ticker}, skipping market creation until API recovers`)
+                } else {
+                  console.warn(`⚠️ Invalid price ${coinDetails.price} for ${ticker}, skipping market creation`)
+                }
                 continue
               }
               
@@ -149,8 +153,12 @@ export async function POST() {
               
               // Log and validate price
               console.log(`💰 ${ticker} maintenance price:`, coinDetails.price)
-              if (coinDetails.price <= 0) {
-                console.warn(`⚠️ Invalid price ${coinDetails.price} for ${ticker}, skipping`)
+              if (coinDetails.price <= 0 || coinDetails.price === -1) {
+                if (coinDetails.price === -1) {
+                  console.warn(`⚠️ CoinGecko API failed for ${ticker}, skipping until API recovers`)
+                } else {
+                  console.warn(`⚠️ Invalid price ${coinDetails.price} for ${ticker}, skipping`)
+                }
                 continue
               }
               

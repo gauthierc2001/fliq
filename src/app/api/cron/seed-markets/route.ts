@@ -20,6 +20,16 @@ export async function POST() {
         const logoUrl = getCryptoLogo(coin.symbol)
         const ticker = getCryptoTicker(coin.symbol)
         
+        // Skip if CoinGecko API failed
+        if (coinDetails.price <= 0 || coinDetails.price === -1) {
+          if (coinDetails.price === -1) {
+            console.warn(`⚠️ CoinGecko API failed for ${ticker}, skipping until API recovers`)
+          } else {
+            console.warn(`⚠️ Invalid price ${coinDetails.price} for ${ticker}, skipping`)
+          }
+          continue
+        }
+        
         for (const duration of DURATIONS) {
           const startTime = new Date()
           const endTime = new Date(startTime.getTime() + duration * 60 * 1000)

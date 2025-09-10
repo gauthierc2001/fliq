@@ -1,7 +1,15 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { calculateOdds } from '@/lib/betting'
-import { getCurrentPrice, getCoinGeckoId } from '@/lib/prices'
+import { getCurrentPrice, getCoinGeckoId, startBackgroundRetries } from '@/lib/prices'
+
+// Start background retries for failed price fetches
+let backgroundRetryStarted = false
+if (!backgroundRetryStarted) {
+  startBackgroundRetries()
+  backgroundRetryStarted = true
+  console.log('🔄 Started background CoinGecko retry mechanism')
+}
 
 // Force dynamic rendering - this route uses database
 export const dynamic = 'force-dynamic'
