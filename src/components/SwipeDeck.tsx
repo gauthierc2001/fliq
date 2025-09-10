@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSwipeable } from 'react-swipeable'
 import { motion } from 'framer-motion'
 import MarketCard from './MarketCard'
@@ -35,10 +35,26 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading, wagerAm
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | 'up' | null>(null)
+  
+  // Audio ref for swipe sound
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   // Filter out markets with less than 15 seconds remaining
   const validMarkets = markets.filter(market => market.timeLeft > 15000) // 15 seconds buffer
   const currentMarket = validMarkets[currentIndex]
+
+  // Initialize audio
+  useEffect(() => {
+    audioRef.current = new Audio('/swipe.mp3')
+    audioRef.current.preload = 'auto'
+    audioRef.current.volume = 0.3 // Set volume to 30% to not be too loud
+    
+    return () => {
+      if (audioRef.current) {
+        audioRef.current = null
+      }
+    }
+  }, [])
 
   // Reset index if current index is out of bounds due to filtering
   useEffect(() => {
@@ -47,8 +63,26 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading, wagerAm
     }
   }, [validMarkets.length, currentIndex])
 
+  // Function to play swipe sound
+  const playSwipeSound = useCallback(() => {
+    if (audioRef.current) {
+      try {
+        audioRef.current.currentTime = 0 // Reset to beginning
+        audioRef.current.play().catch(error => {
+          // Silently handle audio play errors (e.g., user hasn't interacted with page yet)
+          console.log('Audio play prevented:', error)
+        })
+      } catch (error) {
+        console.log('Audio error:', error)
+      }
+    }
+  }, [])
+
   const handleSwipe = useCallback(async (marketId: string, side: 'YES' | 'NO') => {
     if (isAnimating || !currentMarket) return
+
+    // Play swipe sound
+    playSwipeSound()
 
     setIsAnimating(true)
     setSwipeDirection(side === 'YES' ? 'right' : 'left')
@@ -70,10 +104,13 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading, wagerAm
       setSwipeDirection(null)
       console.error('Swipe error:', error)
     }
-  }, [isAnimating, currentMarket, onSwipe, validMarkets.length])
+  }, [isAnimating, currentMarket, onSwipe, validMarkets.length, playSwipeSound])
 
   const handleSkip = useCallback(() => {
     if (isAnimating || !currentMarket) return
+    
+    // Play swipe sound
+    playSwipeSound()
     
     setIsAnimating(true)
     setSwipeDirection('up')
@@ -90,7 +127,7 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading, wagerAm
       setIsAnimating(false)
       setSwipeDirection(null)
     }, 300)
-  }, [isAnimating, currentMarket, onSkip, validMarkets.length])
+  }, [isAnimating, currentMarket, onSkip, validMarkets.length, playSwipeSound])
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => currentMarket && handleSwipe(currentMarket.id, 'NO'),

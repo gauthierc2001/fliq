@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { TrendingDown, TrendingUp, Coins } from 'lucide-react'
 import Image from 'next/image'
 import { getCryptoLogo, getCryptoTicker } from '@/lib/cryptoAssets'
@@ -31,9 +31,40 @@ interface MarketCardProps {
 export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: MarketCardProps) {
   const [timeLeft, setTimeLeft] = useState(market.timeLeft)
   
+  // Audio ref for swipe sound
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  
   // Get crypto logo and ticker from our asset system
   const cryptoLogo = getCryptoLogo(market.symbol)
   const cryptoTicker = getCryptoTicker(market.symbol)
+
+  // Initialize audio
+  useEffect(() => {
+    audioRef.current = new Audio('/swipe.mp3')
+    audioRef.current.preload = 'auto'
+    audioRef.current.volume = 0.3 // Set volume to 30% to not be too loud
+    
+    return () => {
+      if (audioRef.current) {
+        audioRef.current = null
+      }
+    }
+  }, [])
+
+  // Function to play swipe sound
+  const playSwipeSound = useCallback(() => {
+    if (audioRef.current) {
+      try {
+        audioRef.current.currentTime = 0 // Reset to beginning
+        audioRef.current.play().catch(error => {
+          // Silently handle audio play errors (e.g., user hasn't interacted with page yet)
+          console.log('Audio play prevented:', error)
+        })
+      } catch (error) {
+        console.log('Audio error:', error)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     setTimeLeft(market.timeLeft)
@@ -161,14 +192,20 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
       <div className="space-y-2 mt-auto">
         <div className="grid grid-cols-2 gap-3">
           <button
-            onClick={() => onSwipe?.(market.id, 'NO')}
+            onClick={() => {
+              playSwipeSound()
+              onSwipe?.(market.id, 'NO')
+            }}
             className="py-3 px-4 bg-brand-black text-white font-bold rounded-xl hover:bg-gray-800 transition-all duration-200 hover:scale-[1.02] flex items-center justify-center space-x-2 text-sm shadow-lg"
           >
             <TrendingDown className="w-4 h-4" />
             <span>NO</span>
           </button>
           <button
-            onClick={() => onSwipe?.(market.id, 'YES')}
+            onClick={() => {
+              playSwipeSound()
+              onSwipe?.(market.id, 'YES')
+            }}
             className="py-3 px-4 bg-brand-green text-white font-bold rounded-xl hover:bg-brand-greenDark transition-all duration-200 hover:scale-[1.02] flex items-center justify-center space-x-2 text-sm shadow-lg"
           >
             <TrendingUp className="w-4 h-4" />
