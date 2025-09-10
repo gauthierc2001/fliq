@@ -167,9 +167,20 @@ export async function getCoinDetails(coinId: string): Promise<{ price: number; i
     
     const data = await response.json()
     
+    // Ensure we have valid image URLs and prefer larger images
+    let imageUrl = ''
+    if (data.image) {
+      imageUrl = data.image.large || data.image.small || data.image.thumb || ''
+      // Validate that the image URL is actually a URL
+      if (imageUrl && !imageUrl.startsWith('http')) {
+        console.warn(`Invalid image URL for ${coinId}:`, imageUrl)
+        imageUrl = ''
+      }
+    }
+    
     return {
       price: data.market_data?.current_price?.usd || 0,
-      image: data.image?.large || data.image?.small || ''
+      image: imageUrl
     }
   } catch (error) {
     console.error('Error fetching coin details:', error)

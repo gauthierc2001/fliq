@@ -36,7 +36,16 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading, wagerAm
   const [isAnimating, setIsAnimating] = useState(false)
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | 'up' | null>(null)
 
-  const currentMarket = markets[currentIndex]
+  // Filter out markets with less than 15 seconds remaining
+  const validMarkets = markets.filter(market => market.timeLeft > 15000) // 15 seconds buffer
+  const currentMarket = validMarkets[currentIndex]
+
+  // Reset index if current index is out of bounds due to filtering
+  useEffect(() => {
+    if (currentIndex >= validMarkets.length && validMarkets.length > 0) {
+      setCurrentIndex(0)
+    }
+  }, [validMarkets.length, currentIndex])
 
   const handleSwipe = useCallback(async (marketId: string, side: 'YES' | 'NO') => {
     if (isAnimating || !currentMarket) return
@@ -51,7 +60,7 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading, wagerAm
       setTimeout(() => {
         setCurrentIndex(prev => {
           const nextIndex = prev + 1
-          return nextIndex >= markets.length ? 0 : nextIndex
+          return nextIndex >= validMarkets.length ? 0 : nextIndex
         })
         setIsAnimating(false)
         setSwipeDirection(null)
@@ -61,7 +70,7 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading, wagerAm
       setSwipeDirection(null)
       console.error('Swipe error:', error)
     }
-  }, [isAnimating, currentMarket, onSwipe, markets.length])
+  }, [isAnimating, currentMarket, onSwipe, validMarkets.length])
 
   const handleSkip = useCallback(() => {
     if (isAnimating || !currentMarket) return
@@ -76,12 +85,12 @@ export default function SwipeDeck({ markets, onSwipe, onSkip, isLoading, wagerAm
     setTimeout(() => {
       setCurrentIndex(prev => {
         const nextIndex = prev + 1
-        return nextIndex >= markets.length ? 0 : nextIndex
+        return nextIndex >= validMarkets.length ? 0 : nextIndex
       })
       setIsAnimating(false)
       setSwipeDirection(null)
     }, 300)
-  }, [isAnimating, currentMarket, onSkip, markets.length])
+  }, [isAnimating, currentMarket, onSkip, validMarkets.length])
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => currentMarket && handleSwipe(currentMarket.id, 'NO'),

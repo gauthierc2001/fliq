@@ -30,14 +30,6 @@ interface MarketCardProps {
 export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: MarketCardProps) {
   const [timeLeft, setTimeLeft] = useState(market.timeLeft)
   
-  // Debug logging for logo URL
-  useEffect(() => {
-    if (market.logoUrl) {
-      console.log(`Market ${market.symbol} has logo:`, market.logoUrl)
-    } else {
-      console.log(`Market ${market.symbol} has no logo`)
-    }
-  }, [market.symbol, market.logoUrl])
 
   useEffect(() => {
     setTimeLeft(market.timeLeft)
@@ -70,36 +62,47 @@ export default function MarketCard({ market, onSwipe, wagerAmount = 100 }: Marke
       {/* Header */}
       <div className="text-center mb-4">
         <div className="flex items-center justify-center mb-4">
-          {market.logoUrl ? (
-            <Image
-              src={market.logoUrl}
-              alt={`${market.symbol} logo`}
-              width={48}
-              height={48}
-              className="w-12 h-12 rounded-full mr-3 object-cover"
-              unoptimized
-              onError={(e) => {
-                // Hide broken image and show fallback
-                console.warn(`Failed to load logo for ${market.symbol}:`, market.logoUrl)
-                const target = e.target as HTMLImageElement
-                target.style.display = 'none'
-                const fallback = target.nextElementSibling as HTMLElement
-                if (fallback) fallback.style.display = 'flex'
-              }}
-            />
-          ) : null}
-          <div 
-            className={`w-12 h-12 rounded-full bg-gradient-to-br from-brand-green to-brand-greenDark flex items-center justify-center mr-3 ${
-              market.logoUrl ? 'hidden' : 'flex'
-            } shadow-lg border-2 border-white`}
-          >
-            {/* Try to show initials first, fallback to coin icon */}
-            {market.symbol.length >= 2 ? (
-              <span className="text-white font-black text-sm">
-                {market.symbol.slice(0, 2).toUpperCase()}
-              </span>
+          <div className="relative w-12 h-12 mr-3">
+            {market.logoUrl ? (
+              <>
+                <Image
+                  src={market.logoUrl}
+                  alt={`${market.symbol} logo`}
+                  width={48}
+                  height={48}
+                  className="w-12 h-12 rounded-full object-cover shadow-lg border-2 border-white"
+                  unoptimized
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement
+                    target.style.display = 'none'
+                    const fallback = target.parentElement?.querySelector('.fallback-logo') as HTMLElement
+                    if (fallback) {
+                      fallback.style.display = 'flex'
+                    }
+                  }}
+                />
+                <div 
+                  className="fallback-logo absolute inset-0 w-12 h-12 rounded-full bg-gradient-to-br from-brand-green to-brand-greenDark items-center justify-center shadow-lg border-2 border-white hidden"
+                >
+                  {market.symbol.length >= 2 ? (
+                    <span className="text-white font-black text-sm">
+                      {market.symbol.slice(0, 2).toUpperCase()}
+                    </span>
+                  ) : (
+                    <Coins className="w-6 h-6 text-white" />
+                  )}
+                </div>
+              </>
             ) : (
-              <Coins className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-green to-brand-greenDark flex items-center justify-center shadow-lg border-2 border-white">
+                {market.symbol.length >= 2 ? (
+                  <span className="text-white font-black text-sm">
+                    {market.symbol.slice(0, 2).toUpperCase()}
+                  </span>
+                ) : (
+                  <Coins className="w-6 h-6 text-white" />
+                )}
+              </div>
             )}
           </div>
           <div className="text-3xl font-black text-brand-green">{market.title.match(/Will (\w+)/)?.[1] || market.symbol.toUpperCase()}</div>

@@ -129,12 +129,15 @@ export async function GET() {
     }
     
     // Get active markets with timeout and connection resilience
+    // Add 15-second buffer so users have time to bet
+    const minEndTime = new Date(Date.now() + 15000) // 15 seconds from now
+    
     const markets = await Promise.race([
       prisma.market.findMany({
         where: {
           resolved: false,
           endTime: {
-            gt: new Date()
+            gt: minEndTime
           }
         },
         orderBy: {
